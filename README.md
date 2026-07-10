@@ -398,6 +398,7 @@ Script loading strategies, CWV impact by vendor, GTM optimization, and script au
 
 ## Installation
 
+
 ### Manual install — Unix / macOS / Linux
 
 ```bash
