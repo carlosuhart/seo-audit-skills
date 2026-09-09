@@ -125,6 +125,19 @@ Attribution required when reproducing or citing.
    ```
 4. For WordPress: add as a static file via FTP, or use a plugin that serves `/llms.txt`
 
+### Strict format rules (source: llmstxt.org)
+
+The example above is not just a style suggestion — llmstxt.org defines a precise structure so tooling can parse the file with "classical programming techniques (parsers and regex)", not only human reading:
+
+1. **H1 — the only required section.** Exactly one `# Site name` at the top (after an optional BOM). Without it the file is invalid even if everything else is well-formed.
+2. **Blockquote immediately after the H1** — a short summary with the key info needed to understand the rest of the file.
+3. **Optional detail sections** — any non-heading markdown block between the blockquote and the file lists.
+4. **File lists delimited by H2** — each group of links lives under its own `## Heading`.
+5. **Mandatory link syntax inside those lists — the rule that fails in practice:** each item must be a real markdown hyperlink, `[name](url)`, optionally followed by `:` and a note. **Plain-text "Label: https://..." (no brackets) does not satisfy the standard**, even with correct, real URLs — a parser looking for `[text](url)` finds nothing and reports the file as having no links at all.
+6. **Path specificity:** if multiple `llms.txt` files exist at different paths (e.g. `/llms.txt` and `/docs/llms.txt`), each covers the URLs under its own path; agents should use the most specific one on overlap.
+
+**Why this matters beyond style:** since 2026 Lighthouse ships an "Agentic Browsing" category (still under development, subject to change) that audits this exact syntax automatically. Its real failure message when rule 5 breaks is *"File does not appear to contain any links"* — it does not say "wrong format", it reports finding no links at all, even when the file is full of plain-text URLs. **Recurring pattern across multiple site audits:** llms.txt files with complete, accurate content written as "Label: url" lines instead of markdown links — same mistake, more than once, confirming it is the single most common error when this file is hand-written. Check rule 5 line by line before signing off — do not stop at "file exists and returns 200".
+
 **What to include:** The highest-value pages for your target audience. Not everything —
 AI tools read this to build a mental model of the site. Quality over quantity.
 
@@ -397,6 +410,8 @@ CRAWLABILITY
 llms.txt
 [ ] File exists at /llms.txt
 [ ] Includes site description, key sections, notable content
+[ ] Exactly one H1 at the top, blockquote summary immediately after it
+[ ] Every link inside the file lists uses markdown syntax [text](url) — check line by line, never assume from overall content ("Label: url" plain text fails Lighthouse "Agentic Browsing" even with correct URLs)
 [ ] URLs in llms.txt are canonical and return 200
 [ ] File referenced in robots.txt (optional but recommended)
 
