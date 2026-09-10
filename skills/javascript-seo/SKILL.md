@@ -28,11 +28,24 @@ Sitio construido con un framework de componentes (React, Vue, Svelte) donde:
   proyecto (`next.config.js`, `vercel.json`) en lugar de un panel de administración
 
 **Detección rápida:** buscar en el HTML crudo (`curl`, sin ejecutar JS) marcadores del
-framework: `self.__next_f.push(...)` (Next.js App Router), `data-server-rendered`
-(Nuxt), o un `<div id="root">`/`<div id="app">` casi vacío seguido de bundles JS
-grandes. Si el HTML crudo trae contenido real (headings, enlaces, texto), es SSR/SSG
-funcionando bien — si trae solo el shell y el contenido aparece al ejecutar JS, es
-CSR (client-side rendering) puro, con todos los riesgos de esta guía.
+framework: `self.__next_f.push(...)` (Next.js App Router), `<div id="__nuxt">` con
+contenido real dentro (Nuxt 3, que por defecto sí serializa HTML real vía SSR de
+Vue 3 — a diferencia de Next.js, aquí el shell vacío es la excepción, no la regla),
+o un `<div id="root">`/`<div id="app">` casi vacío seguido de bundles JS grandes. Si
+el HTML crudo trae contenido real (headings, enlaces, texto), es SSR/SSG funcionando
+bien — si trae solo el shell y el contenido aparece al ejecutar JS, es CSR
+(client-side rendering) puro, con todos los riesgos de esta guía.
+
+**Nota Nuxt 2 vs Nuxt 3:** el atributo `data-server-rendered="true"` es un marcador
+de Vue 2/Nuxt 2 (`vue-server-renderer`); Nuxt 3 (Vue 3, estándar desde 2022) ya no lo
+emite. No usarlo como señal en auditorías de sitios Nuxt actuales — si aparece, es
+indicio de un proyecto legado en Nuxt 2, dato en sí mismo relevante para el informe
+(stack sin soporte activo).
+
+**Detección de hosting vía cabeceras:** Vercel expone `X-Vercel-Cache`/`X-Vercel-Id`;
+Netlify expone `X-Nf-Request-Id`/`Server: Netlify`. Confirmar con `curl -sI` antes de
+asumir el hosting a partir del dominio o de menciones externas — la cabecera es la
+única fuente verificable.
 
 ---
 
@@ -74,6 +87,31 @@ revise el componente — desde fuera solo se puede documentar el síntoma.
 hidratación en un componente compartido (nav, header) puede romper simultáneamente
 navegación, jerarquía de encabezados y datos estructurados en todo el sitio — no
 tratarlos como 3 hallazgos independientes si la causa raíz es la misma.
+
+### Equivalente en Vue/Nuxt — no es el mismo bug, es una causa distinta
+
+El SSR de Vue 3 (y por tanto de Nuxt 3) serializa el árbol real a HTML por defecto —
+no depende de un payload de hidratación separado como Next.js, así que el mismo
+síntoma (`<a href>`/`<h1>`/JSON-LD ausentes del HTML crudo) casi nunca viene de un
+"hydration mismatch" en el sentido de Next. En Vue/Nuxt, la causa real suele ser una
+de estas dos, y hay que distinguirlas en el hallazgo:
+
+1. **SSR desactivado a nivel de proyecto** (`ssr: false` en `nuxt.config.ts`, modo
+   SPA puro) — en ese caso el HTML crudo trae el shell vacío (`<div id="app"></div>`)
+   para *todo* el sitio, no solo para un componente. Confirmar revisando si existe
+   `nuxt.config.ts` con esa flag o preguntando a Desarrollo antes de reportarlo como
+   bug de hidratación.
+2. **`<ClientOnly>` envolviendo navegación o headings**, o contenido condicionado a
+   `onMounted()`/`process.client` — el componente se salta el SSR a propósito, por lo
+   que sus enlaces/headings nunca existen en el HTML servido aunque el resto de la
+   página sí esté bien renderizada. Es la causa más común y más fácil de confirmar:
+   buscar `<ClientOnly>` en el código del componente afectado, o el comentario vacío
+   `<!--[-->`/`<!--]-->` que Vue 3 deja como marcador de fragmento no renderizado en
+   el HTML crudo, en el lugar donde debería estar el contenido.
+
+El método de verificación en 3 pasos de arriba (curl crudo → crawler con JS → dato
+real de Google) sigue aplicando igual; solo cambia a qué causa apunta el hallazgo en
+el informe.
 
 ---
 
@@ -150,8 +188,25 @@ real + HTTP 200" en una URL que debería ser 404 es soft-404, sin importar si el
 contenido visual es la home o una página de error genérica.
 
 **Fix:** ambas rutas catch-all deben invocar el mecanismo nativo de 404 del
-framework (en Next.js App Router, `notFound()` de `next/navigation`) para que el
-código de respuesta sea 404 real, no 200.
+framework (en Next.js App Router, `notFound()` de `next/navigation`; en Nuxt 3,
+`throw createError({ statusCode: 404, statusMessage: '...' })` dentro de la página
+`[...slug].vue` o del `server middleware` correspondiente) para que el código de
+respuesta sea 404 real, no 200.
+
+**Causa específica en Netlify — la regla de fallback SPA es el origen más frecuente
+de esta variante, no una excepción:** el patrón `_redirects` con
+`/*  /index.html  200` (o su equivalente en `netlify.toml` con
+`[[redirects]] status = 200`) es la configuración estándar recomendada para SPAs de
+una sola página en Netlify, y produce exactamente la Variante 1 de este hallazgo por
+diseño — cualquier ruta inventada sirve `index.html` con HTTP 200. Si el sitio usa
+un router del lado del cliente (React Router, Vue Router) sobre esa regla, la propia
+plataforma de rutas debe renderizar un componente 404 explícito *y* la respuesta
+debe forzarse a 404 real donde sea posible (Netlify Edge Functions o Functions
+pueden interceptar y reescribir el código de estado; el `_redirects` estático no
+puede condicionar el código HTTP al contenido). Si el sitio es SSR/SSG (Next.js,
+Nuxt) desplegado en Netlify, esta regla de fallback no debería existir — es un
+patrón exclusivo de SPA pura, su presencia en un proyecto SSR es en sí misma la
+causa raíz a corregir.
 
 ---
 
@@ -160,10 +215,15 @@ código de respuesta sea 404 real, no 200.
 Sin Yoast/Rank Math generándolo automáticamente, cada página debe declarar su propio
 canonical y sus etiquetas hreflang recíprocas de forma explícita en el componente o
 capa de metadata del framework (en Next.js App Router, la función
-`generateMetadata()` de cada ruta). Ver la skill `canonical` para las reglas
-generales (self-referencing, coherencia con sitemap) y `hreflang` para reciprocidad
-— lo específico de este stack es que no hay UI de plugin donde verificar la
-configuración: solo el HTML servido dice la verdad.
+`generateMetadata()` de cada ruta; en Nuxt 3, el composable `useSeoMeta()` o
+`useHead()` dentro de `<script setup>`, típicamente combinado con
+`definePageMeta()` para datos estáticos de la ruta — o el módulo `@nuxtjs/seo` si el
+proyecto ya lo integra, en cuyo caso verificar su configuración en
+`nuxt.config.ts` antes de asumir que falta). Ver la skill `canonical` para las
+reglas generales (self-referencing, coherencia con sitemap) y `hreflang` para
+reciprocidad — lo específico de este stack es que no hay UI de plugin donde
+verificar la configuración: solo el HTML servido dice la verdad, sin importar el
+framework.
 
 **Patrón de bug frecuente en sitios multi-idioma sin canonical:** una cadena de
 redirects de detección de idioma en la raíz (`dominio.com` → `www.dominio.com` →
@@ -182,12 +242,33 @@ patrón.
 
 En ausencia de un panel de hosting con UI (tipo cPanel/plugin de cabeceras), las
 cabeceras de seguridad y los redirects a nivel de host se declaran en el archivo de
-configuración del framework/plataforma de despliegue (`next.config.js` con la
-función `headers()`, `vercel.json` con `redirects()`). El comportamiento esperado
-(qué código HTTP, qué valores de cabecera) es terreno SEO/seguridad verificable por
-curl; el código exacto de esa configuración es responsabilidad de Desarrollo — no
-prescribir el archivo de config completo en un hallazgo de auditoría, describir el
-resultado esperado y dejar el mecanismo a quien conoce el stack real.
+configuración del framework/plataforma de despliegue:
+
+- **Next.js/Vercel:** `next.config.js` con la función `headers()`/`redirects()`, o
+  `vercel.json` con sus propias claves `headers`/`redirects` (si ambos existen,
+  `vercel.json` tiene precedencia sobre la config de Next.js — verificar cuál está
+  realmente aplicando el valor observado en curl antes de indicarle a Desarrollo
+  dónde tocar).
+- **Nuxt/Vercel o Nuxt/Netlify:** `nitro.routeRules` dentro de `nuxt.config.ts`
+  (ej. `routeRules: { '/**': { headers: { 'X-Frame-Options': 'DENY' } } }`), que Nitro
+  traduce automáticamente a la plataforma de destino sin necesidad de un archivo de
+  config específico del hosting.
+- **Netlify (cualquier framework):** archivo `_headers` en la raíz del output (una
+  ruta por línea, cabeceras indentadas debajo) o el bloque `[[headers]]` de
+  `netlify.toml`; los redirects van en `_redirects` o en `[[redirects]]` de
+  `netlify.toml`. **Diferencia real frente a Vercel que vale la pena verificar
+  siempre con curl:** si una línea de `_redirects` no especifica código de estado
+  explícito, Netlify aplica 301 por defecto — distinto del comportamiento de
+  `vercel.json`, donde el campo `"permanent"` decide entre 307 (por defecto,
+  `false`) y 308/301. Un redirect que "se ve igual" en el archivo de config puede
+  estar sirviendo un código distinto según la plataforma; no asumir el código HTTP
+  sin comprobarlo con `curl -o /dev/null -w "%{http_code}"`.
+
+El comportamiento esperado (qué código HTTP, qué valores de cabecera) es terreno
+SEO/seguridad verificable por curl; el código exacto de esa configuración es
+responsabilidad de Desarrollo — no prescribir el archivo de config completo en un
+hallazgo de auditoría, describir el resultado esperado y dejar el mecanismo a quien
+conoce el stack real.
 
 Ver la skill `cache-headers` para cabeceras de cacheo y la ausente en este listado
 `ssl-https`/`third-party-scripts` para CSP y HSTS — la única diferencia real en
@@ -232,6 +313,12 @@ CRÍTICO
 [ ] ¿Una sub-ruta inventada bajo un segmento válido devuelve HTTP 200 en vez de 404?
 [ ] ¿El primer salto de una cadena de redirects de normalización de host es 307 en
     vez de 301/308 permanente?
+[ ] (Netlify) ¿Existe una regla de fallback SPA (`_redirects` con `/* /index.html
+    200`, o equivalente en `netlify.toml`) en un proyecto que en realidad es SSR/SSG,
+    o que debería servir 404 real en rutas inexistentes?
+[ ] (Vue/Nuxt) ¿El HTML crudo trae el shell vacío para todo el sitio (`ssr: false`,
+    modo SPA) o solo faltan nav/headings puntuales por `<ClientOnly>`/guards
+    `process.client`? — son hallazgos de alcance distinto, no reportarlos igual.
 
 ALTO
 [ ] ¿Cada ruta declara su propio canonical self-referencing vía metadata del
@@ -262,3 +349,7 @@ BAJO
 - Indexación y renderizado en Google: https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics
 - Diagnóstico de rendering: https://developers.google.com/search/docs/crawling-indexing/javascript/fix-search-javascript
 - `fetchpriority`: https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority
+- Nuxt `useSeoMeta()`/`useHead()`: https://nuxt.com/docs/getting-started/seo-meta
+- Nuxt `routeRules`/Nitro: https://nitro.build/config#routerules
+- Netlify `_headers`: https://docs.netlify.com/build/configure-builds/file-based-configuration/#headers
+- Netlify `_redirects`: https://docs.netlify.com/manage/routing/redirects/redirect-options/
