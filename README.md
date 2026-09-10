@@ -2,18 +2,19 @@
 
 Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search
 
-A knowledge base of 21 skills for technical SEO audits with Claude Code.
+A knowledge base of 22 skills for technical SEO audits with Claude Code.
 Each skill encodes real-world patterns: documented CMS bugs, fix-ready code
 snippets, audit checklists, and edge cases that generic AI training data misses.
 
-Covers the full audit stack — CMS mechanics, Core Web Vitals, schema markup,
-cache architecture, hreflang, third-party script management, and the tools
-SEOs actually use.
+Covers the full audit stack — CMS mechanics, JS-framework sites, Core Web Vitals,
+schema markup, cache architecture, hreflang, third-party script management, and
+the tools SEOs actually use.
 
 - **CMS**: WordPress (Divi, Elementor, WooCommerce), PrestaShop, Shopify
+- **JS frameworks**: React/Next.js, Vue/Nuxt on Vercel/Netlify — no CMS, no plugin
 - **Analytics & tracking**: GA4, Google Tag Manager
 - **SEO tools**: Screaming Frog, SE Ranking, Semrush
-- **Technical**: robots.txt (+ indexability), sitemap, canonical tags, redirects, on-page fundamentals, Core Web Vitals, cache, images, SSL/HTTPS, schema markup, hreflang, third-party scripts
+- **Technical**: robots.txt (+ indexability), sitemap, canonical tags, redirects, on-page fundamentals, Core Web Vitals, cache, images, SSL/HTTPS, schema markup, hreflang, third-party scripts, JavaScript SEO
 - **AI/GEO**: GEO (Generative Engine Optimization), AI crawler access, llms.txt, Wikidata entity, brand citation signals
 
 All knowledge is anonymized and GDPR compliant — no client data, no domains,
@@ -294,6 +295,33 @@ JSON-LD structured data implementation, validation, and E-E-A-T signals.
 - **Validation workflow** — validator.schema.org vs Rich Results Test vs GSC Enhancements (different tools, different purposes)
 - **MedicalWebPage** — does not generate GSC enhancement report; value is semantic, E-E-A-T, and AI extraction
 - Audit checklist by criticality
+
+---
+
+### Technical — JavaScript SEO
+
+**File:** `skills/javascript-seo/SKILL.md`
+
+Technical SEO for sites built on JS frameworks (React/Next.js, Vue/Nuxt) deployed on
+Vercel/Netlify or similar — no CMS, no SEO plugin, every signal depends on framework
+configuration.
+
+- **Incomplete hydration** — nav/H1/schema existing only in the hydration payload, never
+  reaching the served HTML; 3-step verification method (raw HTML vs JS-executing
+  crawler vs real Google data) to tell "needs JS rendering" apart from a real bug
+- **UI-interaction-gated content** — pages only reachable through a dropdown/click that
+  no crawler simulates, invisible even to crawlers that fully execute JavaScript
+- **Systemic soft-404** — two distinct variants from catch-all dynamic routes: an
+  invented top-level segment returning the full homepage with HTTP 200, and an
+  invented sub-route rendering a real "not found" page but still with HTTP 200
+- **Canonical/hreflang without a plugin** — framework metadata API patterns, and the
+  307-on-host-normalization bug that breaks canonical consolidation in multi-language
+  redirect chains
+- **Headers and redirects as project config** — behavior-first framing for
+  `next.config.js`/`vercel.json`-based security headers and redirects
+- **fetchpriority misuse** — applied to a text LCP element (heading, paragraph) has
+  zero effect; only works on elements that fetch a resource
+- Audit checklist by severity
 
 ---
 
