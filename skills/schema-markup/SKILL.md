@@ -755,6 +755,76 @@ standalone Person schema on the author's archive page:
 Google uses the `@id` to connect the author entity across pages and build
 a consolidated understanding of the author's expertise.
 
+### Multi-domain entity consolidation (parent brand + product/satellite sites)
+
+Same underlying principle as author `@id` consistency, applied to companies that
+operate several product domains under one parent brand (a SaaS company with a
+marketing site plus a separate domain per product, a group with multiple
+sub-brands, etc.). The fix for the fragmentation below generalizes directly.
+
+**Symptom:** each product domain declares its own independent `Organization`
+block — different `name`, no `@id`, its own partial `sameAs` — instead of all of
+them representing the same parent entity. Google/AI systems see N different,
+unconnected organizations instead of one entity with N properties, splitting
+brand-mention and citation signals across domains instead of consolidating them.
+
+**A second, subtler version of the same bug:** even after anchoring every
+satellite to the parent's `@id`, one satellite ends up using the **legal name**
+(the registered company name) in the `name` field instead of the **public brand
+name** — those are different fields with different purposes (`name` = the brand
+Google/users recognize, `legalName` = the registered entity) and mixing them up
+re-fragments the signal even though `@id` matches.
+
+**Fix — replicate the parent's canonical block on every satellite, changing only `alternateName`:**
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://parent-domain.com/#organization",
+  "name": "Parent Brand Name",
+  "legalName": "Registered Legal Entity Name",
+  "alternateName": "Product/Satellite Name",
+  "url": "https://product-domain.com/",
+  "sameAs": [
+    "https://www.linkedin.com/company/parent-brand",
+    "https://www.instagram.com/parentbrand/",
+    "https://www.youtube.com/@ParentBrandOfficial",
+    "https://www.facebook.com/profile.php?id=XXXXXXXXXXXXXXX",
+    "https://www.wikidata.org/wiki/QXXXXXXX"
+  ]
+}
+```
+
+Same `@id`, same `name`/`legalName`, same complete `sameAs` array on every
+satellite domain — only `alternateName` changes to identify which product this
+particular embed is for. **Never let `sameAs` grow inconsistently between
+satellites** (each one accumulating whatever social profiles someone happened to
+add) — treat the parent's `sameAs` list as the single source of truth and copy it
+in full to every satellite when auditing more than one.
+
+**Known limitation, not fully solved by this pattern:** `url` still varies per
+satellite (each domain's own address) while `@id`/`name`/`legalName` stay fixed —
+technically the same declared entity ends up with a different `url` value
+depending on which domain serves the block. The textbook-correct alternative is a
+separate `Organization` (parent, one fixed `url`) plus a distinct
+`Product`/`SoftwareApplication` entity per satellite (own `@id`, own `url`) linked
+back via `provider`/`manufacturer`. That said, if the parent's own product-page
+schema already models the products as sections of one Organization rather than as
+separate `SoftwareApplication` entities, forcing that split only in the satellite's
+external-facing Organization block creates a **different** inconsistency (the
+satellite modeling itself as a full separate entity while the parent's content
+doesn't) — treat this as an architecture decision to make deliberately for the
+whole domain family, not something to silently "fix" on one satellite at a time.
+
+**A frequent false lead when auditing `sameAs` across satellites:** a social
+profile handle that contains a *different* sub-brand or parent-entity name than
+the one you're auditing (e.g., a YouTube handle literally spelled with the holding
+company's name) does not by itself mean that profile belongs to the holding
+company rather than the operating brand — verify against the parent's own
+already-corrected canonical schema block, not against what the handle string
+seems to say.
+
 ### Person schema when no author archive page exists
 
 When a WordPress author user exists but the public author archive page hasn't been

@@ -291,6 +291,7 @@ JSON-LD structured data implementation, validation, and E-E-A-T signals.
 - **Documented bugs** — Rank Math `datePublished=1970-01-01`, Rank Math lowercase `@type`, logo <112×112px, `relevantSpecialty`/`specialty` with text or wrong enum URL (`PhysicalTherapy` is a business @type, not a MedicalSpecialty value — correct: `Physiotherapy`), `sameAs` with dead URLs (Google+), duplicate `@id` in subdirectory Yoast installations
 - **FAQPage** — rich results restricted to gov/health since 2023, but still valuable for semantic understanding, Bing, and AI extraction (ChatGPT, Perplexity, AI Overviews)
 - **E-E-A-T** — author schema with `jobTitle`, `description`, consistent `@id` across Article and Person pages; embedded Person schema (no `@id`) when author archive page does not yet exist
+- **Multi-domain entity consolidation** — same `@id`/`name`/`legalName`/`sameAs` replicated across a parent brand's product/satellite domains (only `alternateName` changes), the legal-name-vs-brand-name mixup, and the known `url`-varies-per-domain limitation
 - **CMS implementation** — Yoast, Rank Math, WooCommerce, PrestaShop; output buffer fix pattern deployable via functions.php, Code Snippets plugin, HFCM, or must-use plugin
 - **Validation workflow** — validator.schema.org vs Rich Results Test vs GSC Enhancements (different tools, different purposes)
 - **MedicalWebPage** — does not generate GSC enhancement report; value is semantic, E-E-A-T, and AI extraction
