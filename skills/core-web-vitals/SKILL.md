@@ -128,6 +128,17 @@ The time from navigation start until the largest visible content element
 Only one element should have `fetchpriority="high"` — the LCP element.
 If it is set on a decorative icon or separator, move it to the hero image.
 
+**fetchpriority applied to a text LCP element (no effect at all)**
+
+`fetchpriority` only works on elements that fetch a resource (`<img>`, `<link>`,
+`<script>`, `<iframe>`). When the LCP element is text (a heading, a paragraph — common
+in JS-framework sites where the hero headline is the LCP candidate), adding
+`fetchpriority="high"` to that text node does nothing — the browser silently ignores
+it, no error, no warning. This creates a false sense that the finding was addressed.
+If the LCP element is text, the render delay comes from something else entirely:
+render-blocking CSS scoped to that section, a blocking web font, or client-side
+hydration delaying when the text node appears in the DOM — investigate that instead.
+
 **Unoptimized image format**
 
 Target for LCP hero images: WebP or AVIF, < 100KB, with correct `width` and `height`

@@ -541,6 +541,76 @@ if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $json ) || empty( $jso
 }
 ```
 
+### Double-decoding of HTML entities in JSON-LD (Google change, 21 ago 2026)
+
+**Confirmado — cambio oficial de Google, anunciado el 21 de agosto de 2026**
+(comunicado por Google vía LinkedIn, en formato imagen; corroborado
+independientemente por SEO Südwest:
+http://www.seo-suedwest.de/10921-wichtige-google-aenderung-bei-der-extraktion-von-json-ld.html).
+Google cambió cómo decodifica entidades HTML dentro de JSON-LD: ahora las
+decodifica **una sola vez**, en lugar de decodificarlas repetidamente hasta
+resolver todos los niveles de escapado.
+
+**Comportamiento antes/después:**
+
+| Valor en el JSON-LD | Antes (decodificaba en bucle) | Ahora (decodifica 1 vez) |
+|---|---|---|
+| `&amp;` | `&` | `&` (sin cambios) |
+| `&amp;amp;` | `&` | `&amp;` ← roto |
+| `&amp;#10004;` | `✔` | `&#10004;` ← roto, no renderiza |
+
+Los valores **simplemente escapados siguen funcionando igual**. Solo se
+rompe el contenido con **doble escapado** (o más niveles).
+
+**Síntoma:** un campo de texto (`name`, `description`, `headline`, respuestas
+FAQ) muestra `&amp;amp;` o `&amp;#...` literal en el rich result, en vez del
+carácter resuelto. También puede romper URLs con parámetros de tracking que
+contienen `&` doblemente escapado (ej. en `item`/`url` de BreadcrumbList o
+en `Offer.url`), impidiendo el matching correcto de la URL.
+
+**Causa:** el pipeline de generación de schema escapa un valor que ya venía
+escapado desde la base de datos (doble encoding). Típico en plugins
+WordPress mal configurados o desarrollo custom que aplica
+`htmlspecialchars()`/`esc_html()` sobre un string que ya contenía entidades,
+en lugar de escapar solo el valor crudo.
+
+```json
+// Mal — doble escapado, se rompe con el cambio de Google
+"name": "Bar &amp;amp; Grill"
+
+// Correcto — escapado simple (un solo nivel), sigue funcionando igual
+"name": "Bar &amp; Grill"
+
+// Correcto — carácter UTF-8 plano (recomendado por SEO Südwest)
+"name": "Bar & Grill"
+```
+
+**Quién se ve afectado:** principalmente sitios con desarrollo custom o
+plugins que generan el JSON-LD "a mano" (concatenación de strings) en lugar
+de usar `json_encode()`/`wp_json_encode()`, que gestionan el escapado
+correctamente por defecto. La mayoría de sitios con Yoast, Rank Math o
+Schema Pro no debería verse afectada — estos plugins usan
+`wp_json_encode()` internamente.
+
+**Diagnóstico:**
+1. Extraer los bloques JSON-LD con el método curl+python de este documento
+   (ver "Diagnostic commands" más abajo)
+2. Buscar literalmente `&amp;amp;` y `&amp;#` dentro de los bloques
+   `<script type="application/ld+json">` — es el patrón exacto que señala
+   SEO Südwest para detectar el problema
+3. Confirmar en GSC > Enhancements si hay caída reciente de rich results en
+   páginas con este patrón, y contrastar la fecha con el 21 de agosto de 2026
+4. Validar con Rich Results Test qué texto está parseando Google realmente
+   en el campo afectado
+
+**Fix:** asegurar que el pipeline de generación de schema escape una sola
+vez, usando el carácter UTF-8 plano (o, si se necesita escapado JSON, el
+escape Unicode de un ampersand: código de escape JSON estándar para U+0026,
+no una entidad HTML) en vez de funciones HTML-escape. En PHP: `wp_json_encode()` o `json_encode()` con
+`JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES` sobre el valor crudo de la
+base de datos — nunca sobre un valor que ya pasó por `htmlspecialchars()` o
+`esc_html()` previamente.
+
 ### `@type` lowercase in `Organization` (not just Person/Article)
 
 Beyond the documented Rank Math bug in author objects, some plugins generate
@@ -918,6 +988,7 @@ LOW
 [ ] nutrition.calories includes unit ("300 calories" not "300")
 [ ] Recipe datePublished present
 [ ] No empty [] JSON-LD blocks on any page type
+[ ] No double-decoded HTML entities in text fields (&amp;amp; / &amp;#... left literal) — Google change confirmed 21-Aug-2026
 ```
 
 ---

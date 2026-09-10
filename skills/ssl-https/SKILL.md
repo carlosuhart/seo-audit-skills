@@ -260,6 +260,35 @@ Header always set Referrer-Policy "strict-origin-when-cross-origin"
 | `Permissions-Policy` | Restrict browser features | Deny unused: `geolocation=(), microphone=()` |
 | `Content-Security-Policy` | Prevent XSS | Complex — start in `report-only` mode |
 
+### CSP baseline directives frequently missing
+
+Even in an initial `Content-Security-Policy-Report-Only` rollout scoped to the site's
+real scripts/styles/fonts/connections, two low-risk hardening directives are commonly
+left out and should be added from the start unless there's a specific reason not to:
+
+```
+object-src 'none';
+base-uri 'self';
+```
+
+`object-src 'none'` blocks legacy `<object>`/`<embed>`/`<applet>` plugin content —
+almost no modern site legitimately needs this. `base-uri 'self'` prevents an injected
+`<base>` tag from hijacking all relative URLs on the page. Neither typically breaks
+functionality, unlike `script-src`/`style-src` restrictions which do need a real
+inventory of the site's own inline scripts/styles before tightening.
+
+Also confirm the policy actually reaches a reporting endpoint (`report-uri` or the
+newer `report-to`) — without one, Report-Only violations only show up in whichever
+browser console someone happens to have open, not systematically.
+
+### `includeSubDomains` and `preload` on HSTS — audit subdomains first
+
+Adding `includeSubDomains` to `Strict-Transport-Security` without first confirming
+every active subdomain serves valid HTTPS can break subdomains that aren't HTTPS-ready.
+`preload` is a further commitment (submission to browser preload lists is difficult to
+reverse) — treat it as a separate decision made only after `includeSubDomains` has
+been live and confirmed safe, not as one more parameter to add at the same time.
+
 ### X-Powered-By exposure
 
 `X-Powered-By: PHP/8.1` reveals the PHP version and can be used to target

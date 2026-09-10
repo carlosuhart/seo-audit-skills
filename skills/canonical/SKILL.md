@@ -250,6 +250,11 @@ via JS, añadir también el tag estático o configurar SSR/prerendering.
 **Verificar rendering en GSC:**
 URL Inspection > Ver página renderizada > buscar `rel="canonical"` en el código renderizado.
 
+**Sitios sin CMS/plugin SEO (React/Vue/Next.js sobre Vercel u hosting similar):**
+ver skill `javascript-seo` — cubre el patrón de redirect 307 en la normalización de
+host que rompe la señal canonical, y el método de verificación en 3 pasos para
+distinguir "falta ejecutar JS" de un bug real de hidratación.
+
 ---
 
 ## Errores comunes

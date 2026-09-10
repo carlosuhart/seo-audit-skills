@@ -406,6 +406,16 @@ BAJO
 
 ---
 
+## Sitios sin CMS (React/Vue/Next.js sobre Vercel u hosting similar)
+
+Patrón frecuente: una cadena de redirects de detección de idioma en la raíz
+(`dominio.com` → `www.dominio.com` → `www.dominio.com/es`) donde el salto de
+normalización de host (sin `www` a con `www`, o HTTP a HTTPS) usa código **307
+(temporal)** cuando debería ser 301/308 (permanente) — el 307 es correcto solo en el
+salto que sí depende del visitante (la detección de idioma en sí), nunca en la
+normalización de host, que es una decisión permanente de arquitectura. Ver skill
+`javascript-seo` para el método de verificación completo y su efecto sobre canonical.
+
 ## Referencias
 
 - Redirecciones y Google: https://developers.google.com/search/docs/crawling-indexing/301-redirects

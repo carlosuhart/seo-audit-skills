@@ -279,6 +279,33 @@ sección visible, o cambiar las etiquetas de los widgets anteriores a `<div>` co
 
 ---
 
+### URLs reales solo alcanzables mediante un dropdown/menú interactivo — SF (incluso en modo JS) no las encuentra
+
+**Síntoma:** el crawl (incluso con JS Rendering activado) reporta muchas menos URLs
+que las que el sitio realmente tiene, y las páginas faltantes existen y devuelven 200
+al visitarlas directamente.
+
+**Causa:** las URLs solo aparecen en el HTML tras hacer click en un elemento de UI
+(dropdown, acordeón, tab) — típico en sitios construidos con React/Vue donde el menú
+de navegación despliega submenús por JavaScript. SF ejecuta JS y espera a que la
+página se estabilice, pero **no simula clicks arbitrarios de interfaz** salvo
+configuración muy específica (y no por defecto en un crawl estándar).
+
+**Por qué SF no lo detecta como issue:** no hay ningún error que reportar desde su
+perspectiva — simplemente nunca llegó a esas URLs porque ningún enlace real las
+apunta desde donde el crawler sí estuvo.
+
+**Verificación:** confirmar manualmente en el navegador qué acción de UI revela el
+enlace, y cruzar contra `curl` sobre la página que contiene el menú — si el `<a href>`
+no aparece ni en el HTML crudo ni en el crawl JS de SF, el enlace no existe hasta la
+interacción. Ver skill `javascript-seo` para el método de verificación completo.
+
+**Fix:** no depende de SF — es un cambio de Desarrollo para que los items del menú
+sean `<a href>` reales en el HTML servido, independientemente del estado visual
+abierto/cerrado del dropdown.
+
+---
+
 ## Custom extraction with XPath
 
 Screaming Frog's Custom Extraction feature allows extracting specific elements
