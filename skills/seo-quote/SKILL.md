@@ -238,7 +238,7 @@ En código Python interno usar float estándar; solo formatear al escribir el do
 
 ## Fase 6: Generación del documento .docx
 
-Generar un script Python con python-docx y ejecutarlo. Guardar en `C:/Users/cmano/claude-seo/<cliente>/cotizacion-seo-<slug-dominio>-<YYYY-MM-DD>.docx`.
+Generar un script Python con python-docx y ejecutarlo. Guardar en `<directorio-de-auditorias>/<cliente>/cotizacion-seo-<slug-dominio>-<YYYY-MM-DD>.docx`.
 
 Crear el directorio si no existe.
 
@@ -375,7 +375,7 @@ style.font.size = Pt(11)
 
 # ... (código completo del documento)
 
-output_path = f"C:/Users/cmano/claude-seo/{DATOS['nombre'].lower().replace('.', '-')}/cotizacion-seo-{DATOS['nombre'].lower().replace('.', '-')}-{datetime.now().strftime('%Y-%m-%d')}.docx"
+output_path = f"<directorio-de-auditorias>/{DATOS['nombre'].lower().replace('.', '-')}/cotizacion-seo-{DATOS['nombre'].lower().replace('.', '-')}-{datetime.now().strftime('%Y-%m-%d')}.docx"
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
 doc.save(output_path)
 print(f"Documento guardado: {output_path}")
@@ -387,7 +387,7 @@ El script real generado debe estar completamente funcional y rellenar todos los 
 
 ## Output final esperado
 
-1. El documento `.docx` guardado en `C:/Users/cmano/claude-seo/<cliente>/cotizacion-seo-<slug>-<fecha>.docx`
+1. El documento `.docx` guardado en `<directorio-de-auditorias>/<cliente>/cotizacion-seo-<slug>-<fecha>.docx`
 2. En el chat: resumen de 5 líneas con:
    - Tier asignado
    - Issues críticos detectados (N)

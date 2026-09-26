@@ -374,7 +374,7 @@ persona responsable sería desproporcionada (Art. 64).
 
 ## Paso 6 — Output según modo
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_nfadp_[fecha].md` o `.docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_nfadp_[fecha].md` o `.docx`.
 
 Modo `--docx`: misma estructura que `rgpd`, adaptada:
 - Autoridad: FDPIC (edoeb.admin.ch)

@@ -470,7 +470,7 @@ Data: [data] | Setor: [setor] | Score: [X/100]
   internacionales pueden estar en actualización — verificar em gov.br/anpd
 ```
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_lgpd_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_lgpd_[fecha].md`.
 
 ### Modo cliente (`--docx`)
 
@@ -481,7 +481,7 @@ Misma estructura que `rgpd` modo `--docx`, adaptada a LGPD:
 - Pie de página: "Desenvolvido por Zythos Media — Especialistas em SEO & IA Search"
   con hipervínculo a https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_lgpd_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_lgpd_[fecha].docx`.
 
 ---
 

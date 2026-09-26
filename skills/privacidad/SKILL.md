@@ -205,7 +205,7 @@ Estructura del .docx:
 8. Pie de página en todas las páginas: "Desarrollado por Zythos Media — Especialistas
    en SEO & IA Search" con hipervínculo a https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_privacidad_[fecha].md` o `.docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_privacidad_[fecha].md` o `.docx`.
 
 ---
 

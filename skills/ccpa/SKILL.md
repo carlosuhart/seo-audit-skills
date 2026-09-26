@@ -406,7 +406,7 @@ No hay límite global establecido por ley, pero el CPPA puede multar por cada
 
 ## Paso 6 — Output según modo
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_ccpa_[fecha].md` o `.docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_ccpa_[fecha].md` o `.docx`.
 
 Modo `--docx`: misma estructura que `rgpd`, adaptada:
 - Autoridad: CPPA (cppa.ca.gov) + Attorney General de California

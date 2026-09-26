@@ -362,7 +362,7 @@ Fecha: [fecha] | Sector: [sector] | Score: [X/100]
 - Nota: Data (Use and Access) Act en tramitación — verificar estado
 ```
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_uk-gdpr_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_uk-gdpr_[fecha].md`.
 
 ### Modo cliente (`--docx`)
 
@@ -371,7 +371,7 @@ Misma estructura que el skill `rgpd` modo `--docx`, adaptada a UK:
 - Multas en GBP
 - Referencias a PECR, Children's Code e IDTA en lugar de ePrivacy/CCT
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_uk-gdpr_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_uk-gdpr_[fecha].docx`.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search
 
-A knowledge base of 22 skills for technical SEO audits with Claude Code.
+A knowledge base of 38 skills for technical SEO audits with Claude Code.
 Each skill encodes real-world patterns: documented CMS bugs, fix-ready code
 snippets, audit checklists, and edge cases that generic AI training data misses.
 
@@ -428,6 +428,124 @@ Script loading strategies, CWV impact by vendor, GTM optimization, and script au
 - **GTM tag audit** — identifying unused tags, trigger optimization (DOM Ready vs Window Loaded), tag sequencing
 - **Auditing third-party footprint** — Chrome DevTools Coverage tab, PSI "Reduce third-party code", Screaming Frog source code extraction
 - Audit checklist by impact level
+
+---
+
+### Search Console — Impression Mining
+
+**File:** `skills/mineria-de-impresiones/SKILL.md`
+
+Turns Google Search Console data into an actionable content plan. Decides what to improve, what to create, and how to rewrite titles and metas.
+
+- **Query classification by intent** — informational, transactional, navigational, comparative; different treatment per bucket
+- **High-impression zero-click queries** — the content gap signal most audits ignore
+- **CTR reference curves by position** (2026 data) — what is actually underperforming versus what is normal for that rank
+- **Title and meta rewriting** driven by the query set a page already surfaces for, not by guesswork
+- **Content expansion versus new page** — the decision rule, including when a query cluster does not justify its own URL
+- **GSC data quality context** — the May 2025 to April 2026 impression logging error and the `&num=100` inflation removed in September 2025; why clicks are the only safe metric across that window
+- Never analyzes without real data: the skill refuses to estimate
+
+---
+
+### Search Console — Diagnostics
+
+**File:** `skills/seo-gsc-diagnostics/SKILL.md` + `scripts/gsc_diagnostics.py`
+
+Quick wins, query cannibalization, and traffic anomalies from raw GSC data. Python script, no third-party MCP server required.
+
+- **Quick wins** — high impressions, low CTR, position near page one; ranked by realistic click upside
+- **Query cannibalization** — same query, two or more URLs splitting clicks. Includes the minimum-clicks floor that removes false positives: without it, 243 of 314 findings on a 1,500-URL site were meaningless 1-1 pairs
+- **Anomaly detection** — z-score over the daily series to isolate days that break pattern
+- Local OAuth token or service account, both supported; paths configurable via `GSC_TOKEN_PATH` and `GSC_SERVICE_ACCOUNT_KEY`
+- Complements impression mining (prescriptive) and period-comparison drop analysis
+
+---
+
+### Search Console — Internal Linking Audit
+
+**File:** `skills/seo-interlinking/SKILL.md` + `scripts/audit_interlinking.py`
+
+Internal-linking health on an existing site, from Screaming Frog exports crossed with GSC.
+
+- **Orphan pages** — indexable URLs with zero or one internal inlink
+- **Click depth** — pages buried too far from the homepage
+- **Anchor-text over-optimization** — internal anchors repeating the same exact-match phrase
+- **Hub candidates** — pages with authority to donate that currently link out to nothing
+- **Prioritized by real traffic**, not by raw counts: the crossing with GSC clicks and impressions is what separates a page worth rescuing from one that never had demand
+- Known limitation documented: a crawl that misses sidebar, footer, or deep category pagination inflates the orphan count. Normalize legacy permalink formats before building the graph or the link graph fragments and pages appear orphaned that are not
+- Diagnosis only — never edits pages
+
+---
+
+### AI Search — GA4 Referral Traffic
+
+**File:** `skills/ga4-ai-traffic/SKILL.md` + `scripts/ga4_ai_traffic.py`
+
+Measures real referral traffic from AI assistants (ChatGPT, Perplexity, Gemini, Copilot, Claude, Grok, Meta AI) through the GA4 Data API.
+
+- Distinguishes measured traffic from **AI visibility**: this counts sessions, it does not measure how a platform describes the brand
+- **The undercount is structural** — GA4's AI Assistants channel excludes AI Overviews and AI Mode, and most AI sessions arrive without a referrer and land in Direct. Any number reported here is a floor, not a total
+- Token path configurable via `GA4_TOKEN_PATH`; refuses to estimate when the credential is unavailable
+
+---
+
+### Vertical — Higher Education SEO
+
+**File:** `skills/seo-educacion/SKILL.md`
+
+SEO for universities and higher-education institutions, where the funnel is an enrollment cycle rather than a purchase.
+
+- **Enrollment funnel** mapped to search intent by stage
+- **Seasonality** of admission cycles in Peru and Chile, and what that does to year-over-year comparisons
+- **Schema** — Course, EducationalOrganization and LocalBusiness together, and how they interact
+- **Keyword research by tier** — program, faculty, and institution level
+- Editorial calendar anchored to the admission calendar, plus GEO/AEO considerations
+
+---
+
+### Defense — Negative SEO Monitoring
+
+**File:** `skills/seo-negativo/SKILL.md`
+
+Continuous monitoring for negative SEO and reputation attacks.
+
+- **Link bombing** — detection patterns and the disavow decision, including when disavow is the wrong answer because the spam is structural and Google already ignores it
+- **Content scraping** and duplicate detection
+- **Manual actions and algorithmic penalties** — how to tell them apart
+- **Fake reviews** monitoring
+- **Rebranding protocol, weeks 1 to 8** — the sequence that avoids losing equity during a domain or brand change
+- Generates `disavow.txt` when the evidence justifies it
+
+---
+
+### Privacy — Multi-Jurisdiction Compliance Suite
+
+**Files:** `skills/privacidad/SKILL.md` (orchestrator) + 8 jurisdiction sub-skills
+
+Data-protection compliance audits across eight jurisdictions. The orchestrator detects which laws apply from site signals (TLD, currency, language, stated audience) or takes them explicitly, runs one shared discovery pass, then delegates to each sub-skill and consolidates the findings.
+
+| Sub-skill | Law | Jurisdiction |
+|---|---|---|
+| `rgpd` | GDPR (EU 2016/679), with national variations | European Union |
+| `uk-gdpr` | UK GDPR + PECR 2003 | United Kingdom |
+| `ley-datos-chile` | Ley 21.719 | Chile |
+| `lgpd` | Lei 13.709/2018 | Brazil |
+| `ley-25326` | Ley 25.326 (habeas data) | Argentina |
+| `lfpdppp` | LFPDPPP (ARCO rights) | Mexico |
+| `nfadp` | nFADP / revDSG | Switzerland |
+| `ccpa` | CCPA / CPRA (threshold-dependent, opt-out model) | California, US |
+
+- Each sub-skill produces a compliance score, an article-by-article status table, and prioritized issues with penalties quantified in the local currency
+- **Extraterritoriality is judged by targeting, not accessibility** — a site being reachable from a jurisdiction does not make that law apply; the language, currency and audience signals do
+- Each is invocable directly, without the orchestrator
+
+---
+
+### Commercial — SEO Audit Quote
+
+**File:** `skills/seo-quote/SKILL.md`
+
+Generates a client-ready `.docx` SEO audit report for proposals and quotes. Collects minimum site data (volume, stack, critical issues), estimates hours, and produces a budget in USD.
 
 ---
 

@@ -415,7 +415,7 @@ Fecha: [fecha] | Sector: [sector] | Score: [X/100]
 - ⚠️ Verificar si existe reforma legislativa en vigor a la fecha de uso
 ```
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_ley25326_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_ley25326_[fecha].md`.
 
 ### Modo cliente (`--docx`)
 
@@ -425,7 +425,7 @@ Misma estructura que `rgpd` modo `--docx`, adaptada:
 - Referencia al habeas data constitucional
 - Pie de página: hipervínculo "Zythos Media" → https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_ley25326_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_ley25326_[fecha].docx`.
 
 ---
 

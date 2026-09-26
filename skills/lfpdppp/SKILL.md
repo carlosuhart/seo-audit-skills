@@ -450,7 +450,7 @@ Fecha: [fecha] | Sector: [sector] | Score: [X/100]
 - Salario mínimo CDMX: verificar valor actualizado en conasami.gob.mx
 ```
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_lfpdppp_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_lfpdppp_[fecha].md`.
 
 ### Modo cliente (`--docx`)
 
@@ -460,7 +460,7 @@ Misma estructura que `rgpd` modo `--docx`, adaptada:
 - Terminología mexicana: aviso de privacidad, derechos ARCO, titular
 - Pie de página: hipervínculo "Zythos Media" → https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente]/auditoria_lfpdppp_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_lfpdppp_[fecha].docx`.
 
 ---
 

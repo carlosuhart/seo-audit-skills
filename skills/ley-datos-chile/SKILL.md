@@ -600,7 +600,7 @@ Riesgo sancionador: [nivel y multa estimada]
 ---
 _Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search_
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente o dominio]/auditoria_ley21719_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente o dominio]/auditoria_ley21719_[fecha].md`.
 
 ### Modo informe cliente (`--docx`)
 
@@ -619,7 +619,7 @@ Estructura del .docx:
    advertencia sobre el reglamento en elaboración
 10. Pie de página (en todas las páginas del documento): texto "Desarrollado por Zythos Media — Especialistas en SEO & IA Search" con hipervínculo sobre "Zythos Media" apuntando a https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente o dominio]/auditoria_ley21719_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente o dominio]/auditoria_ley21719_[fecha].docx`.
 
 ### Comparativa RGPD (solo si el usuario lo solicita explícitamente)
 
@@ -658,8 +658,8 @@ El score de cumplimiento Ley 21.719 se integra en el reporte unificado del audit
 **Antes de compartir el reporte:**
 ```
 # Anonimizar reporte si contiene PII del cliente auditado
-/anonimizar C:/Users/cmano/claude-seo/[cliente]/auditoria_ley21719_[fecha].md --ley chile
-/anonimizar C:/Users/cmano/claude-seo/[cliente]/auditoria_ley21719_[fecha].docx --ley chile
+/anonimizar <directorio-de-auditorias>/[cliente]/auditoria_ley21719_[fecha].md --ley chile
+/anonimizar <directorio-de-auditorias>/[cliente]/auditoria_ley21719_[fecha].docx --ley chile
 ```
 
 Usar `--ley chile` (no `--ley todo`) para evitar falsos positivos en números de artículos.

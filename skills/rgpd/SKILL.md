@@ -791,7 +791,7 @@ Riesgo sancionador: [Art. 83(5) o Art. 83(4) — hasta X€]
 ---
 _Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search_
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente o dominio]/auditoria_rgpd_[fecha].md`.
+Guardar en `<directorio-de-auditorias>/[cliente o dominio]/auditoria_rgpd_[fecha].md`.
 
 ### Modo informe cliente (`--docx`)
 
@@ -813,7 +813,7 @@ Estructura del .docx:
 10. Pie de página (en todas las páginas): "Desarrollado por Zythos Media — Especialistas en
     SEO & IA Search" con hipervínculo sobre "Zythos Media" apuntando a https://zythos.media
 
-Guardar en `C:/Users/cmano/claude-seo/[cliente o dominio]/auditoria_rgpd_[fecha].docx`.
+Guardar en `<directorio-de-auditorias>/[cliente o dominio]/auditoria_rgpd_[fecha].docx`.
 
 ### Comparativa Ley 21.719 Chile (solo si el usuario lo solicita)
 
@@ -852,8 +852,8 @@ El score RGPD se integra en el reporte unificado del audit.
 
 **Antes de compartir el reporte:**
 ```
-/anonimizar C:/Users/cmano/claude-seo/[cliente]/auditoria_rgpd_[fecha].md --ley todo
-/anonimizar C:/Users/cmano/claude-seo/[cliente]/auditoria_rgpd_[fecha].docx --ley todo
+/anonimizar <directorio-de-auditorias>/[cliente]/auditoria_rgpd_[fecha].md --ley todo
+/anonimizar <directorio-de-auditorias>/[cliente]/auditoria_rgpd_[fecha].docx --ley todo
 ```
 
 ---
