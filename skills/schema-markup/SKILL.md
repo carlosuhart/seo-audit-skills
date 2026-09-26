@@ -321,6 +321,58 @@ incorrect — validation tools check structure, not factual accuracy.
 
 ## Documented bugs and common errors
 
+### Schema Pro guarda un snapshot en postmeta que re-guardar el post NO regenera
+
+**El bug más caro de diagnosticar de esta lista**, porque desafía la intuición: puedes limpiar
+el contenido del post, verificarlo, volver a guardarlo, y el schema sigue mostrando los datos
+viejos indefinidamente.
+
+**Causa:** Schema Pro (`wp-schema-pro`) no genera el JSON-LD al vuelo en cada carga. Guarda un
+**snapshot renderizado** en postmeta —`wp_schema_pro_optimized_structured_data`, más los campos
+por plantilla tipo `recipe-NNN-ingredients`, `recipe-NNN-recipe-instructions`— y sirve ese
+snapshot. Rank Math hace algo equivalente con `rank_math_schema_*`. Disparar `save_post` **no
+lo reconstruye**.
+
+**Consecuencia práctica:** cualquier corrección masiva sobre `content.raw` (limpiar enlaces de
+afiliado inyectados, corregir texto, reparar rutas de imagen rotas) deja el schema intacto con
+los datos corruptos. El contenido visible queda limpio y los datos estructurados que lee Google
+siguen sucios, sin ninguna señal visible.
+
+**Detección** — el campo no lo expone la REST API estándar de WordPress, así que hay que leer el
+JSON-LD del HTML renderizado:
+
+```bash
+curl -s -A "Mozilla/5.0" https://example.com/post/ \
+  | grep -o '<script type="application/ld+json"[^>]*>.*\?</script>' \
+  | grep -i "patron_a_buscar"
+```
+
+Para barrer un sitio completo, itera sobre el sitemap o el listado de posts y cachea por lotes:
+una pasada sobre ~1.100 URLs tarda del orden de 20–30 minutos y conviene poder reanudarla.
+
+**Reparación:** hay que escribir en postmeta, que tampoco expone la REST API estándar. En
+WordPress con el plugin **Code Snippets** instalado se puede registrar una ruta REST temporal
+que lea y escriba postmeta, usarla una vez y borrar el snippet en el mismo proceso. Alternativa
+más limpia si el acceso lo permite: borrar la clave de caché para forzar la regeneración.
+
+**Tres precauciones aprendidas reparando esto:**
+
+1. **Nunca "limpies" `_wp_old_slug`.** WordPress guarda ahí el slug anterior a propósito: es lo
+   que alimenta `_wp_old_slug_redirect` y sirve el 301 desde la URL antigua. Limpiarlo rompe
+   redirecciones que funcionan. Exclúyelo explícitamente de cualquier barrido sobre postmeta.
+2. **No resuelvas "la imagen correcta" como "el primer adjunto del post".** Si una URL de imagen
+   está corrupta dentro del schema, la cadena corrupta normalmente decodifica al nombre real del
+   archivo — verifica ese candidato con HEAD antes de sustituirlo por otro. Tomar el primer
+   adjunto mete una imagen equivocada que nadie va a notar.
+3. **Los valores serializados de PHP no se parchean con reemplazo de texto.** Cambiar una cadena
+   dentro de un `s:123:"..."` invalida el prefijo de longitud. Si `update_post_meta` devuelve
+   `false`, probablemente no escribió nada — verifica antes de asumir que falló por otra razón.
+
+**Verificación:** tras reparar, la página puede seguir sirviendo el schema viejo por caché.
+Comprueba con cache-busting (`?nc=$RANDOM`) antes de dar el fix por fallido, y fuerza el purgado
+del lado del servidor con un `touch` al post (un POST del mismo contenido dispara `save_post`,
+que sí purga la caché de página aunque no regenere el schema).
+
 ### datePublished = "1970-01-01" (Rank Math bug)
 
 **Cause:** Rank Math generates `datePublished: "1970-01-01T00:00:00+00:00"` for

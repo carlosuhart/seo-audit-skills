@@ -219,6 +219,7 @@ Canonical tag implementation, auditing, and CMS-specific bugs.
 - **Redirect loops** — causes (bad .htaccess rules, bidirectional migration), detection with curl, fix
 - **WordPress** — Redirection plugin (limitations vs server-level), .htaccess RewriteRule patterns, Nginx `return 301`, multisite subdirectory handling
 - **PrestaShop** — Tráfico > Redirecciones SEO & URLs, Friendly URLs activation, category/product URL mapping from database
+- **Legacy permalink internal links** — after a category→flat permalink change, old in-content links still 301 so they never show up as errors, yet they burn a hop and fragment link-graph analysis into phantom nodes; verify each flat destination with HEAD before rewriting
 - **PageRank transmission** — 301 transmits ~99% (2016 update), 302 not guaranteed, chain impact on crawl budget not on PageRank
 - **Migration checklist** — pre-migration crawl, URL mapping priorities (by inlinks), implementation, link update, sitemap update, GSC Change of Address
 - **Crawl budget** — GSC crawl stats high redirect %, Screaming Frog All Inlinks to Redirects report
@@ -289,6 +290,7 @@ JSON-LD structured data implementation, validation, and E-E-A-T signals.
 
 - **Type selection** — by page type: Organization/LocalBusiness, Article, FAQPage, BreadcrumbList, Product+Offer, MedicalWebPage, AggregateRating
 - **Documented bugs** — Rank Math `datePublished=1970-01-01`, Rank Math lowercase `@type`, logo <112×112px, `relevantSpecialty`/`specialty` with text or wrong enum URL (`PhysicalTherapy` is a business @type, not a MedicalSpecialty value — correct: `Physiotherapy`), `sameAs` with dead URLs (Google+), duplicate `@id` in subdirectory Yoast installations
+- **Cached schema snapshots** — Schema Pro (and Rank Math) store rendered JSON-LD in postmeta and re-saving the post does NOT regenerate it, so bulk content fixes silently leave structured data stale; detection, repair via a temporary REST route, and the `_wp_old_slug` / serialized-value traps
 - **FAQPage** — rich results restricted to gov/health since 2023, but still valuable for semantic understanding, Bing, and AI extraction (ChatGPT, Perplexity, AI Overviews)
 - **E-E-A-T** — author schema with `jobTitle`, `description`, consistent `@id` across Article and Person pages; embedded Person schema (no `@id`) when author archive page does not yet exist
 - **Multi-domain entity consolidation** — same `@id`/`name`/`legalName`/`sameAs` replicated across a parent brand's product/satellite domains (only `alternateName` changes), the legal-name-vs-brand-name mixup, and the known `url`-varies-per-domain limitation
@@ -354,6 +356,9 @@ LCP, CLS, INP, and TTFB diagnosis and optimization across CMS platforms.
 - **Field vs lab data** — CrUX vs Lighthouse, when each is authoritative, minimum traffic threshold for CrUX data
 - **LCP diagnostic tree** — LCP element identification, lazy-loaded hero image, fetchpriority placement, preload hints, format and file size
 - **CLS causes and fixes** — missing image dimensions, web font FOUT, dynamic content injection, Elementor lazy background shift, cookie banners
+- **Ad-driven CLS** — using CrUX `experimental_ad_density`/`ad_cpu`/`ad_kilobytes` to tell ad-caused CLS apart from the consent banner in one API call, without reproducing it in a browser
+- **Reserving ad slot height** — why `ins.adsbygoogle` alone is the wrong selector when Auto Ads is on, where to source real slot heights, why ads never fill in automation
+- **LiteSpeed Delay JS Execution** — breaks jQuery-dependent sliders, leaves content invisible to non-interacting visitors and bots; exclusion field lives in the Tuning tab, plus `?LSCWP_CTRL=before_optm` to get real script paths
 - **INP** — long tasks, third-party script competition, DOM size, forced reflows. Replaced FID in March 2024
 - **TTFB** — relationship to LCP, OPcache, page cache, CDN for HTML
 - **CMS-specific** — Divi (inline CSS, background hero), Elementor (lazy LCP, WP Rocket conflict, DOM size), PrestaShop (Cache-Control: no-store, CCC), Shopify (app scripts)
@@ -371,6 +376,7 @@ Cache-Control strategy, CDN configuration, and CMS-specific caching setup.
 - **Cache layers architecture** — browser cache → CDN → reverse proxy → page cache → object cache → OPcache → database
 - **ETag and Last-Modified** — validation mechanics, Googlebot crawl budget impact, multi-server inode ETag problem
 - **WordPress** — WP Rocket (cache exclusions for WooCommerce), LiteSpeed Cache (X-Robots-Tag bug on XML), Redis object cache
+- **LiteSpeed + Cloudflare** — LiteSpeed emits only a proprietary header Cloudflare cannot read, so `Edge TTL: respect origin` has no directive to respect and HTML is barely cached; how to confirm it with a cookie-based origin probe, and the permanent `x-litespeed-cache: miss` case
 - **PrestaShop** — CCC options table, Smarty cache, Varnish and full-page cache options
 - **Nginx** — FastCGI page cache snippet, static asset cache headers, cache bypass for logged-in users
 - **CDN** — what CDNs cache by default (assets yes, HTML no), Cloudflare "Cache Everything" rule, cache invalidation strategies

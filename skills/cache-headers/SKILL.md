@@ -338,6 +338,80 @@ Options:
 
 ---
 
+## LiteSpeed + Cloudflare — `respect_origin` no tiene nada que respetar
+
+Combinación muy común (WordPress + LiteSpeed Cache + Cloudflare) con un fallo silencioso que
+no aparece en ningún panel: **el HTML apenas se cachea en el edge y el TTFB de campo se dispara
+a 2 s o más**, mientras que cada petición individual que se prueba a mano parece rápida.
+
+**La causa:** LiteSpeed Cache emite `x-litespeed-cache-control: public,max-age=604800`, una
+cabecera **propietaria que Cloudflare no interpreta**, y **no emite ningún `Cache-Control`
+estándar**. Si la Cache Rule de Cloudflare usa `Edge TTL: respect origin`, Cloudflare no
+encuentra ninguna directiva que respetar y cae a sus heurísticas por defecto, reteniendo el
+HTML unos pocos segundos. Cada expiración cuesta un render PHP completo.
+
+**Cómo confirmarlo** — comparar la respuesta con y sin que aplique la Cache Rule. Enviar una
+cookie de sesión de WordPress hace que la regla no aplique y devuelve la respuesta del origen
+tal cual:
+
+```bash
+# Origen directo (la regla de CF no aplica por la cookie)
+curl -sI -H 'Cookie: wordpress_logged_in_x=1' "https://example.com/post/?x=$RANDOM" \
+  | grep -iE 'cache-control|x-litespeed|cf-cache-status'
+
+# Con la regla de CF aplicando
+curl -sI "https://example.com/post/?x=$RANDOM" \
+  | grep -iE 'cache-control|x-litespeed|cf-cache-status'
+```
+
+Diagnóstico según lo que aparezca:
+
+| Observación | Significado |
+|---|---|
+| El origen no devuelve `Cache-Control`, solo `x-litespeed-cache-control` | `respect_origin` es inservible → usar `override_origin` con TTL explícito |
+| `Cache-Control: no-store` aparece **solo** cuando la regla aplica | Lo genera `browser_ttl: bypass` de la propia regla. Instruye al navegador, **no** al edge. No es la causa del problema de caché |
+| `x-litespeed-cache: miss` siempre, incluso repitiendo la misma URL | La caché de página de LiteSpeed no sirve nunca (ver abajo) |
+
+**El fix** es dejar de depender del origen para el TTL del edge:
+
+```
+Cloudflare → Caching → Cache Rules → [tu regla de HTML]
+  Edge TTL:    Override origin → 4 hours
+  Browser TTL: Bypass   (correcto para HTML: el visitante siempre recibe contenido fresco)
+```
+
+Vía API, conservando el resto de la regla intacta:
+
+```bash
+curl -X PUT "https://api.cloudflare.com/client/v4/zones/$ZONE/rulesets/$RULESET" \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"rules":[{"action":"set_cache_settings","description":"Cache HTML anon",
+       "expression":"<tu expresion original>","enabled":true,
+       "action_parameters":{"cache":true,"browser_ttl":{"mode":"bypass"},
+       "edge_ttl":{"mode":"override_origin","default":14400}}}]}'
+```
+
+Exporta primero el ruleset actual (`GET .../rulesets/phases/http_request_cache_settings/entrypoint`)
+como respaldo: el PUT reemplaza el conjunto completo de reglas, no hace merge.
+
+**`x-litespeed-cache: miss` permanente es un problema aparte.** Si el servidor responde `miss`
+en todas las peticiones —incluso pidiendo dos veces seguidas la misma URL contra el origen y en
+todos los tipos de página— la caché de página de LiteSpeed no está sirviendo, aunque el plugin
+esté activo y marque la página como cacheable. La causa habitual es que falten las reglas del
+servidor en el `.htaccess`:
+
+```apache
+<IfModule LiteSpeed>
+    CacheLookup on
+</IfModule>
+```
+
+Requiere acceso al servidor o al hosting; no es diagnosticable ni corregible desde la API de
+WordPress. Con Cloudflare bien configurado el impacto en usuarios queda absorbido, pero cada
+purga del CDN vuelve a costar un render PHP completo y el origen queda expuesto si el CDN falla.
+
+---
+
 ## Diagnosing cache issues
 
 ### Check headers directly

@@ -245,6 +245,38 @@ limpiar cadenas, actualizando los links internos que apuntan a URLs intermedias.
 
 ## Casos especiales
 
+### Enlaces internos con permalink antiguo tras cambiar la estructura
+
+Al migrar de permalinks con categoría (`/categoria/slug/`) a permalinks planos (`/slug/`),
+WordPress sigue resolviendo las URLs viejas con un 301 real vía `_wp_old_slug_redirect`. Los
+enlaces internos antiguos que quedan en el contenido **no están rotos**, así que no aparecen en
+ningún informe de errores — y por eso sobreviven años.
+
+Dos motivos para corregirlos igualmente:
+
+1. **Cada enlace gasta un salto**, con su latencia y su dilución de PageRank (ver la sección de
+   transmisión de PageRank más arriba).
+2. **Fragmentan cualquier análisis del grafo de enlaces.** Si construyes el grafo sin
+   normalizar, `/categoria/slug/` y `/slug/` cuentan como nodos distintos y las páginas
+   aparecen como huérfanas falsamente. En un sitio real de ~1.100 posts, normalizar redujo el
+   recuento de nodos de 1.328 a 1.253: 75 nodos fantasma que distorsionaban el diagnóstico.
+
+**Detección** — buscar hrefs con prefijo de categoría sobre el contenido crudo:
+
+```python
+PREFIJOS = ('categoria-1', 'categoria-2', ...)   # slugs reales, vía /wp-json/wp/v2/categories
+patron = re.compile(r'href="%s/(%s)/([a-z0-9][a-z0-9-]*)/?"' % (SITE, '|'.join(PREFIJOS)))
+# descartar 'page', 'feed', 'amp': son paginación, no posts
+```
+
+**Antes de reescribir, verifica cada destino plano con HEAD.** No todos los slugs viejos mapean
+1:1 a una URL plana viva: si el post se renombró, la URL plana puede dar 404 y estarías
+cambiando un 301 que funciona por un enlace roto. Regla: reescribir solo hacia destinos que
+devuelvan 200 directo; el resto se deja como está.
+
+**Reemplaza solo dentro de `href="..."`**, nunca el texto visible — la URL antigua puede
+aparecer también como texto en el contenido.
+
 ### HTTPS y www — orden correcto de redirects
 
 La cadena correcta para un sitio que migra a HTTPS y non-www:
