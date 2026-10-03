@@ -223,6 +223,30 @@ dos H1. Verificar con View Source en páginas que usan Divi Builder.
 
 ---
 
+## Sitios multilingües — title y meta de las portadas de cada idioma
+
+Con WPML + Rank Math, el title de la portada suele ser `%sitename% %page% %sep% %sitedesc%`.
+`%sitedesc%` sale del `Tagline` de WordPress y la meta description de la opción de portada
+de Rank Math. Ambos son strings de WPML String Translation: si no tienen traducción,
+`/en/`, `/pt-br/` y `/fr/` muestran title y meta en el idioma por defecto aunque hreflang,
+canonical, `html lang` y `og:locale` estén bien. No lo detecta un crawler que solo mire
+duplicados por URL.
+
+Corrección: traducir en String Translation el `Tagline` (context `WP`), la meta description
+y la description de Facebook/Open Graph de la portada (las tres strings de Rank Math). El
+nombre del sitio no se traduce si es marca. Adaptar los claims: una frase como "la mayor
+comunidad de lectores en español" no vale para la versión inglesa. Verificar en vivo cada
+portada.
+
+## Open Graph duplicado por un plugin social
+
+Plugins de publicación en redes (Blog2Social con `og_active` y `card_active`) imprimen su
+propio bloque `og:title`, `og:description`, `og:url` (a veces relativo, inválido),
+`og:image` y `og:article:published_time` además del que emite el plugin SEO. Facebook y
+LinkedIn toman el primero que encuentran. Si el plugin SEO ya genera Open Graph y Twitter
+Cards, desactivarlos en el plugin social. Detección: contar `og:url` y `og:title` en el
+HTML; debe haber uno de cada.
+
 ## Canibalización de keywords entre title/H1
 
 Cuando dos páginas del mismo sitio tienen el mismo title tag o compiten por la misma

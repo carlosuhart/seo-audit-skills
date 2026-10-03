@@ -209,6 +209,46 @@ coincide con el idioma/región del usuario.
 
 ---
 
+### Error 6: Enlaces internos de una traducción al idioma original existiendo la traducción
+
+El flujo de traducción deja los enlaces internos apuntando al original "hasta que exista
+traducción", pero nadie los actualiza cuando la traducción se publica. El post en inglés
+enlaza al artículo en español aunque `/en/...` existe: señal de idioma cruzada y
+enlazado interno desperdiciado. En un caso real, 130 enlaces en 98 posts.
+
+Detección: construir el mapa de traducciones desde los hreflang del sitemap (Rank Math y
+WPML los publican ahí) y, para cada enlace interno de un post en idioma X hacia otro
+idioma, comprobar si existe la versión X. Regla de corrección para todo enlace interno de
+una traducción: versión publicada en su idioma si existe; si no, la original.
+
+Variante: el modelo que tradujo inventó el slug de la versión traducida a partir del
+título (`/en/how-is-the-ibu-calculated.../`) y el enlace da 404. Nunca construir slugs
+desde títulos.
+
+### Error 7: Traducción con el cuerpo en otro idioma
+
+El hreflang y el `html lang` dicen `en`, el título está en inglés, pero el cuerpo quedó en
+el idioma original (o en un tercero). Google ve contenido duplicado entre idiomas con la
+anotación equivocada. Detectarlo con un conteo de palabras vacías exclusivas de cada
+idioma sobre el texto visible; las listas compartidas entre español y portugués dan
+falsos positivos.
+
+### Error 8: Posts publicados sin idioma asignado (WPML)
+
+Un post sin fila en `icl_translations` no aparece en la REST de ningún idioma ni en el
+selector, pero el sitemap lo publica con una URL sin prefijo que redirige ("URL fantasma"
+en GSC). Suele ser un duplicado de una traducción creado cuando falló el vínculo.
+Corrección: papelera + 301 a la versión correcta del grupo de traducción.
+
+### Error 9: Portadas traducidas con title y meta description del idioma original
+
+En WPML, el title de la portada se arma con strings (`Tagline` para `%sitedesc%` y las
+opciones de portada del plugin SEO) que deben traducirse en String Translation. Si no
+tienen traducción, `/en/` muestra el title y la meta del idioma por defecto aunque
+hreflang, canonical y `og:locale` estén bien. Ver `on-page-fundamentals`.
+
+Procedimiento completo y SQL de WPML en `wordpress-hidden-errors`.
+
 ## Single-language, multi-region sites
 
 A single-language site targeting multiple regions of the same language

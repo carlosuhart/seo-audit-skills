@@ -317,6 +317,20 @@ relativo resuelve al dominio equivocado. Usar siempre URL absoluta.
 
 ---
 
+### Error 6: Canonical personalizado heredado (Rank Math)
+
+El meta `rank_math_canonical_url` de un post conserva una URL de otra época: con un
+prefijo de idioma que ya no existe (`/es/...`) o apuntando a un artículo sin relación
+(casos reales: tres guías de bares canonizadas a un tutorial de elaboración). El crawler
+lo reporta como "canonicalizada", pero el efecto oculto es otro: **Rank Math excluye del
+sitemap todo post cuyo canonical apunta a otra URL**, así que esos posts desaparecen del
+sitemap sin que nadie lo note.
+
+Detección: consultar todos los posts con `rank_math_canonical_url` no vacío (suelen ser
+pocos) y comparar cada destino con el post. Corrección: si no hay una consolidación
+real, borrar el meta (vuelve el canonical a sí mismo y el post entra al sitemap); si la
+hay (artículos hermanos casi idénticos), conservarla y limpiar la URL de destino.
+
 ## Detección en Screaming Frog
 
 Columnas clave en la pestaña Internal:

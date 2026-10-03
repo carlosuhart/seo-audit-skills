@@ -433,6 +433,48 @@ Googlebot tiene acceso total de todas formas, estas reglas son redundantes.
 
 ---
 
+### Error 8: Grupos de bots que solo declaran `Crawl-delay`
+
+```
+User-agent: GPTBot
+Crawl-delay: 5
+```
+
+Un bot con grupo propio ignora por completo el grupo `*`. Ese bloque, pensado para
+"frenar" al bot, en realidad le quita todos los `Disallow` (wp-admin, búsquedas,
+feeds, tags). El comentario habitual "heredan las restricciones de arriba" es falso.
+Corrección: agrupar los bots con varias líneas `User-agent` y repetir en el grupo
+todas las reglas `Allow`/`Disallow` del grupo `*` (y su `Content-Signal`, si lo hay).
+
+### Error 9: Bloques de Content-Signal duplicados y contradictorios
+
+Plugins de "AI Content Signals" escriben en el robots.txt físico un bloque
+`# BEGIN AI Content Signals ... # END` con su propio `User-Agent: *`. Si el plugin se
+guardó dos veces con valores distintos y el archivo no tenía sus marcadores en el
+formato esperado, quedan dos bloques (`ai-train=yes` y `ai-train=no`). Dejar uno solo,
+el más reciente, conservando los marcadores para que el plugin lo reemplace en vez de
+volver a añadir. Si existe archivo físico, nada de lo que se configure en el robots
+virtual de WordPress/Rank Math se sirve.
+
+Al editar el archivo, comprobar los saltos de línea: es habitual que mezcle `\r\n`
+(bloques antiguos) y `\n` (bloques añadidos por plugins), lo que rompe búsquedas y
+reemplazos por expresión regular. Normalizar antes.
+
+### Error 10: `Disallow: /tag/` en un sitio multilingüe con prefijo de idioma
+
+`/tag/` no cubre `/en/tag/` ni `/pt-br/tag/`: la política de rastreo queda distinta
+por idioma. Añadir `Disallow: /*/tag/` (y lo mismo para cualquier ruta de taxonomía
+o feed que se quiera bloquear en todos los idiomas).
+
+### Error 11: robots.txt dice una cosa y el WAF hace otra
+
+`Allow: /feed$` en robots.txt con una regla WAF "anti-bot" heredada que contiene
+`uri.path contains "/feed/"`: lectores RSS y agregadores no verificados reciben 403.
+Al auditar robots.txt, revisar también las reglas WAF/CDN que afectan a las mismas
+rutas; el robots.txt solo declara intención.
+
+Ver `wordpress-hidden-errors` (patrones P5 y P6) para el procedimiento completo.
+
 ## Validación obligatoria contra el sitio real
 
 Toda propuesta de robots.txt debe verificarse contra el sitio real antes de publicar.

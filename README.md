@@ -2,7 +2,7 @@
 
 Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search
 
-A knowledge base of 38 skills for technical SEO audits with Claude Code.
+A knowledge base of 39 skills for technical SEO audits with Claude Code.
 Each skill encodes real-world patterns: documented CMS bugs, fix-ready code
 snippets, audit checklists, and edge cases that generic AI training data misses.
 
@@ -10,7 +10,7 @@ Covers the full audit stack — CMS mechanics, JS-framework sites, Core Web Vita
 schema markup, cache architecture, hreflang, third-party script management, and
 the tools SEOs actually use.
 
-- **CMS**: WordPress (Divi, Elementor, WooCommerce), PrestaShop, Shopify
+- **CMS**: WordPress (Divi, Elementor, WooCommerce, multilingual WPML forensics), PrestaShop, Shopify
 - **JS frameworks**: React/Next.js, Vue/Nuxt on Vercel/Netlify — no CMS, no plugin
 - **Analytics & tracking**: GA4, Google Tag Manager
 - **SEO tools**: Screaming Frog, SE Ranking, Semrush
@@ -60,6 +60,21 @@ Covers WordPress sites built with Elementor (free and Pro), including stacks wit
 - **PHP EOL** — 7.4 EOL since Nov 2022. Fix: update in hPanel/cPanel/Plesk
 - **Keyword cannibalization on location pages** — Elementor makes it easy to duplicate templates by city
 - Audit checklist by criticality + common positives + configuration paths
+
+---
+
+### CMS — WordPress Hidden Errors (multilingual forensics)
+
+**File:** `skills/wordpress-hidden-errors/SKILL.md` (+ `references/`, `scripts/`)
+
+Forensic audit of large WordPress sites, especially multilingual (WPML/Polylang + Rank Math + LiteSpeed + Cloudflare), for errors no crawler sees because they live in raw content, WPML tables or plugin settings. Built from a real 2,000+ document, 4-language audit where one pattern alone touched 1,300 posts.
+
+- **Method** — full per-language REST dump with `context=edit`, offline scan, DB writes through a temporary Code Snippets endpoint with md5 control that never moves `modified`, Cloudflare purge in batches
+- **Links** — retired language prefix (`/es/...`) everywhere (content, author field, footer, cookie plugin, redirect table), translations linking to the original when the translation exists, translation slugs invented from titles, `?p=` links to draft translations, self-links through redirects
+- **Content** — shortcodes of uninstalled plugins rendered raw (strip keeping paragraph breaks and removing the headings that only existed for the box), the same shortcode hidden inside Advanced Ads units, translations whose body stayed in the source language, AI chat UI markup pasted into posts, literal `
+` stored in content, invalid JSON-LD escapes, obfuscated scripts injected into `post_content`
+- **WPML / plugins** — published posts with no language (sitemap ghost URLs), untranslated homepage strings, WP External Links marking own links as external on translated pages, Rank Math attachment redirect pointing to a 404, inherited custom canonicals that silently drop posts from the sitemap, page-type default noindex hiding new tools, social plugins duplicating Open Graph, physical robots.txt with contradictory plugin blocks, WAF rules blocking feeds
+- **Scripts** — `wp_dump.py`, `wp_scan.py`, `wp_apply.py`, `strip_shortcode.py` (env-configured, no site data)
 
 ---
 

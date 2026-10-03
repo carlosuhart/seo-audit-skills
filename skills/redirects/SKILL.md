@@ -323,6 +323,36 @@ La rule intercepta cualquier petición www (http o https) y redirige directo al 
 
 **Riesgo de loop:** si el servidor tiene un redirect en dirección opuesta (non-www → www) y Cloudflare tiene www → non-www, se produce un loop. Antes de activar la rule, verificar la dirección del redirect de servidor con `curl -sI https://dominio.com/` y `curl -sI https://www.dominio.com/`.
 
+### Redirección de adjuntos a una URL obsoleta (Rank Math)
+
+`attachment_redirect_default` en las opciones generales de Rank Math define a dónde va
+una página de adjunto sin entrada padre. Si quedó apuntando a una portada antigua (por
+ejemplo `/es` tras retirar el prefijo de idioma), **todo adjunto huérfano redirige a un
+404**. Se manifiesta en URLs que parecen posts: un slug de traducción que coincide con el
+nombre de una imagen subida. Revisar este ajuste en cualquier migración de estructura
+de URLs y apuntarlo a la portada actual.
+
+### Autoenlace y prioridad de reglas en la tabla de redirecciones
+
+- Al reemplazar un enlace interno por el destino final de su redirección, comprobar que
+  ese destino no sea el propio post (la redirección vieja puede apuntar a él): quitar el
+  enlace en vez de crear un autoenlace.
+- En la tabla `rank_math_redirections`, si dos reglas casan con la misma ruta gana la más
+  antigua. Antes de crear una, buscar si ya existe otra para esa ruta.
+- La API REST de redirecciones de Rank Math no es fiable; tras escribir, verificar la
+  respuesta real (`x-redirect-by: Rank Math` y `location`).
+- Si una regla de caché de Cloudflare guarda las 301, una corrección no se ve hasta
+  purgar esa URL concreta.
+
+### Prefijo de idioma retirado en un sitio multilingüe
+
+Cuando el idioma por defecto pierde su prefijo (`/es/slug/` → `/slug/`), además de los
+enlaces del contenido quedan apuntando al prefijo: `url_to` de cientos de redirecciones
+existentes (que pasan a ser cadenas), el campo Website del autor, el footer del tema, la
+URL de la política de privacidad del plugin de cookies y las strings traducidas de WPML.
+Corregir todos y añadir una regla en el edge (`/es/*` → `/*`, 301 dinámica que conserva el
+query string) para los enlaces externos. Procedimiento en `wordpress-hidden-errors`.
+
 ### Soft 404 vs redirect
 
 Una URL que devuelve 200 con contenido de "página no encontrada" es un soft 404.

@@ -593,6 +593,22 @@ if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $json ) || empty( $jso
 }
 ```
 
+### Inline JSON-LD broken by escaping (content published via API)
+
+Two patterns found when content is created programmatically through the REST API:
+
+- **Literal `\n` stored in `post_content`.** The body was saved with escaped newlines (a
+  JSON string not decoded before publishing). The whole post renders as one block with
+  visible `\n\n`, and every inline JSON-LD block fails to parse. Count backslash-n in the
+  raw content; replace literal `\r\n`, `\n`, `\t` with real characters and re-validate.
+- **`\'` inside JSON strings.** `\'` is not a valid JSON escape (only `\"`, `\\`, `\/`,
+  `\b`, `\f`, `\n`, `\r`, `\t`, `\u`). Python-style escaping of apostrophes makes the
+  whole block invalid and Google ignores it silently. Replace with a plain `'`.
+
+When fixing either from a shell, write the script to a file and build the backslash
+with `chr(92)`: heredocs and `-c` strings silently eat backslashes and the replacement
+does nothing. Validate every inline block with a real JSON parser after the fix.
+
 ### Double-decoding of HTML entities in JSON-LD (Google change, 21 ago 2026)
 
 **Confirmado — cambio oficial de Google, anunciado el 21 de agosto de 2026**
