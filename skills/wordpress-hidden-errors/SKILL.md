@@ -167,6 +167,23 @@ opciones y consultas SQL de WPML y Rank Math en `references/wpml-rankmath-intern
 - **Verificar "estático" no basta para scripts.** LiteSpeed puede mover JS inline a un
   archivo combinado; confirmar en navegador real.
 
+- **md5 que nunca coincide.** Si un post tiene bytes en otra codificación (ISO-8859-1
+  en contenido antiguo), el `content.raw` de la REST no es idéntico a `post_content` y el
+  servidor rechaza la escritura por md5. Para esos posts, aplicar solo los fragmentos
+  cambiados (por ejemplo el `href="..."` exacto) con un endpoint que exija que cada
+  fragmento exista en la base de datos, y verificar después por la REST.
+- **WAF que exige cabeceras de navegador en escrituras.** `wp_common.api_client()` ya
+  envía `Origin` y `Referer` de wp-admin; si aún hay 403/503 en Code Snippets, revisar
+  eventos del firewall.
+
+- **Un enlace con `#` al mismo post no es un autoenlace.** Los índices (`[toc]` y similares)
+  enlazan a `post/#seccion`; al normalizar la URL quitando el fragmento parecen autoenlaces.
+  Excluir siempre los `href` con `#` antes de quitar autoenlaces, y comparar el número de
+  anclas antes y después de cada lote.
+- **Cortes de conexión en hosting compartido.** `wp_apply.py collect` es reanudable y
+  reintenta con espera creciente; ante un `ReadError`, comprobar que el sitio responde y
+  relanzar con `--pause` mayor, nunca en paralelo.
+
 ## Entregable
 
 Informe interno con hallazgos por severidad, IDs afectados (JSON aparte), causa raíz y

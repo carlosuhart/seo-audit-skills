@@ -34,7 +34,10 @@ def public_client() -> httpx.Client:
 
 
 def api_client() -> httpx.Client:
-    return httpx.Client(http2=True, headers={'User-Agent': UA, 'Authorization': _auth()}, timeout=180)
+    # Origin/Referer de wp-admin: algunos WAF bloquean (503/403) las escrituras REST sin ellos.
+    return httpx.Client(http2=True, timeout=180, headers={
+        'User-Agent': UA, 'Authorization': _auth(), 'Accept': 'application/json',
+        'Origin': SITE, 'Referer': SITE + '/wp-admin/'})
 
 
 APPLY_PHP = r'''

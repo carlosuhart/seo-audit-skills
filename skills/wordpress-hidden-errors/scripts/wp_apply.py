@@ -25,21 +25,34 @@ def md5(s: str) -> str:
     return hashlib.md5(s.encode('utf-8')).hexdigest()
 
 
-def collect(d: str, ids: list[int]) -> None:
+def collect(d: str, ids: list[int], pause: float = 1.0) -> None:
+    """Respalda content.raw de cada ID. Reanudable (salta lo ya respaldado) y con reintentos ante cortes."""
+    import httpx
     api = api_client()
     os.makedirs(f'{d}/backup', exist_ok=True)
-    items = {}
-    for i in ids:
-        time.sleep(1)
-        r = api.get(f'{SITE}/wp-json/wp/v2/posts/{i}', params={'context': 'edit', '_fields': 'id,link,content'})
-        if r.status_code != 200:
-            r = api.get(f'{SITE}/wp-json/wp/v2/pages/{i}', params={'context': 'edit', '_fields': 'id,link,content'})
-        if r.status_code != 200:
-            print('no encontrado', i); continue
+    items_f = f'{d}/items.json'
+    items = json.load(open(items_f, encoding='utf-8')) if os.path.exists(items_f) else {}
+    for n_, i in enumerate(ids, 1):
+        if str(i) in items:
+            continue
+        r = None
+        for attempt in range(5):
+            time.sleep(pause * (1 if attempt == 0 else 4 ** attempt))
+            try:
+                r = api.get(f'{SITE}/wp-json/wp/v2/posts/{i}', params={'context': 'edit', '_fields': 'id,link,content'})
+                if r.status_code != 200:
+                    r = api.get(f'{SITE}/wp-json/wp/v2/pages/{i}', params={'context': 'edit', '_fields': 'id,link,content'})
+                break
+            except httpx.HTTPError as e:
+                print('reintento', i, type(e).__name__, flush=True); api = api_client()
+        if r is None or r.status_code != 200:
+            print('no encontrado', i, flush=True); continue
         raw = r.json()['content']['raw']
         items[str(i)] = {'link': r.json()['link'], 'md5': md5(raw)}
         open(f'{d}/backup/{i}.html', 'w', encoding='utf-8', newline='').write(raw)
-    json.dump(items, open(f'{d}/items.json', 'w', encoding='utf-8'), indent=1)
+        if n_ % 25 == 0:
+            json.dump(items, open(items_f, 'w', encoding='utf-8'), indent=1); print(n_, '/', len(ids), flush=True)
+    json.dump(items, open(items_f, 'w', encoding='utf-8'), indent=1)
     print('respaldados', len(items))
 
 
@@ -84,9 +97,10 @@ def main() -> None:
     ap.add_argument('dir')
     ap.add_argument('--ids', default='')
     ap.add_argument('--batch', type=int, default=10)
+    ap.add_argument('--pause', type=float, default=1.0)
     a = ap.parse_args()
     if a.cmd == 'collect':
-        collect(a.dir, [int(x) for x in a.ids.split(',') if x])
+        collect(a.dir, [int(x) for x in a.ids.split(',') if x], a.pause)
     elif a.cmd == 'plan':
         todo, _ = build(a.dir)
         print('posts que cambian', len(todo), [t['id'] for t in todo][:50])

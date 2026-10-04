@@ -142,11 +142,16 @@ URL contratada; es decisión del negocio, no corrección técnica.
 `<article data-turn-id="..." data-testid="conversation-turn-4">`, decenas de clases de
 Tailwind, `data-message-author-role`, `data-writing-block`.
 
-**Detección:** regex sobre esas marcas.
+**Detección:** regex sobre esas marcas. Variante más discreta: atributos `data-start` y
+`data-end` (y clases `whitespace-pre-wrap break-words`) sueltos en `<p>` y `<li>`, sin
+contenedor `<article>`; también es texto copiado de un chat. Variante antigua (2023):
+contenedores `<div class="... agent-turn">`, `flex flex-grow flex-col`, `flex-col gap-1`
+y `markdown prose`. Al desenvolverlos, colapsar siempre los saltos triples resultantes.
 
 **Corrección:** desenvolver solo los contenedores marcados (`article`, `div`, `section`,
 `span`) junto con su cierre emparejado; en las etiquetas con significado (`p`, `h2`,
-`em`) borrar solo los atributos. Trabajar sobre el texto exacto (sin reserializar con un
+`em`, `li`, `ol`, `ul`, `b`, `i`) borrar solo los atributos. Si al quitar contenedores
+quedan tres o más saltos seguidos, colapsarlos a uno de párrafo. Trabajar sobre el texto exacto (sin reserializar con un
 parser HTML) y exigir que el texto visible sea idéntico antes y después.
 
 ### C5. Saltos de línea escapados
@@ -178,6 +183,53 @@ Descartar los propios (widgets del sitio) por contexto.
 **Corrección:** eliminar el `<script>` completo; avisar como hallazgo de seguridad
 (revisar cómo entró: cuenta comprometida, plugin, copia de contenido) y buscar el mismo
 patrón en opciones y widgets.
+
+### C8. Páginas de un plugin desinstalado (membresías, tiendas, formularios)
+
+Se desinstala un plugin que creaba sus propias páginas (Paid Memberships Pro: pago,
+niveles, login) y las páginas siguen publicadas, indexables y en el sitemap, mostrando
+sus shortcodes en crudo (`[pmpro_checkout]`). Detección: shortcodes no registrados en
+páginas (no solo en posts). Corrección: borrador + 301 a la portada o a la página que
+sustituya la función.
+
+### L6. Slug cambiado sin redirección
+
+Al optimizar un post se cambió su slug y no se creó la 301: la URL antigua (la que
+tenía enlaces externos y posición en Google) da 404. Aparece como enlace interno roto
+cuyo destino correcto es un post existente con slug casi igual. Corrección: 301 de la URL
+antigua a la nueva y reemplazo de los enlaces internos. Revisar en GSC si hay más URLs que
+daban clics y hoy responden 404.
+
+### C9. Receta recreada en el idioma destino (duplicado por un proceso de traducción)
+
+El pipeline que traduce del sitio A al sitio B no detecta que la receta ya existía en B
+con otro slug y crea una segunda versión. Quedan dos URLs en B que canibalizan, y el
+hreflang de A apunta a una mientras otra parte del contenido enlaza a la otra (pares no
+recíprocos). Detección: títulos duplicados o casi duplicados en B y la comprobación de
+reciprocidad del hreflang entre los dos volcados. Corrección: no aplicar a ciegas "gana la
+de más clics"; pesar clics y, además, cuántos enlaces internos y del otro sitio apuntan a
+cada una y cuál tiene el contenido más completo. Si la vieja tiene clics marginales,
+quedarse con la nueva (301 vieja → nueva); si la vieja tiene tráfico real, al revés y
+actualizar los enlaces.
+
+### P8. Caché de CDN envenenada con la página antibot del hosting
+
+Una regla de caché de HTML con TTL forzado (`edge_ttl: override_origin`) ignora el
+`Cache-Control: private, no-store` de la página de comprobación de Imunify360/similar
+(`One moment, please...`, `请稍候…`, recarga cada 5 s) y la sirve como si fuera la
+página real, a visitantes y a Googlebot, durante todo el TTL. Detección: pedir la portada
+y URLs clave con varios UA; un `<title>` de espera, sin canonical ni H1, con
+`cf-cache-status: HIT` y `age` alto. Corrección inmediata: purgar esa URL. Corrección de
+raíz: `edge_ttl: respect_origin`; si el origen no manda `Cache-Control` en el HTML normal,
+Cloudflare lo sigue cacheando (verificar MISS→HIT), y deja de congelar lo marcado no-store.
+
+### H4. Hreflang entre dos dominios armado con "el primer enlace"
+
+Un snippet que genera el hreflang tomando el primer enlace al otro dominio que aparezca en
+el contenido es frágil: si el cuerpo enlaza antes a otro artículo del otro sitio, el par
+queda mal. Además, una URL fija con `www` en la portada apunta a una redirección si el
+otro dominio es sin www. Verificar reciprocidad cruzando los dos volcados (para cada post
+de A, el primer enlace a B debe existir en B y su primer enlace a A debe volver al post).
 
 ---
 

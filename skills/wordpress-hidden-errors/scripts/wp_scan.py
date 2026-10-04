@@ -22,7 +22,7 @@ STOP = {
     'pt-br': {'não', 'uma', 'dos', 'das', 'com', 'também', 'mais', 'você', 'pela', 'pelo'},
     'fr': {'les', 'des', 'est', 'une', 'dans', 'pour', 'avec', 'qui', 'sont', 'aux'},
 }
-AI_MARK = re.compile(r'data-(?:turn-id|message-author-role|writing-block|free-thinking|testid="conversation)|text-token-text|markdown prose')
+AI_MARK = re.compile(r'data-(?:turn-id|message-author-role|writing-block|free-thinking|testid="conversation|start="\d+" data-end)|text-token-text|markdown prose|agent-turn|flex flex-grow flex-col')
 OBFUSC = re.compile(r'createElement|appendChild|eval\(|atob\(|fromCharCode|document\.write')
 HREF = re.compile(r'''\bhref\s*=\s*["']([^"']+)["']''', re.I)
 
