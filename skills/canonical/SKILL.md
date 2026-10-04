@@ -1,10 +1,10 @@
 ---
 name: canonical
 description: >
-  Auditoría e implementación de canonical tags. Cubre self-referencing, paginación,
-  parámetros URL, conflictos con hreflang, bugs por CMS (Yoast, Rank Math, WooCommerce,
-  PrestaShop, Elementor), JavaScript rendering, canonical chains y casos donde
-  canonical es la causa raíz de problemas de indexación o canibalización.
+  Auditoría e implementación de canonical: self-referencing, paginación, parámetros,
+  conflictos con hreflang, cadenas, canonicals heredados y bugs por CMS (Yoast, Rank
+  Math, WooCommerce, PrestaShop), incluido el canonical como causa de problemas de
+  indexación o canibalización.
 user-invokable: false
 ---
 

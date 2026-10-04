@@ -1,11 +1,9 @@
 ---
 name: nfadp
 description: >
-  Audita un sitio web frente a la nueva Ley Federal de Protección de Datos
-  Personales de Suiza (nFADP / revDSG — en vigor desde el 1 de septiembre de 2023).
-  Detecta el sector automáticamente. Produce informe de cumplimiento con score,
-  tabla de estado por artículo e issues priorizados con cuantificación de sanciones en CHF.
-  Sub-skill del orquestador /privacidad — también invocable directamente.
+  Auditoría nFADP/revDSG (Suiza, vigente desde el 1/9/2023): detecta el sector y entrega
+  informe con score, estado por artículo, issues priorizados y sanciones en CHF.
+  Sub-skill de /privacidad, también invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

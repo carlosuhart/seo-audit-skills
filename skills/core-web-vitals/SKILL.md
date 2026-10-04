@@ -1,11 +1,9 @@
 ---
 name: core-web-vitals
 description: >
-  Core Web Vitals diagnosis and optimization: LCP, CLS, INP, and TTFB.
-  Covers field data vs lab data, CrUX interpretation, diagnostic tree per metric,
-  and CMS-specific fixes for WordPress (Divi, Elementor, WP Rocket), PrestaShop,
-  and Shopify. Use when analyzing CWV scores, diagnosing performance issues, or
-  implementing optimizations to improve LCP, CLS, or INP.
+  Core Web Vitals diagnosis and fixes (LCP, CLS, INP, TTFB): field vs lab data, CrUX, a
+  diagnostic tree per metric and fixes for WordPress (Divi, Elementor, WP Rocket),
+  PrestaShop and Shopify. Use for CWV scores or performance issues.
 ---
 
 # Core Web Vitals — Technical SEO

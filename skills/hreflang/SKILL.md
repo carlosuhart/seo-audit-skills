@@ -1,11 +1,9 @@
 ---
 name: hreflang
 description: >
-  Implementación y auditoría de hreflang para sitios multilingües o multirregionales
-  en WordPress. Cubre WPML, TranslatePress, Yoast SEO, implementación manual con HFCM,
-  reciprocidad, x-default, errores comunes y validación. Usar cuando el sitio tenga
-  versiones en varios idiomas o regiones, o cuando se detecten issues de hreflang
-  en GSC o herramientas de auditoría.
+  Implementación y auditoría de hreflang en WordPress multilingüe o multirregional:
+  WPML, TranslatePress, Yoast, HFCM, reciprocidad, x-default y errores comunes. Usar
+  cuando el sitio tiene varios idiomas o regiones o hay issues de hreflang en GSC.
 user-invokable: false
 ---
 

@@ -1,17 +1,11 @@
 ---
 name: wordpress-hidden-errors
 description: >
-  Auditoría forense de errores ocultos en WordPress grande y multilingüe (WPML o
-  Polylang, Rank Math, LiteSpeed, Cloudflare): los que no ve Screaming Frog ni GSC
-  porque viven en la base de datos, el contenido crudo o la configuración de plugins.
-  Volcado por idioma vía REST, escaneo offline (prefijos de idioma retirados, enlaces
-  cruzados de idioma, slugs de traducción inventados, ?p= a borradores, traducciones
-  con el cuerpo en otro idioma, posts sin idioma, shortcodes de plugins desinstalados,
-  residuos de chat de IA, scripts inyectados, JSON-LD roto) y corrección con control
-  md5 sin mover la fecha de modificación. Use when user says "errores ocultos",
-  "auditoría profunda WordPress", "qué más está roto", "limpieza masiva de contenido",
-  "WPML", "shortcodes en crudo" o "URLs fantasma en el sitemap". No usar para una
-  sola URL (seo-page) ni para CWV.
+  Auditoría forense de errores ocultos en WordPress grande (WPML/Polylang, Rank Math,
+  LiteSpeed, Cloudflare): enlaces rotos o cruzados de idioma, shortcodes huérfanos,
+  residuos de IA, scripts inyectados, duplicados y caché envenenada, con corrección
+  controlada por md5. Usar con "errores ocultos", "auditoría profunda WordPress" o "qué
+  más está roto". No para una sola URL ni para CWV.
 user-invokable: true
 ---
 

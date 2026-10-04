@@ -1,10 +1,9 @@
 ---
 name: ley-25326
 description: >
-  Audita un sitio web frente a la Ley 25.326 de Protección de Datos Personales
-  (Argentina). Detecta el sector automáticamente. Produce informe de cumplimiento
-  con score, tabla de estado por artículo e issues priorizados con cuantificación
-  de sanciones. Sub-skill del orquestador /privacidad — también invocable directamente.
+  Auditoría Ley 25.326 (Argentina): detecta el sector y entrega informe con score,
+  estado por artículo, issues priorizados y sanciones. Sub-skill de /privacidad, también
+  invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

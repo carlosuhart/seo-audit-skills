@@ -1,11 +1,8 @@
 ---
 name: wordpress-divi
 description: >
-  Conocimiento especializado sobre WordPress + Divi para auditorías SEO.
-  Issues recurrentes, soluciones y checklist de verificación específicos para
-  sitios construidos con Divi Theme de Elegant Themes. Usar cuando el sitio
-  auditado corra WordPress + Divi o cuando el usuario mencione "Divi", "Elegant
-  Themes", "Divi Builder" o "Divi Theme".
+  WordPress + Divi en auditorías SEO: issues recurrentes, soluciones y checklist. Usar
+  cuando el sitio corre Divi o se menciona "Divi", "Elegant Themes" o "Divi Builder".
 ---
 
 # WordPress + Divi — Guía SEO Técnica

@@ -1,12 +1,10 @@
 ---
 name: geo-ai-discoverability
 description: >
-  GEO (Generative Engine Optimization): optimize content and site signals so that
-  AI tools (Google AI Overviews, Google AI Mode, ChatGPT, Perplexity, Bing Copilot)
-  cite, reference, and surface the site. Covers llms.txt, AI crawler access, Wikidata
-  entity hygiene, passage-level citability, brand mention signals, and platform-specific
-  patterns including AI Mode vs AI Overviews distinction. Use when auditing AI visibility,
-  implementing llms.txt, or analyzing why a site is not cited by AI assistants.
+  Implementa las señales de entidad y contenido para que los buscadores con IA citen el
+  sitio: Wikidata, NewsMediaOrganization, Wikipedia, llms.txt, RSL 1.0, E-E-A-T, pasajes
+  citables, Knowledge Panel, Preferred Sources e IndexNow. Para auditar un dominio
+  completo usar seo-geo; para un post, blog-geo.
 ---
 
 # GEO — Generative Engine Optimization

@@ -1,10 +1,8 @@
 ---
 name: google-tag-manager
 description: >
-  Diagnóstico y configuración de Google Tag Manager. Casos de uso principales:
-  evento GTM que no llega a GA4, dataLayer debugging, Consent Mode v2, firing order,
-  Preview vs Production discrepancies. Aplica a todos los proyectos SEO donde se
-  detecte GTM instalado.
+  Diagnóstico y configuración de Google Tag Manager: eventos que no llegan a GA4,
+  dataLayer, Consent Mode v2, orden de disparo y diferencias entre Preview y Producción.
 user-invokable: false
 ---
 

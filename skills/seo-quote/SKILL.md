@@ -1,10 +1,9 @@
 ---
 name: seo-quote
 description: >
-  Genera un informe de auditoría SEO en formato .docx para cotizaciones y propuestas comerciales.
-  Recopila datos mínimos del sitio (volumen, stack, issues críticos), calcula horas de trabajo
-  y genera un presupuesto en USD. Output: documento entregable al cliente.
-  Invocar cuando el usuario pida "cotización SEO", "presupuesto SEO", "propuesta SEO", "informe de auditoría para cliente" o "/seo-quote".
+  Genera un informe .docx de auditoría con cotización en USD para propuestas
+  comerciales: datos mínimos del sitio, horas estimadas y presupuesto. Usar con
+  "cotización SEO", "presupuesto SEO" o "/seo-quote".
 user-invokable: true
 argument-hint: "<url> [--rate <usd/h>] [--lang es|en]"
 ---

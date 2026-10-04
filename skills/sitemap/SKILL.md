@@ -1,10 +1,9 @@
 ---
 name: sitemap
 description: >
-  Technical audit knowledge for XML sitemaps: discovery, structural checks,
-  URL quality validation, lastmod integrity, CMS-specific patterns, and sampling.
-  Use when evaluating, diagnosing, or fixing a sitemap — including sitemap index
-  structures, sub-sitemap issues, and robots.txt conflicts.
+  XML sitemap audits: discovery, structure, URL quality, lastmod integrity, CMS patterns
+  and sampling, including sitemap indexes and robots.txt conflicts. Use when evaluating
+  or fixing a sitemap.
 ---
 
 # XML Sitemap — Technical SEO Audit

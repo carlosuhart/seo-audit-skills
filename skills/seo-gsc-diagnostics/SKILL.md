@@ -1,6 +1,10 @@
 ---
 name: seo-gsc-diagnostics
-description: Diagnóstico avanzado sobre datos reales de Google Search Console — detecta quick wins (impresiones altas, CTR bajo, posición cerca de página 1), canibalización de queries (misma query, dos o más páginas compitiendo) y anomalías (días fuera de patrón en clics/impresiones). Usa este skill cuando el usuario pida "quick wins GSC", "canibalización de queries", "qué queries se pelean entre páginas", "anomalías en Search Console", "días raros de tráfico", o cualquier auditoría diagnóstica sobre datos de GSC que no sea clasificación de contenido (eso es mineria-de-impresiones) ni comparación de períodos por caída (eso es seo-gsc-drops).
+description: >
+  Diagnóstico sobre datos reales de GSC: quick wins, canibalización de queries y
+  anomalías de clics o impresiones. Usar con "quick wins GSC", "canibalización de
+  queries" o "anomalías en Search Console". Para contenido usar mineria-de-impresiones;
+  para caídas, seo-gsc-drops.
 allowed-tools:
   - Read
   - Bash

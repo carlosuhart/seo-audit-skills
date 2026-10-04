@@ -1,13 +1,9 @@
 ---
 name: ccpa
 description: >
-  Audita un sitio web frente a la California Consumer Privacy Act (CCPA, 2018)
-  modificada por la California Privacy Rights Act (CPRA, 2020, en vigor desde
-  1 enero 2023). Detecta si el sitio cumple los umbrales de aplicación, evalúa
-  los 8 derechos del consumidor, los requisitos de opt-out y los acuerdos con
-  proveedores de servicios. Produce informe de cumplimiento con score e issues
-  priorizados con cuantificación de sanciones en USD.
-  Sub-skill del orquestador /privacidad — también invocable directamente.
+  Auditoría CCPA/CPRA (California): umbrales de aplicación, 8 derechos del consumidor,
+  opt-out y contratos con proveedores, con informe de score y sanciones en USD.
+  Sub-skill de /privacidad, también invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

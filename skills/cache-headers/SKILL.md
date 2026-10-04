@@ -1,11 +1,9 @@
 ---
 name: cache-headers
 description: >
-  Cache architecture for SEO: Cache-Control directives, CDN vs browser cache,
-  ETag and Last-Modified, caching strategies by content type, and CMS-specific
-  configuration for WordPress (WP Rocket, LiteSpeed), PrestaShop, and Nginx/Apache.
-  Use when diagnosing TTFB issues, configuring caching layers, or auditing
-  cache-related headers in HTTP responses.
+  Cache architecture for SEO: Cache-Control, CDN vs browser cache, ETag and
+  Last-Modified, and CMS setups (WP Rocket, LiteSpeed, PrestaShop, Nginx/Apache). Use
+  for TTFB issues, caching layers or cache header audits.
 ---
 
 # Cache Headers & Caching Strategy — Technical SEO

@@ -1,11 +1,9 @@
 ---
 name: image-optimization
 description: >
-  Image optimization for SEO and Core Web Vitals: format selection (WebP, AVIF),
-  responsive images (srcset, sizes), lazy loading strategy, LCP image handling
-  (fetchpriority, preload), compression targets, and CMS-specific implementation
-  for WordPress and PrestaShop. Use when auditing images for LCP, CLS, bandwidth,
-  or accessibility issues.
+  Image SEO and Core Web Vitals: WebP and AVIF, srcset and sizes, lazy loading, the LCP
+  image (fetchpriority, preload), compression and WordPress or PrestaShop
+  implementation. Use when auditing images for LCP, CLS, weight or accessibility.
 ---
 
 # Image Optimization — SEO & Core Web Vitals

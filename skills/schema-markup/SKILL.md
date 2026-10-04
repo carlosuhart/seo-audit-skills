@@ -1,11 +1,9 @@
 ---
 name: schema-markup
 description: >
-  Schema.org structured data (JSON-LD) for SEO: type selection, implementation
-  by CMS (WordPress/Yoast/Rank Math, WooCommerce, PrestaShop), documented bugs,
-  validation workflow, E-E-A-T signals, and rich result eligibility. Use when
-  auditing schema markup, implementing structured data, or diagnosing rich result
-  issues in Google Search Console.
+  Schema.org JSON-LD for SEO: type selection, CMS implementation (Yoast, Rank Math,
+  WooCommerce, PrestaShop), documented bugs, validation and rich result eligibility. Use
+  when auditing or implementing structured data or diagnosing rich results in GSC.
 ---
 
 # Schema Markup (JSON-LD) — Technical SEO

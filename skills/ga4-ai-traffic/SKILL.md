@@ -1,6 +1,10 @@
 ---
 name: ga4-ai-traffic
-description: Mide tráfico referido desde plataformas de AI Search (ChatGPT, Perplexity, Gemini, Copilot, Claude, Grok, Meta AI) usando datos reales de GA4. Usa este skill cuando el usuario pida "tráfico desde ChatGPT", "cuánto tráfico llega de IA", "AI referral traffic", "visitas desde Perplexity/Copilot/Gemini", "cómo va creciendo el tráfico de AI search", o cualquier medición de sesiones/usuarios que lleguen desde un asistente de IA. No confundir con geo-platform-audit (eso mide cómo te describe cada plataforma, no cuánto tráfico real envía) ni con seo-geo (auditoría de citabilidad, no de tráfico).
+description: >
+  Tráfico real referido desde AI Search (ChatGPT, Perplexity, Gemini, Copilot, Claude,
+  Grok, Meta AI) con datos de GA4. Usar con "tráfico desde ChatGPT", "AI referral
+  traffic" o "visitas desde IA". No confundir con geo-platform-audit (percepción de
+  marca) ni con seo-geo (citabilidad).
 allowed-tools:
   - Read
   - Bash

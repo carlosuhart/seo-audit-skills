@@ -1,11 +1,9 @@
 ---
 name: lfpdppp
 description: >
-  Audita un sitio web frente a la Ley Federal de Protección de Datos Personales
-  en Posesión de los Particulares (LFPDPPP — México, 2010) y su Reglamento.
-  Detecta el sector automáticamente. Produce informe de cumplimiento con score,
-  tabla de estado por artículo e issues priorizados con cuantificación de sanciones.
-  Sub-skill del orquestador /privacidad — también invocable directamente.
+  Auditoría LFPDPPP y su Reglamento (México): detecta el sector y entrega informe con
+  score, estado por artículo, issues priorizados y sanciones. Sub-skill de /privacidad,
+  también invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

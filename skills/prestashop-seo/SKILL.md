@@ -1,11 +1,9 @@
 ---
 name: prestashop-seo
 description: >
-  Conocimiento especializado sobre PrestaShop para auditorías SEO.
-  Issues recurrentes, configuraciones del backoffice, estructura de URLs,
-  sitemap y performance específicos de PrestaShop. Usar cuando el sitio
-  auditado corra PrestaShop o cuando el usuario mencione "PrestaShop",
-  "controlador", "CCC" o "1_index_sitemap".
+  SEO en PrestaShop: issues recurrentes, backoffice, estructura de URLs, sitemap y
+  performance. Usar cuando el sitio corre PrestaShop o se menciona "controlador", "CCC"
+  o "1_index_sitemap".
 ---
 
 # PrestaShop — Guía SEO Técnica

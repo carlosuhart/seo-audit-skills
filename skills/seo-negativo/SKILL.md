@@ -1,6 +1,9 @@
 ---
 name: seo-negativo
-description: Monitoreo continuo de SEO negativo y protocolo de respuesta ante ataques — link bombing, scraping de contenido, penalizaciones manuales, reseñas falsas y ataques de reputación durante migraciones de dominio o rebrandings. Genera disavow.txt. Usar cuando el usuario mencione "SEO negativo", "ataque de backlinks", "link bombing", "scraping de contenido", "penalización manual", "reseñas falsas", "caída sospechosa de rankings", "monitoreo de reputación", "protocolo de rebranding SEO" o pida generar un archivo disavow.
+description: >
+  Monitoreo y respuesta ante SEO negativo: link bombing, scraping, penalizaciones
+  manuales, reseñas falsas y ataques durante migraciones o rebrandings, con generación
+  de disavow.txt. Usar con "SEO negativo", "ataque de backlinks" o "disavow".
 metadata:
   type: skill
 ---

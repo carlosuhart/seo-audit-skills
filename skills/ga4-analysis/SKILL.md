@@ -1,11 +1,9 @@
 ---
 name: ga4-analysis
 description: >
-  Análisis de GA4: orgánico vs pagado, attribution models, channel groupings,
-  DebugView, informes de adquisición, métricas de engagement, comparativa de
-  períodos. Cubre también integración con GSC y Google Ads. Aplica cuando se
-  pide interpretar datos de tráfico, analizar caídas, o cruzar fuentes de
-  adquisición.
+  Análisis de GA4: orgánico frente a pagado, atribución, channel groupings, DebugView,
+  adquisición, engagement y comparación de períodos, con cruce con GSC y Google Ads.
+  Usar al interpretar tráfico, caídas o fuentes de adquisición.
 user-invokable: false
 ---
 

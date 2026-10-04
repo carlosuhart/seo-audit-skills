@@ -1,10 +1,9 @@
 ---
 name: ssl-https
 description: >
-  HTTPS implementation and SSL/TLS auditing: certificate types, mixed content
-  detection and fixing, HTTPS redirect chains, HSTS configuration, and
-  security headers. Use when a site has mixed content warnings, HTTP URLs,
-  certificate issues, or when migrating from HTTP to HTTPS.
+  HTTPS and SSL/TLS audits: certificates, mixed content, HTTPS redirect chains, HSTS and
+  security headers. Use for mixed content, HTTP URLs, certificate issues or HTTP to
+  HTTPS migrations.
 ---
 
 # SSL/HTTPS — Technical SEO

@@ -1,10 +1,9 @@
 ---
 name: redirects
 description: >
-  Auditoría e implementación de redirects 301/302 para SEO. Cubre cadenas y loops,
-  migración de URLs, implementación en WordPress (plugins, .htaccess, Nginx),
-  PrestaShop, detección con Screaming Frog, transmisión de PageRank, redirects
-  temporales mal usados y checklist de migración completa.
+  Auditoría e implementación de redirects 301/302: cadenas, bucles, migraciones,
+  WordPress (plugins, .htaccess, Nginx), PrestaShop, Rank Math y Cloudflare, con
+  detección en Screaming Frog.
 user-invokable: false
 ---
 

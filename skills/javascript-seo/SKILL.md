@@ -1,12 +1,10 @@
 ---
 name: javascript-seo
 description: >
-  Auditoría técnica de sitios renderizados con frameworks JavaScript (React/Next.js,
-  Vue/Nuxt y equivalentes, desplegados en Vercel/Netlify u hosting similar sin CMS
-  tradicional). Cubre hidratación incompleta, contenido gateado por interacción de UI
-  invisible a cualquier crawler, soft-404 sistémico por rutas catch-all, y la
-  implementación de canonical/hreflang/cabeceras cuando no existe un plugin SEO que
-  las genere — todo el trabajo recae en configuración de framework y componentes.
+  Auditoría técnica de sitios con frameworks JavaScript sin CMS (React/Next.js, Vue/Nuxt
+  en Vercel o Netlify): hidratación incompleta, contenido oculto tras una interacción,
+  soft-404 por rutas catch-all y canonical, hreflang y cabeceras configurados en el
+  framework.
 user-invokable: false
 ---
 

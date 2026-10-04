@@ -1,10 +1,8 @@
 ---
 name: semrush
 description: >
-  Uso e interpretación de Semrush en auditorías SEO: Organic Research,
-  Keyword Gap, Backlink Gap, Site Audit, Traffic Analytics, Position Tracking.
-  Cómo cruzar con SE Ranking, Screaming Frog y GSC. Precisión de datos
-  y cuándo confiar en cada fuente.
+  Semrush en auditorías: Organic Research, Keyword y Backlink Gap, Site Audit, Traffic
+  Analytics y Position Tracking, con cruce con otras fuentes y fiabilidad de cada dato.
 user-invokable: false
 ---
 

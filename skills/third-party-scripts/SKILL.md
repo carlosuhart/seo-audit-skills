@@ -1,11 +1,10 @@
 ---
 name: third-party-scripts
 description: >
-  Third-party script management for SEO and Core Web Vitals: script loading
-  strategies (async, defer, preload, module), CWV impact by vendor category,
-  GTM-based deferral, auditing the third-party footprint, and eliminating
-  unused scripts. Use when diagnosing INP, TBT, or LCP issues caused by
-  third-party JavaScript, or when reviewing a site's script inventory.
+  Third-party scripts and Core Web Vitals: loading strategies (async, defer, module),
+  impact by vendor, GTM deferral, footprint audits, removing unused scripts and spotting
+  scripts injected into post content. Use for INP, TBT or LCP caused by third-party
+  JavaScript.
 ---
 
 # Third-Party Scripts — Performance & SEO

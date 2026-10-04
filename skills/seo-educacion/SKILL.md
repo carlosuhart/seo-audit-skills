@@ -1,6 +1,10 @@
 ---
 name: seo-educacion
-description: SEO especializado para instituciones de educación superior — universidades privadas, institutos y centros de formación. Cubre enrollment funnel completo, estacionalidad por ciclo académico (Perú/Chile), arquitectura de contenidos por programa, schema Course + EducationalOrganization + LocalBusiness multi-sede, keyword research por tier, calendario editorial y GEO/AEO para captación de leads. Usar cuando el usuario mencione "SEO para universidad", "SEO educación superior", "enrollment funnel", "captación de postulantes", "schema Course", "SEO instituto" o "SEO centro de formación".
+description: >
+  SEO para educación superior (universidades, institutos, centros de formación): funnel
+  de matrícula, estacionalidad en Perú y Chile, schema Course y EducationalOrganization
+  multi-sede, keywords por tier y GEO. Usar con "SEO para universidad", "captación de
+  postulantes" o "schema Course".
 metadata:
   type: skill
 ---

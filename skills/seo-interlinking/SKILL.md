@@ -1,21 +1,11 @@
 ---
 name: seo-interlinking
 description: >
-  Audits internal-linking health on an existing website using Screaming Frog exports
-  and optional Google Search Console data. Detects orphan pages (indexable pages with
-  0-1 internal inlinks), pages buried too deep in click-depth from the homepage,
-  internal anchor-text over-optimization, and hub pages that could donate link equity
-  to weak pages. Cross-references findings with GSC clicks/impressions to prioritize
-  by real impact, then produces a ranked recommendations report (add link from X to Y,
-  suggested anchor) -- always reading the target project's own interlinking house
-  rules from memory first before suggesting a format. Diagnosis and recommendations
-  only: never edits posts, never inserts links, never touches WordPress.
-  Use when the user says "auditoría de interlinking", "salud de enlaces internos",
-  "páginas huérfanas", "profundidad de clic", "link equity", "internal linking audit",
-  "orphan pages", "click depth audit", or asks to find pages with no internal links
-  or redistribute internal link authority on an existing site.
-  Not for planning a new site's architecture or a new content cluster -- see
-  site-architecture or seo-cluster for that.
+  Audits internal linking on an existing site with Screaming Frog exports and GSC:
+  orphan pages, click depth, over-optimized anchors and hub pages, with ranked link
+  recommendations. Diagnosis only, it never edits WordPress. Use for "páginas
+  huérfanas", "auditoría de interlinking" or "orphan pages". Not for planning new sites
+  (site-architecture, seo-cluster).
 argument-hint: "<all-inlinks.csv> <internal-overview.csv> --home <url> [--gsc <gsc.csv>]"
 metadata:
   category: seo

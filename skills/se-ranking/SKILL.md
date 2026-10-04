@@ -1,10 +1,8 @@
 ---
 name: se-ranking
 description: >
-  Interpretación de datos de SE Ranking en auditorías SEO: rank tracking,
-  histórico de posiciones, Site Audit, keyword research, competitor gap,
-  estimaciones de tráfico. Cómo cruzar con Screaming Frog, Semrush y GSC.
-  Señales a priorizar y falsos positivos conocidos.
+  Interpretación de SE Ranking: rank tracking, Site Audit, keyword research, competitor
+  gap y tráfico estimado, con cruce con Screaming Frog, Semrush y GSC.
 user-invokable: false
 ---
 

@@ -1,10 +1,9 @@
 ---
 name: screaming-frog
 description: >
-  Uso e interpretación de Screaming Frog SEO Spider en auditorías técnicas.
-  Modos de crawl (Spider vs JS Rendering), configuración por tipo de CMS,
-  reports clave, exportación y cruce con GSC/GA4/PSI. Limitaciones y
-  falsos positivos frecuentes.
+  Screaming Frog en auditorías: modos de crawl (Spider frente a JS), configuración por
+  CMS, reports clave, exportación y cruce con GSC, GA4 y PSI, con sus falsos positivos
+  frecuentes.
 user-invokable: false
 ---
 

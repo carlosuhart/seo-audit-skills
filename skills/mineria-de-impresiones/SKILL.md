@@ -1,6 +1,10 @@
 ---
 name: mineria-de-impresiones
-description: Convierte datos de Google Search Console en un plan de mejora de contenido accionable. Usa este skill cuando el usuario pida "mejorar contenido con GSC", "minería de impresiones", "optimizar página con Search Console", "clasificar queries", "qué contenido crear según mis datos", "mejorar CTR", "optimizar títulos y metas", o cualquier tarea que use datos de GSC para decidir qué mejorar, qué crear y cómo optimizar contenido. También actívalo con "grupos de queries", "brecha de contenido con GSC", "expandir contenido", "queries con impresiones sin clics", o plan editorial basado en Search Console. Se diferencia de gsc-opportunities (diagnostica QUÉ queries trabajar) porque aquí el foco es CÓMO mejorar contenido, QUÉ crear y CÓMO optimizar títulos/metas clasificando queries por intención. SIEMPRE pide los datos de GSC antes de analizar. NUNCA analices sin datos reales.
+description: >
+  Convierte datos de GSC en un plan de contenido: clasifica queries por intención y
+  decide qué mejorar, qué crear y cómo optimizar títulos y metas. Usar con "minería de
+  impresiones", "mejorar CTR", "brecha de contenido con GSC" o "queries con impresiones
+  sin clics". Siempre pide datos reales de GSC antes de analizar.
 ---
 
 # Minería de impresiones

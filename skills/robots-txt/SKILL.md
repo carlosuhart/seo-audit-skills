@@ -1,11 +1,9 @@
 ---
 name: robots-txt
 description: >
-  robots.txt y control de indexabilidad: especificación oficial de Google, plantillas
-  por tipo de sitio (informativo, e-commerce, WordPress, WooCommerce), requerimientos
-  de Google Merchant Center, meta robots (noindex/nofollow/noarchive), X-Robots-Tag
-  HTTP header, conflict resolution Disallow vs noindex, e interpretación del informe
-  de cobertura en GSC.
+  robots.txt e indexabilidad: especificación de Google, plantillas por tipo de sitio,
+  Merchant Center, bots de IA, meta robots, X-Robots-Tag, conflicto entre Disallow y
+  noindex e informe de cobertura de GSC.
 ---
 
 # robots.txt — Guía Técnica SEO

@@ -1,11 +1,10 @@
 ---
 name: on-page-fundamentals
 description: >
-  Title tags, meta descriptions y H1: reglas de optimización, longitudes, duplicados,
-  ausencias, canibalización, casos por tipo de página (homepage, categoría, producto,
-  artículo, local), bugs por CMS (Yoast, Rank Math, WooCommerce, PrestaShop),
-  impacto en CTR y detección con Screaming Frog y GSC. Usar en cualquier auditoría
-  de contenido o al optimizar páginas para CTR o posicionamiento.
+  Title, meta description y H1: longitudes, duplicados, ausencias, canibalización,
+  reglas por tipo de página, sitios multilingües, bugs por CMS (Yoast, Rank Math,
+  WooCommerce, PrestaShop) e impacto en CTR. Usar en auditorías de contenido u
+  optimización de CTR.
 user-invokable: false
 ---
 

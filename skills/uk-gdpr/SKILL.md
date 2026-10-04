@@ -1,11 +1,9 @@
 ---
 name: uk-gdpr
 description: >
-  Audita un sitio web frente al UK GDPR (Retained EU Law post-Brexit) y las
-  PECR 2003 (Privacy and Electronic Communications Regulations). Detecta el
-  sector automáticamente. Produce informe de cumplimiento con score, tabla de
-  estado por artículo e issues priorizados con cuantificación de sanciones en GBP.
-  Sub-skill del orquestador /privacidad — también invocable directamente.
+  Auditoría UK GDPR y PECR 2003 (Reino Unido tras el Brexit): detecta el sector y
+  entrega informe con score, estado por artículo, issues priorizados y sanciones en GBP.
+  Sub-skill de /privacidad, también invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

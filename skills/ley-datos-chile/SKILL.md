@@ -1,10 +1,8 @@
 ---
 name: ley-datos-chile
 description: >
-  Audita un sitio web frente a los requisitos de la Ley 21.719 de Protección de
-  Datos Personales (Chile). Detecta el sector del sitio automáticamente y aplica
-  requisitos específicos. Produce informe de cumplimiento con score, tabla de
-  estado por artículo e issues priorizados.
+  Auditoría Ley 21.719 (Chile): detecta el sector y entrega informe con score, estado
+  por artículo e issues priorizados. Sub-skill de /privacidad, también invocable sola.
 user-invokable: true
 argument-hint: "<url> [--docx]"
 license: MIT

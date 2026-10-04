@@ -1,11 +1,9 @@
 ---
 name: wordpress-elementor
 description: >
-  Conocimiento especializado sobre WordPress + Elementor para auditorías SEO.
-  Issues recurrentes, soluciones y checklist de verificación específicos para
-  sitios construidos con Elementor (free y Pro). Usar cuando el sitio auditado
-  corra WordPress + Elementor o cuando el usuario mencione "Elementor", "Hello
-  Elementor", "Elementor Pro" o "elementor-post".
+  WordPress + Elementor (free y Pro) en auditorías SEO: issues recurrentes, soluciones y
+  checklist. Usar cuando el sitio corre Elementor o se menciona "Elementor" o "Hello
+  Elementor".
 ---
 
 # WordPress + Elementor — Guía SEO Técnica
