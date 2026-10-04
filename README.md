@@ -24,543 +24,82 @@ no identifying information. The pattern matters, not the source.
 
 ## Skills
 
-### CMS — WordPress + Divi
-
-**File:** `skills/wordpress-divi/SKILL.md`
-
-Covers WordPress sites built with Divi Theme (Elegant Themes) 4.27.x.
-
-- **Missing H1** — Divi does not generate H1 automatically. Fix: module > Design > Heading Tag
-- **Massive inline CSS** — Divi Dynamic CSS injects hundreds of KB per page. Fix: Critical CSS + Improved Asset Loading
-- **Render-blocking JS** — 10-20 scripts without `async`/`defer`. PHP snippets with `script_loader_tag` hook (WP 4.1+) to defer by handle, with jQuery exclusion
-- **Hero as CSS background-image** — invisible to the preload scanner. Fix: `<link rel="preload">` or convert to real `<img>`
-- **Security** — `<meta generator>`, `X-Powered-By`, open REST API, user enumeration, pingback. PHP snippets with `wp_robots` (WP 5.7+) and `rest_authentication_errors` (WP 4.4+) hooks
-- **Virtual robots.txt** — WordPress generates robots.txt without a physical file. `robots_txt` hook (WP 3.0+) to add AI crawler rules
-- **Conditional loading** — Ninja Forms, Dashicons and GDPR plugins load on all pages. Fix: `wp_enqueue_scripts` with priority 100+
-- Audit checklist by criticality + common positives + Divi/Yoast configuration paths
-
----
-
-### CMS — WordPress + Elementor
-
-**File:** `skills/wordpress-elementor/SKILL.md`
-
-Covers WordPress sites built with Elementor (free and Pro), including stacks with WP Rocket and WooCommerce.
-
-- **Lazy-loaded LCP hero** — Elementor and WP Rocket replace `src` with SVG placeholder. `fetchpriority="high"` becomes useless even when present. Fix: `e-no-lazyload`, exclude in WP Rocket > Media > LazyLoad
-- **fetchpriority on wrong element** — assigned to decorative images (separators, dividers) instead of the real LCP image
-- **Excessive CSS/JS** — 40-90+ resources. Fix: Improved Asset Loading (Elementor > Settings > Performance)
-- **Massive HTML payload** — WP Rocket injects `RocketLazyLoadScripts` and `elementorFrontendConfig` inline. Observed up to 1.4 MB
-- **Elementor lazy load on backgrounds** — `.e-con.e-parent:nth-of-type(n+4)` hides backgrounds of sections 4+ until JS marks them. Causes CLS
-- **Missing security headers** — consistent pattern. Snippets for Nginx and Apache
-- **Version exposure** — Elementor in meta generator. PHP snippet to remove it
-- **REST Link header** — exposes internal WordPress IDs. Fix: `remove_action('template_redirect', 'rest_output_link_header', 11)`
-- **DOM size** — Section/Column (4 divs) vs Flexbox Containers (2 divs). Fix: Elementor > Tools > Converter
-- **WooCommerce** — duplicate BreadcrumbList (Yoast + Schema Pro), FAQPage without rich results in e-commerce since 2023, missing Product schema, `/my-account/` in sitemap
-- **PHP EOL** — 7.4 EOL since Nov 2022. Fix: update in hPanel/cPanel/Plesk
-- **Keyword cannibalization on location pages** — Elementor makes it easy to duplicate templates by city
-- Audit checklist by criticality + common positives + configuration paths
-
----
-
-### CMS — WordPress Hidden Errors (multilingual forensics)
-
-**File:** `skills/wordpress-hidden-errors/SKILL.md` (+ `references/`, `scripts/`)
-
-Forensic audit of large WordPress sites, especially multilingual (WPML/Polylang + Rank Math + LiteSpeed + Cloudflare), for errors no crawler sees because they live in raw content, WPML tables or plugin settings. Built from a real 2,000+ document, 4-language audit where one pattern alone touched 1,300 posts.
-
-- **Method** — full per-language REST dump with `context=edit`, offline scan, DB writes through a temporary Code Snippets endpoint with md5 control that never moves `modified`, Cloudflare purge in batches
-- **Links** — retired language prefix (`/es/...`) everywhere (content, author field, footer, cookie plugin, redirect table), translations linking to the original when the translation exists, translation slugs invented from titles, `?p=` links to draft translations, self-links through redirects
-- **Content** — shortcodes of uninstalled plugins rendered raw (strip keeping paragraph breaks and removing the headings that only existed for the box), the same shortcode hidden inside Advanced Ads units, translations whose body stayed in the source language, AI chat UI markup pasted into posts, literal `
-` stored in content, invalid JSON-LD escapes, obfuscated scripts injected into `post_content`
-- **WPML / plugins** — published posts with no language (sitemap ghost URLs), untranslated homepage strings, WP External Links marking own links as external on translated pages, Rank Math attachment redirect pointing to a 404, inherited custom canonicals that silently drop posts from the sitemap, page-type default noindex hiding new tools, social plugins duplicating Open Graph, physical robots.txt with contradictory plugin blocks, WAF rules blocking feeds
-- **Scripts** — `wp_dump.py`, `wp_scan.py`, `wp_apply.py`, `strip_shortcode.py` (env-configured, no site data)
-
----
-
-### CMS — PrestaShop
-
-**File:** `skills/prestashop-seo/SKILL.md`
-
-Covers PrestaShop 1.7.x / 8.x, including stacks with CreativeElements and Nginx/Plesk.
-
-- **sitemap.xml 404** — PrestaShop generates the sitemap at `/1_index_sitemap.xml`. The standard path does not exist by default. Fix: 301 redirect in Nginx or .htaccess
-- **Cache-Control: no-store** — disabled by default on all HTML pages. Fix: CCC in Advanced Parameters > Performance (Smart cache CSS/JS, Minify HTML, Move JS to end)
-- **URLs with numeric ID** — `/217-slug` is PrestaShop standard. Not an error if the canonical points to the URL with ID. Migration requires a redirect plan
-- **Controllers in sitemap** — CreativeElements and sitemap modules include internal AJAX endpoints. Fix: exclude from the module or block in robots.txt
-- **PHPSESSID with decade-long expiry** — GDPR/ePrivacy. Fix: `session.cookie_lifetime = 0` in php.ini
-- **Missing OG tags** — PrestaShop does not generate them by default. Smarty snippets for head.tpl
-- **Hero as background-image** — native sliders and CreativeElements. Fix: `displayHeader` hook to inject preload
-- **Security** — Nginx headers, CSP in report-only mode, `expose_php = Off`
-- **Schema Product + Offer** — generated natively in PS8 if enabled. AggregateRating requires a reviews module
-- **IndexNow** — implementation via `actionObjectProductUpdateAfter` hook
-- Backoffice route table + checklist by criticality + common positives
-
----
-
-### Tracking — Google Tag Manager
-
-**File:** `skills/google-tag-manager/SKILL.md`
-
-GTM debugging and configuration, focused on the "event not reaching GA4" scenario.
-
-- **Diagnostic tree** — 7 ordered steps: paused tag → restrictive trigger → Preview Mode → Consent Mode → firing order → Measurement ID → DebugView
-- **Preview vs Production** — Preview bypasses ad blockers and Consent Mode. Always test in incognito. `?gtm_debug=x` for debugging in the real environment
-- **dataLayer** — structure, naming rules, GA4 reserved events, how to read the dataLayer in console and in the Preview tab
-- **Consent Mode v2** — mandatory in EEA since March 2024. `analytics_storage: denied` blocks GA4 tags. Difference between Basic and Advanced Consent Mode. Default + update snippets
-- **Firing order** — GA4 Configuration Tag must fire on "Initialization - All Pages" before Event Tags. Tag Sequencing to guarantee it. Full trigger hierarchy
-- **DebugView** — how to activate via GTM, Chrome Extension or URL param
-- **Common cases** — AJAX forms vs traditional submit, Contact Form 7 (`wpcf7mailsent`), Elementor Forms, clicks on `tel:` and `mailto:`
-- Container installation verification via console and Network tab
-
----
-
-### Tracking — GA4 Analysis
-
-**File:** `skills/ga4-analysis/SKILL.md`
-
-GA4 data analysis for SEO audits, focused on organic vs paid acquisition.
-
-- **UA to GA4 differences** — sessions vs events, bounce rate vs engagement rate, goals vs conversions, sampling vs BigQuery
-- **Organic vs paid** — channel groups, how to isolate Organic Search, why misconfigured UTMs inflate organic
-- **Attribution models** — Data-driven (default), Last click, First click, Linear, Time decay. Lookback windows. Why GA4 and Google Ads show different numbers
-- **Engagement** — definition of engaged session (>=10s or >=2 pages or conversion), difference from UA bounce rate
-- **GSC integration** — Reports > Acquisition > Search Console. Limitation: only sessions where GA4 recorded the visit
-- **Google Ads integration** — remarketing audiences, conversion import, organic vs paid side-by-side analysis
-- **DebugView** — activation, latency, parameter validation
-- **Useful SEO reports** — organic landing pages, organic queries, pages with high organic bounce rate
-- **Common errors** — paid traffic in Organic, self-referral, inflated sessions, duplicate conversions, excessive direct traffic
-- BigQuery export, key dimensions and metrics
-
----
-
-### Tool — SE Ranking
-
-**File:** `skills/se-ranking/SKILL.md`
-
-SE Ranking data interpretation in the context of SEO audits.
-
-- **Rank tracking** — normal volatility (+-3) vs real drop (>5 positions sustained 7+ days) vs sudden drop (possible update). Diagnostic tree before acting
-- **SERP Features** — position 4 with Featured Snippet can outperform position 1 without feature in real CTR
-- **Site Audit** — static crawler (no JS rendering). Issues = signals, not conclusions. Prioritization table: high/medium/low priority by real impact
-- **Documented false positives** — H1 missing in Divi/Elementor, duplicate content from pagination, broken links in JS, dynamic meta description
-- **Traffic estimation** — error margin +-40-60%. Use as trend, not absolute figure. Comparison with GA4 and GSC
-- **Keyword research** — recommended flow from seed keywords to intent assignment. Volume differences between SE Ranking, Semrush and Google Ads
-- **Competitor analysis** — Share of Voice, Keyword Gap, when to use Semrush for discovery and SE Ranking for precise tracking
-- Integration with GSC, Screaming Frog and Semrush
-
----
-
-### Tool — Screaming Frog
-
-**File:** `skills/screaming-frog/SKILL.md`
-
-Technical use of Screaming Frog SEO Spider in audits.
-
-- **Spider vs JS Rendering** — Spider: fast, does not execute JS. JS Rendering: uses Chromium, 5-10x slower, mandatory for Divi/Elementor. Selective crawl by URL list for large sites
-- **CMS configuration** — WordPress (exclusions for wp-admin, feeds, searches; JS timeout 10s) and PrestaShop (session/currency/language parameters to exclude; Accept-Language header)
-- **Key reports** — Response Codes (302->301 redirects, linked 404s, 500s), Page Titles (missing, duplicate, length), Meta Description, H1 (missing, multiple), Canonicals (pointing to 404, missing canonical), Directives (unintentional noindex), Images (alt text, size)
-- **Orphan pages** — Bulk Export > All Inlinks. Pages without internal links that rank in SE Ranking = opportunity to improve internal PageRank
-- **Integration** — GSC (impressions/clicks columns in crawl), GA4 (sessions per URL), PSI (selective crawl only)
-- **False positives** — H1 missing in Divi/Elementor, duplicate content in pagination without canonical, broken links in JS modals, slow page without CDN cache, images missing alt in CSS backgrounds
-- **Performance** — estimated time table by site size and crawl mode. Minimum 8GB RAM for JS rendering
-
----
-
-### Tool — Semrush
-
-**File:** `skills/semrush/SKILL.md`
-
-Semrush use and interpretation as a complementary tool in the audit stack.
-
-- **Organic Research** — position distribution (top 3 / 4-10 / 11-100), top pages, historical trend, branded vs non-branded. Precision: +-40%, use as trend
-- **Keyword Gap** — Missing (biggest opportunity), Weak (improve position), Untapped (validate demand). Intents: Informational, Navigational, Commercial, Transactional
-- **Backlink Gap** — domains linking to competitors but not the client. Filter by Authority Score >30
-- **Site Audit** — basic crawler. In the audit flow, Screaming Frog is the main crawler. Semrush Site Audit as secondary check
-- **Traffic Analytics** — total traffic estimation (not just organic). Useful for channel comparison with competitors. Do not use as real figures
-- **Authority Score** — proprietary metric, not PageRank. Range table. Use as comparative reference, not as a target
-- **SE Ranking vs Semrush** — SE Ranking for precise tracking of defined keywords, Semrush for full domain discovery. Flow: Semrush discovers, SE Ranking tracks
-- **Why positions differ** — measurement date, datacenter, request location
-- Useful exports, limitations to communicate to the client
-
----
-
-### Technical — robots.txt + Indexability
-
-**File:** `skills/robots-txt/SKILL.md`
-
-Full technical specification and templates by site type, with focus on Google Merchant Center. Includes meta robots and X-Robots-Tag indexability control.
-
-- **Google specification** — Allow/Disallow precedence (longest rule wins), user-agent matching (specific does not inherit from `*`), `*` and `$` wildcards, AdsBot outside the `*` wildcard
-- **Merchant Center** — MC error table and its cause in robots.txt, official solution (Googlebot + Googlebot-image with empty `Disallow:`), `*` block directives that cause disapprovals
-- **Templates** — informational site/blog, e-commerce without MC, e-commerce with MC (with "what NOT to include" section)
-- **AI governance** — table of training bots (block) vs AI search bots (allow). Difference between GPTBot and ChatGPT-User
-- **Indexability** — meta robots directives (noindex, nofollow, noarchive, noimageindex), X-Robots-Tag HTTP header, LiteSpeed Cache noindex bug, Disallow vs noindex conflict resolution
-- **GSC coverage report** — indexability states interpretation, "Google chose different canonical", noindex on pages that should be indexed
-- **Screaming Frog** — Indexability column, Non-Indexable filter, URLs in Sitemap Non-Indexable
-- **WordPress** — how to edit: SEO plugin, physical file, PHP hook
-- Evaluation checklist by criticality (critical / high / medium / low)
-
----
-
-### Technical — Canonical Tags
-
-**File:** `skills/canonical/SKILL.md`
-
-Canonical tag implementation, auditing, and CMS-specific bugs.
-
-- **Fundamentals** — when to use canonical vs 301, mandatory rules (absolute URL, one per page, self-reference, sitemap/hreflang coherence)
-- **Pagination** — self-referencing canonical on page 2+, why canonical to page 1 removes paginated pages from the index
-- **URL parameters** — tracking/UTM parameters, WooCommerce faceted navigation, PrestaShop LayerNavigation
-- **WordPress** — Yoast (relative canonical bug in subdirectory), Rank Math + Elementor duplicate canonical bug
-- **WooCommerce** — products in multiple categories (primary category required), variation URLs, transactional endpoint canonicals
-- **PrestaShop** — URL with numeric ID, LayerNavigation facet URLs, `PS_CANONICAL_REDIRECT` and `PS_LAYERED_FULL_TREE`
-- **Canonical chains** — how chains form, PageRank deprecation per hop, fix via direct canonical to final URL
-- **JavaScript rendering** — canonical injected by JS vs static HTML, GSC URL Inspection to verify rendered canonical
-- **Common errors** — canonical to redirect, canonical to 404, canonical to noindex, multiple canonicals, relative canonical
-- **GSC signals** — "Duplicate without user-selected canonical", "Google chose different canonical"
-- Audit checklist by criticality
-
----
-
-### Technical — Redirects
-
-**File:** `skills/redirects/SKILL.md`
-
-301/302 redirect implementation, chains, loops, and migration planning.
-
-- **Redirect types** — 301/302/307/308 comparison table with PageRank transmission and correct use cases
-- **Redirect chains** — how they form (migrations, HTTP→HTTPS, multiple rebrands), crawl budget impact, fix
-- **Redirect loops** — causes (bad .htaccess rules, bidirectional migration), detection with curl, fix
-- **WordPress** — Redirection plugin (limitations vs server-level), .htaccess RewriteRule patterns, Nginx `return 301`, multisite subdirectory handling
-- **PrestaShop** — Tráfico > Redirecciones SEO & URLs, Friendly URLs activation, category/product URL mapping from database
-- **Legacy permalink internal links** — after a category→flat permalink change, old in-content links still 301 so they never show up as errors, yet they burn a hop and fragment link-graph analysis into phantom nodes; verify each flat destination with HEAD before rewriting
-- **PageRank transmission** — 301 transmits ~99% (2016 update), 302 not guaranteed, chain impact on crawl budget not on PageRank
-- **Migration checklist** — pre-migration crawl, URL mapping priorities (by inlinks), implementation, link update, sitemap update, GSC Change of Address
-- **Crawl budget** — GSC crawl stats high redirect %, Screaming Frog All Inlinks to Redirects report
-- **Special cases** — HTTPS+www in one hop vs two, soft 404 vs redirect, redirect to homepage as weak fallback
-- Audit checklist by criticality
-
----
-
-### Technical — On-Page Fundamentals
-
-**File:** `skills/on-page-fundamentals/SKILL.md`
-
-Title tags, meta descriptions, and H1: optimization rules, common errors, and audit workflow.
-
-- **Title tag** — length (50-60 chars), structure by page type (homepage/category/product/article/local), Google rewrite causes, keyword stuffing
-- **Meta description** — length (140-155 chars), when Google ignores it, structure by page type, why absence is not always bad
-- **H1** — one per page rule, H1 ≠ title tag relationship, hierarchy structure, H1 in theme header on all pages
-- **CMS bugs** — Divi H1 not auto-generated, Elementor H1 conflict with theme, WP Rocket + Elementor template H1 duplication
-- **WooCommerce** — product title template without purchase keyword, PrestaShop category meta title defaulting to category name
-- **Cannibalization** — GSC query appearing across two URLs, detection in Screaming Frog, fix options (differentiate vs consolidate)
-- **Screaming Frog** — missing/duplicate/overlength titles, missing/duplicate meta descriptions, missing/multiple H1
-- **GSC CTR analysis** — pages with >100 impressions and CTR <2% in position 1-5 as title optimization candidates
-- Audit checklist by criticality
-
----
-
-### Technical — Sitemap XML
-
-**File:** `skills/sitemap/SKILL.md`
-
-Technical audit knowledge for XML sitemaps, covering discovery, structural validation, URL quality, and live sampling.
-
-- **Discovery** — robots.txt `Sitemap:` directive first, standard path fallback (`/sitemap_index.xml`, `/sitemap.xml`, PrestaShop `/1_index_sitemap.xml`)
-- **Critical blockers** — X-Robots-Tag noindex on the sitemap (HTTP 200 but unprocessable), HTTP status != 200, XML parse errors. Fixes for LiteSpeed Cache, Apache, Nginx
-- **Sitemap index** — sub-sitemaps returning 404, empty sub-sitemaps, authors sub-sitemap (thin content)
-- **URL quality** — HTTP/HTTPS mixing, www/non-www inconsistency, trailing slash inconsistency, uppercase paths, UTM/tracking parameters, staging URLs, cross-domain URLs, robots.txt Disallow conflicts
-- **lastmod integrity** — presence rate, `1970-01-01` Rank Math bug, invalid format, future dates, all-identical dates (static generation), all very old dates
-- **Sampling** — live checks for broken URLs, redirects (>20%), noindex pages in sitemap, canonical mismatch, slow response times (crawl budget impact)
-- **CMS patterns** — WordPress/Yoast, WordPress/Rank Math (documented bugs), WordPress/WooCommerce (`/my-account/`, product variations, out-of-stock, product tags, endpoints), PrestaShop default path, Shopify limitations, Magento
-- Audit checklist by criticality (critical / high / medium / low) + common positives
-
----
-
-### Technical — Hreflang
-
-**File:** `skills/hreflang/SKILL.md`
-
-Hreflang implementation and auditing for multilingual or multi-regional WordPress sites.
-
-- **Fundamentals** — when to implement, when not to, mandatory syntax, reciprocity rule and self-reference
-- **WPML** — configuration, indexable test page issue, conflict with page builders
-- **TranslatePress** — duplicate hreflang conflict with Yoast. Solution: disable in one of the two
-- **Yoast + independent installations** — incorrect WebSite schema @id in subdirectory. PHP snippet fix
-- **HFCM (manual implementation)** — when to use instead of a global plugin. Per-page setup
-- **Hreflang Manager Lite** — global mode risk with partial translation: generates massive broken reciprocity
-- **Common errors** — broken reciprocity, URLs with 404/redirect, incorrect language code, missing x-default, duplicate hreflang
-- **Validation** — Screaming Frog Hreflang tab (noreturn, incorrect code, non-canonical), GSC > International, manual JS verification snippet
-- **Single-language multi-region** — es-ES / es-MX / es-AR structure, x-default placement, canonical per region, WordPress implementation options
-- Checklist by criticality (critical / high / medium / low)
-
----
-
-### Technical — Schema Markup
-
-**File:** `skills/schema-markup/SKILL.md`
-
-JSON-LD structured data implementation, validation, and E-E-A-T signals.
-
-- **Type selection** — by page type: Organization/LocalBusiness, Article, FAQPage, BreadcrumbList, Product+Offer, MedicalWebPage, AggregateRating
-- **Documented bugs** — Rank Math `datePublished=1970-01-01`, Rank Math lowercase `@type`, logo <112×112px, `relevantSpecialty`/`specialty` with text or wrong enum URL (`PhysicalTherapy` is a business @type, not a MedicalSpecialty value — correct: `Physiotherapy`), `sameAs` with dead URLs (Google+), duplicate `@id` in subdirectory Yoast installations
-- **Cached schema snapshots** — Schema Pro (and Rank Math) store rendered JSON-LD in postmeta and re-saving the post does NOT regenerate it, so bulk content fixes silently leave structured data stale; detection, repair via a temporary REST route, and the `_wp_old_slug` / serialized-value traps
-- **FAQPage** — rich results restricted to gov/health since 2023, but still valuable for semantic understanding, Bing, and AI extraction (ChatGPT, Perplexity, AI Overviews)
-- **E-E-A-T** — author schema with `jobTitle`, `description`, consistent `@id` across Article and Person pages; embedded Person schema (no `@id`) when author archive page does not yet exist
-- **Multi-domain entity consolidation** — same `@id`/`name`/`legalName`/`sameAs` replicated across a parent brand's product/satellite domains (only `alternateName` changes), the legal-name-vs-brand-name mixup, and the known `url`-varies-per-domain limitation
-- **CMS implementation** — Yoast, Rank Math, WooCommerce, PrestaShop; output buffer fix pattern deployable via functions.php, Code Snippets plugin, HFCM, or must-use plugin
-- **Validation workflow** — validator.schema.org vs Rich Results Test vs GSC Enhancements (different tools, different purposes)
-- **MedicalWebPage** — does not generate GSC enhancement report; value is semantic, E-E-A-T, and AI extraction
-- Audit checklist by criticality
-
----
-
-### Technical — JavaScript SEO
-
-**File:** `skills/javascript-seo/SKILL.md`
-
-Technical SEO for sites built on JS frameworks (React/Next.js, Vue/Nuxt) deployed on
-Vercel/Netlify or similar — no CMS, no SEO plugin, every signal depends on framework
-configuration.
-
-- **Incomplete hydration** — nav/H1/schema existing only in the hydration payload, never
-  reaching the served HTML; 3-step verification method (raw HTML vs JS-executing
-  crawler vs real Google data) to tell "needs JS rendering" apart from a real bug
-- **UI-interaction-gated content** — pages only reachable through a dropdown/click that
-  no crawler simulates, invisible even to crawlers that fully execute JavaScript
-- **Systemic soft-404** — two distinct variants from catch-all dynamic routes: an
-  invented top-level segment returning the full homepage with HTTP 200, and an
-  invented sub-route rendering a real "not found" page but still with HTTP 200
-- **Canonical/hreflang without a plugin** — framework metadata API patterns, and the
-  307-on-host-normalization bug that breaks canonical consolidation in multi-language
-  redirect chains
-- **Headers and redirects as project config** — behavior-first framing for
-  `next.config.js`/`vercel.json`-based security headers and redirects
-- **fetchpriority misuse** — applied to a text LCP element (heading, paragraph) has
-  zero effect; only works on elements that fetch a resource
-- Audit checklist by severity
-
----
-
-### AI / GEO — Generative Engine Optimization
-
-**File:** `skills/geo-ai-discoverability/SKILL.md`
-
-Optimize for citation by AI assistants (Google AI Overviews, ChatGPT, Perplexity, Bing Copilot).
-
-- **AI crawler access** — robots.txt rules for GPTBot, OAI-SearchBot, PerplexityBot, Google-Extended, Anthropic-AI; decision logic for training vs citation access
-- **llms.txt** — file structure, implementation for WordPress and static sites, linking from robots.txt
-- **Wikidata entity** — minimum viable entity for brand/publication authority, required statements, linking to Organization schema via `sameAs`
-- **NewsMediaOrganization schema** — `publishingPrinciples`, `masthead`, `description`, ISSN for publications
-- **Passage-level citability** — answer-first structure, named statistics format, anti-patterns that reduce AI extraction
-- **E-E-A-T for AI** — author `jobTitle` + `description` as primary authority signals, about/masthead requirements
-- **Platform-specific** — Google AI Overviews (organic ranking matters), Perplexity (authorship + dates), ChatGPT/SearchGPT (Bing index + OAI-SearchBot), Bing Copilot (FAQ schema weighted)
-- **Wikipedia** — notability threshold, approach, Wikidata link
-- **Citation monitoring** — manual spot-check method, DataForSEO LLM mentions API
-- Audit checklist by criticality
-
----
-
-### Performance — Core Web Vitals
-
-**File:** `skills/core-web-vitals/SKILL.md`
-
-LCP, CLS, INP, and TTFB diagnosis and optimization across CMS platforms.
-
-- **Field vs lab data** — CrUX vs Lighthouse, when each is authoritative, minimum traffic threshold for CrUX data
-- **LCP diagnostic tree** — LCP element identification, lazy-loaded hero image, fetchpriority placement, preload hints, format and file size
-- **CLS causes and fixes** — missing image dimensions, web font FOUT, dynamic content injection, Elementor lazy background shift, cookie banners
-- **Ad-driven CLS** — using CrUX `experimental_ad_density`/`ad_cpu`/`ad_kilobytes` to tell ad-caused CLS apart from the consent banner in one API call, without reproducing it in a browser
-- **Reserving ad slot height** — why `ins.adsbygoogle` alone is the wrong selector when Auto Ads is on, where to source real slot heights, why ads never fill in automation
-- **LiteSpeed Delay JS Execution** — breaks jQuery-dependent sliders, leaves content invisible to non-interacting visitors and bots; exclusion field lives in the Tuning tab, plus `?LSCWP_CTRL=before_optm` to get real script paths
-- **INP** — long tasks, third-party script competition, DOM size, forced reflows. Replaced FID in March 2024
-- **TTFB** — relationship to LCP, OPcache, page cache, CDN for HTML
-- **CMS-specific** — Divi (inline CSS, background hero), Elementor (lazy LCP, WP Rocket conflict, DOM size), PrestaShop (Cache-Control: no-store, CCC), Shopify (app scripts)
-- Measurement tools (PSI, CrUX, DevTools, WebPageTest) and audit checklist
-
----
-
-### Performance — Cache Headers
-
-**File:** `skills/cache-headers/SKILL.md`
-
-Cache-Control strategy, CDN configuration, and CMS-specific caching setup.
-
-- **Cache-Control directives** — `max-age`, `s-maxage`, `no-cache`, `no-store`, `immutable`, `stale-while-revalidate` with use cases per content type
-- **Cache layers architecture** — browser cache → CDN → reverse proxy → page cache → object cache → OPcache → database
-- **ETag and Last-Modified** — validation mechanics, Googlebot crawl budget impact, multi-server inode ETag problem
-- **WordPress** — WP Rocket (cache exclusions for WooCommerce), LiteSpeed Cache (X-Robots-Tag bug on XML), Redis object cache
-- **LiteSpeed + Cloudflare** — LiteSpeed emits only a proprietary header Cloudflare cannot read, so `Edge TTL: respect origin` has no directive to respect and HTML is barely cached; how to confirm it with a cookie-based origin probe, and the permanent `x-litespeed-cache: miss` case
-- **PrestaShop** — CCC options table, Smarty cache, Varnish and full-page cache options
-- **Nginx** — FastCGI page cache snippet, static asset cache headers, cache bypass for logged-in users
-- **CDN** — what CDNs cache by default (assets yes, HTML no), Cloudflare "Cache Everything" rule, cache invalidation strategies
-- Diagnosing cache issues with curl and response headers
-
----
-
-### Performance — Image Optimization
-
-**File:** `skills/image-optimization/SKILL.md`
-
-Format selection, responsive images, LCP handling, and CMS-specific optimization.
-
-- **Format selection** — WebP vs AVIF vs JPEG/PNG comparison, file size targets by image type
-- **Responsive images** — `srcset`, `sizes` attribute explanation, what happens when `sizes` is missing
-- **LCP images** — never lazy-load, `fetchpriority="high"`, `<link rel="preload">` in `<head>`, only one `fetchpriority` per page
-- **Lazy loading** — when to use and when not to. Elementor and WP Rocket lazy-loading paradox on hero images
-- **alt text** — content vs decorative images, keyword-stuffing pitfalls, WooCommerce product alt
-- **CLS prevention** — explicit `width` + `height`, `aspect-ratio` CSS alternative
-- **CSS background-image vs `<img>`** — preload scanner visibility, when each is appropriate
-- **CMS specifics** — WordPress (ShortPixel, Smush, attachment page noindex), PrestaShop (thumbnail regeneration), WooCommerce gallery
-
----
-
-### Security — SSL/HTTPS
-
-**File:** `skills/ssl-https/SKILL.md`
-
-Certificate management, mixed content, HTTPS migration, and security headers.
-
-- **Certificate types** — DV, OV, EV, wildcard, SAN. Let's Encrypt auto-renewal
-- **HTTPS redirect** — correct single-hop chain, redirect loops, WordPress and Nginx configuration
-- **Mixed content** — active (blocked) vs passive (warning), detection via DevTools and Screaming Frog, WordPress database search-replace, PrestaShop `ps_configuration` table
-- **HSTS** — directives, preload list requirements, risks of `includeSubDomains` with non-HTTPS subdomains
-- **Security headers** — HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, X-Powered-By removal
-- **HTTPS migration checklist** — pre-migration, redirects, mixed content, WordPress config, GSC, monitoring
-
----
-
-### Performance — Third-Party Scripts
-
-**File:** `skills/third-party-scripts/SKILL.md`
-
-Script loading strategies, CWV impact by vendor, GTM optimization, and script auditing.
-
-- **Loading strategies** — `async` vs `defer` vs blocking, dynamic import for interaction-triggered scripts
-- **CWV impact by vendor** — analytics (GA4, Matomo), advertising (Meta Pixel, Hotjar, Clarity), chat widgets, fonts (Google Fonts self-hosting), maps (facade pattern), video embeds
-- **Facade pattern** — lazy-load maps and YouTube players on user interaction
-- **GTM tag audit** — identifying unused tags, trigger optimization (DOM Ready vs Window Loaded), tag sequencing
-- **Auditing third-party footprint** — Chrome DevTools Coverage tab, PSI "Reduce third-party code", Screaming Frog source code extraction
-- Audit checklist by impact level
-
----
-
-### Search Console — Impression Mining
-
-**File:** `skills/mineria-de-impresiones/SKILL.md`
-
-Turns Google Search Console data into an actionable content plan. Decides what to improve, what to create, and how to rewrite titles and metas.
-
-- **Query classification by intent** — informational, transactional, navigational, comparative; different treatment per bucket
-- **High-impression zero-click queries** — the content gap signal most audits ignore
-- **CTR reference curves by position** (2026 data) — what is actually underperforming versus what is normal for that rank
-- **Title and meta rewriting** driven by the query set a page already surfaces for, not by guesswork
-- **Content expansion versus new page** — the decision rule, including when a query cluster does not justify its own URL
-- **GSC data quality context** — the May 2025 to April 2026 impression logging error and the `&num=100` inflation removed in September 2025; why clicks are the only safe metric across that window
-- Never analyzes without real data: the skill refuses to estimate
-
----
-
-### Search Console — Diagnostics
-
-**File:** `skills/seo-gsc-diagnostics/SKILL.md` + `scripts/gsc_diagnostics.py`
-
-Quick wins, query cannibalization, and traffic anomalies from raw GSC data. Python script, no third-party MCP server required.
-
-- **Quick wins** — high impressions, low CTR, position near page one; ranked by realistic click upside
-- **Query cannibalization** — same query, two or more URLs splitting clicks. Includes the minimum-clicks floor that removes false positives: without it, 243 of 314 findings on a 1,500-URL site were meaningless 1-1 pairs
-- **Anomaly detection** — z-score over the daily series to isolate days that break pattern
-- Local OAuth token or service account, both supported; paths configurable via `GSC_TOKEN_PATH` and `GSC_SERVICE_ACCOUNT_KEY`
-- Complements impression mining (prescriptive) and period-comparison drop analysis
-
----
-
-### Search Console — Internal Linking Audit
-
-**File:** `skills/seo-interlinking/SKILL.md` + `scripts/audit_interlinking.py`
-
-Internal-linking health on an existing site, from Screaming Frog exports crossed with GSC.
-
-- **Orphan pages** — indexable URLs with zero or one internal inlink
-- **Click depth** — pages buried too far from the homepage
-- **Anchor-text over-optimization** — internal anchors repeating the same exact-match phrase
-- **Hub candidates** — pages with authority to donate that currently link out to nothing
-- **Prioritized by real traffic**, not by raw counts: the crossing with GSC clicks and impressions is what separates a page worth rescuing from one that never had demand
-- Known limitation documented: a crawl that misses sidebar, footer, or deep category pagination inflates the orphan count. Normalize legacy permalink formats before building the graph or the link graph fragments and pages appear orphaned that are not
-- Diagnosis only — never edits pages
-
----
-
-### AI Search — GA4 Referral Traffic
-
-**File:** `skills/ga4-ai-traffic/SKILL.md` + `scripts/ga4_ai_traffic.py`
-
-Measures real referral traffic from AI assistants (ChatGPT, Perplexity, Gemini, Copilot, Claude, Grok, Meta AI) through the GA4 Data API.
-
-- Distinguishes measured traffic from **AI visibility**: this counts sessions, it does not measure how a platform describes the brand
-- **The undercount is structural** — GA4's AI Assistants channel excludes AI Overviews and AI Mode, and most AI sessions arrive without a referrer and land in Direct. Any number reported here is a floor, not a total
-- Token path configurable via `GA4_TOKEN_PATH`; refuses to estimate when the credential is unavailable
-
----
-
-### Vertical — Higher Education SEO
-
-**File:** `skills/seo-educacion/SKILL.md`
-
-SEO for universities and higher-education institutions, where the funnel is an enrollment cycle rather than a purchase.
-
-- **Enrollment funnel** mapped to search intent by stage
-- **Seasonality** of admission cycles in Peru and Chile, and what that does to year-over-year comparisons
-- **Schema** — Course, EducationalOrganization and LocalBusiness together, and how they interact
-- **Keyword research by tier** — program, faculty, and institution level
-- Editorial calendar anchored to the admission calendar, plus GEO/AEO considerations
-
----
-
-### Defense — Negative SEO Monitoring
-
-**File:** `skills/seo-negativo/SKILL.md`
-
-Continuous monitoring for negative SEO and reputation attacks.
-
-- **Link bombing** — detection patterns and the disavow decision, including when disavow is the wrong answer because the spam is structural and Google already ignores it
-- **Content scraping** and duplicate detection
-- **Manual actions and algorithmic penalties** — how to tell them apart
-- **Fake reviews** monitoring
-- **Rebranding protocol, weeks 1 to 8** — the sequence that avoids losing equity during a domain or brand change
-- Generates `disavow.txt` when the evidence justifies it
-
----
-
-### Privacy — Multi-Jurisdiction Compliance Suite
-
-**Files:** `skills/privacidad/SKILL.md` (orchestrator) + 8 jurisdiction sub-skills
-
-Data-protection compliance audits across eight jurisdictions. The orchestrator detects which laws apply from site signals (TLD, currency, language, stated audience) or takes them explicitly, runs one shared discovery pass, then delegates to each sub-skill and consolidates the findings.
+Each skill lives in `skills/<name>/SKILL.md`. The details (bugs, fixes, checklists) are inside the file; this list only says what each one is for.
+
+### CMS
+
+| Skill | What it covers |
+|---|---|
+| `wordpress-divi` | Recurring SEO issues in WordPress + Divi, with fixes and checklist |
+| `wordpress-elementor` | Recurring SEO issues in WordPress + Elementor (free and Pro), with fixes and checklist |
+| `wordpress-hidden-errors` | Forensic audit of large or multilingual WordPress sites: broken or cross-language links, orphan shortcodes, AI residue, injected scripts, duplicates and poisoned cache, with md5-checked fixes (+ `references/`, `scripts/`) |
+| `prestashop-seo` | PrestaShop issues, back office settings, URL structure, sitemap and performance |
+
+### Tracking and tools
+
+| Skill | What it covers |
+|---|---|
+| `google-tag-manager` | GTM diagnosis: events not reaching GA4, dataLayer, Consent Mode v2, firing order |
+| `ga4-analysis` | GA4 analysis: organic vs paid, attribution, channel groupings, period comparison, GSC crossing |
+| `screaming-frog` | Crawl modes, CMS configuration, key reports, integrations and known false positives |
+| `se-ranking` | Reading SE Ranking data: rank tracking, Site Audit, keywords, competitor gap |
+| `semrush` | Semrush in audits: Organic Research, Keyword and Backlink Gap, Site Audit, data reliability |
+
+### Technical
+
+| Skill | What it covers |
+|---|---|
+| `robots-txt` | robots.txt and indexability: Google spec, templates by site type, Merchant Center, AI bots, meta robots |
+| `canonical` | Canonical audits: pagination, parameters, chains, hreflang conflicts and CMS bugs |
+| `redirects` | 301/302 redirects: chains, loops, migrations, WordPress, PrestaShop and Cloudflare |
+| `on-page-fundamentals` | Title, meta description and H1: lengths, duplicates, cannibalization, CMS bugs, CTR |
+| `sitemap` | XML sitemap audits: discovery, URL quality, lastmod integrity, CMS patterns |
+| `hreflang` | Hreflang in multilingual WordPress: WPML, TranslatePress, reciprocity, x-default |
+| `schema-markup` | JSON-LD: type selection, CMS implementation, documented bugs, validation |
+| `javascript-seo` | JS-framework sites without a CMS (Next.js, Nuxt): hydration, gated content, soft-404, config-based canonical |
+
+### Performance and security
+
+| Skill | What it covers |
+|---|---|
+| `core-web-vitals` | LCP, CLS, INP and TTFB: field vs lab data, diagnostic tree, fixes by CMS |
+| `cache-headers` | Cache-Control, CDN vs browser cache, LiteSpeed + Cloudflare, CMS setups |
+| `image-optimization` | WebP/AVIF, srcset, LCP image, lazy loading, alt text, CLS |
+| `third-party-scripts` | async/defer, impact by vendor, GTM deferral, scripts injected into post content |
+| `ssl-https` | Certificates, mixed content, HTTPS redirects, HSTS and security headers |
+
+### Search Console, analytics and AI search
+
+| Skill | What it covers |
+|---|---|
+| `mineria-de-impresiones` | Turns GSC queries into a content plan: what to improve, create or retitle |
+| `seo-gsc-diagnostics` | Quick wins, query cannibalization and anomalies from raw GSC data (+ script) |
+| `seo-interlinking` | Internal-linking audit from Screaming Frog + GSC: orphans, depth, anchors, hubs (+ script) |
+| `ga4-ai-traffic` | Real referral traffic from AI assistants in GA4, reported as a floor (+ script) |
+| `geo-ai-discoverability` | Signals for AI citation: crawler access, llms.txt, Wikidata, schema, citable passages |
+
+### Verticals, defense and commercial
+
+| Skill | What it covers |
+|---|---|
+| `seo-educacion` | Higher-education SEO: enrollment funnel, seasonality, Course schema, keyword tiers |
+| `seo-negativo` | Negative SEO monitoring: link bombing, scraping, penalties, fake reviews, disavow |
+| `seo-quote` | Client-ready `.docx` audit with an hours estimate and a USD quote |
+
+### Privacy (8 jurisdictions)
+
+`privacidad` is the orchestrator: it detects which laws apply from the site's targeting (not mere accessibility), runs one shared discovery pass and consolidates the results. Each sub-skill also works on its own and returns a score, an article-by-article table and penalties in local currency.
 
 | Sub-skill | Law | Jurisdiction |
 |---|---|---|
-| `rgpd` | GDPR (EU 2016/679), with national variations | European Union |
+| `rgpd` | GDPR (EU 2016/679) | European Union |
 | `uk-gdpr` | UK GDPR + PECR 2003 | United Kingdom |
 | `ley-datos-chile` | Ley 21.719 | Chile |
 | `lgpd` | Lei 13.709/2018 | Brazil |
-| `ley-25326` | Ley 25.326 (habeas data) | Argentina |
-| `lfpdppp` | LFPDPPP (ARCO rights) | Mexico |
+| `ley-25326` | Ley 25.326 | Argentina |
+| `lfpdppp` | LFPDPPP | Mexico |
 | `nfadp` | nFADP / revDSG | Switzerland |
-| `ccpa` | CCPA / CPRA (threshold-dependent, opt-out model) | California, US |
-
-- Each sub-skill produces a compliance score, an article-by-article status table, and prioritized issues with penalties quantified in the local currency
-- **Extraterritoriality is judged by targeting, not accessibility** — a site being reachable from a jurisdiction does not make that law apply; the language, currency and audience signals do
-- Each is invocable directly, without the orchestrator
-
----
-
-### Commercial — SEO Audit Quote
-
-**File:** `skills/seo-quote/SKILL.md`
-
-Generates a client-ready `.docx` SEO audit report for proposals and quotes. Collects minimum site data (volume, stack, critical issues), estimates hours, and produces a budget in USD.
+| `ccpa` | CCPA / CPRA | California, US |
 
 ---
 
