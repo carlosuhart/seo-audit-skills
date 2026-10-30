@@ -206,6 +206,25 @@ Nuxt) desplegado en Netlify, esta regla de fallback no debería existir — es u
 patrón exclusivo de SPA pura, su presencia en un proyecto SSR es en sí misma la
 causa raíz a corregir.
 
+**Antes de pedir el 404: comprobar qué más atiende esa ruta catch-all.** En una
+auditoría real, la ruta `/[lang]/[...not-found]` que devolvía soft-404 también servía a
+los subdominios de aplicación (portal de clientes, portal ejecutivo) y a enlaces de
+cotización enviados a clientes. "No hay nada que el 404 pueda romper" resultó falso y
+solo salió al revisar en profundidad. Revisión mínima antes de recomendar el cambio:
+- Reunir URL de todas las fuentes: GSC 16 meses, landings y páginas vistas de GA4,
+  Bing, crawl, sitemap, enlaces y recursos de todas las páginas, backlinks y archivos
+  de raíz.
+- Probarlas en vivo salto a salto; en Vercel, la cabecera `X-Matched-Path` dice qué
+  ruta del proyecto atendió cada URL.
+- Revisar los subdominios que comparten despliegue, los títulos de GA4 por ruta y qué
+  sirve cada ruta sin sesión iniciada.
+- El entregable separa "Qué no debe cambiar" (rutas en operación), recomienda una opción
+  (Desarrollo decide la implementación), lista resguardos y validaciones, y deja aparte,
+  para consulta, las decisiones con valor en juego (p. ej. 301 de URL que tienen tráfico).
+- Cuantificar también las cifras infladas por la condición (páginas "vistas" que eran
+  soft-404 en GA4, URL descubiertas en GSC, issues en auditorías) para que la caída tras
+  el arreglo no se lea como pérdida.
+
 ---
 
 ## Canonical y hreflang — sin plugin, todo vía metadata del framework
@@ -233,6 +252,23 @@ canonical que corrija la señal, Google puede terminar indexando la versión sin
 contenido. Confirmar con URL Inspection API sobre las 2-3 variantes de la home —
 "Duplicate, Google chose different canonical than user" es la señal directa de este
 patrón.
+
+**Metadata en streaming de Next.js 15.2+ — title, canonical y hreflang dentro del `<body>`.**
+Desde Next.js 15.2, la metadata asíncrona se envía en streaming: title, description, robots,
+canonical y hreflang llegan dentro del `<body>` para todos los user agents salvo los que el
+framework considera bots limitados, y el `<head>` solo trae scripts. Google los ve tras
+renderizar (React los sube al `<head>`), pero **las herramientas que leen el HTML servido los
+ignoran**: Semrush informa "International SEO: Not implemented" y 0 hreflang aunque estén
+completos, y cualquier crawler o agente de IA sin JS ve la página sin title ni canonical.
+Comparar el mismo sitio con dos productos de la misma marca puede mostrar uno con la metadata
+en el `<head>` y otro en el `<body>`, según la versión y el uso de `generateMetadata` asíncrono.
+Diagnóstico: `curl -s URL | grep -n -iE "<title|rel=\"canonical|hreflang"` y mirar si las líneas
+quedan antes o después de `<body`. Solución para Desarrollo: configurar `htmlLimitedBots` en
+`next.config` para servir la metadata bloqueante en el `<head>` a los bots que interesan, o
+volver síncrona la metadata de las rutas clave.
+
+**Redirección de idioma por IP en el cliente:** ver `hreflang`, Error 10. No se detecta sin
+navegador y sin simular varios países.
 
 ---
 

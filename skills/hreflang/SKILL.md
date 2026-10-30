@@ -247,6 +247,44 @@ hreflang, canonical y `og:locale` estén bien. Ver `on-page-fundamentals`.
 
 Procedimiento completo y SQL de WPML en `wordpress-hidden-errors`.
 
+### Error 10: Redirección automática de idioma por IP en el cliente
+
+El servidor responde 200 en cada URL de idioma con su canonical propia y su hreflang correcto,
+pero al cargar, un script consulta un servicio de geolocalización por IP y, según el país,
+cambia la URL al prefijo de otro idioma (`router.replace`) y guarda una cookie de idioma. Con
+esa cookie, el middleware responde 307 a toda URL cuyo prefijo no coincida. Suele venir
+"de regalo" con otra función legítima (detectar el país para moneda, tarifas o cotizador).
+
+**Efecto observado en una auditoría real:** Googlebot rastrea mayormente desde EE. UU., así que
+las versiones de otros idiomas acaban como "Duplicada: Google eligió otra canónica" (Google
+elige la del idioma al que lo redirigen) o "Página con redirección". En un sitio de 324 URL,
+110 URL de dos idiomas tenían la canónica de Google en el tercero, mientras el idioma
+secundario acumulaba miles de impresiones desde su país con CTR de 0,16%.
+
+**Cómo detectarlo** (no se ve con `curl` ni con un crawler sin JS):
+1. Navegador automatizado en sesión limpia; interceptar la petición al servicio de geolocalización
+   y simular la respuesta de varios países, con UA de navegador y de Googlebot.
+2. Si el servicio falla (abortar la petición), no debería haber redirección: confirma la causa.
+3. URL Inspection API sobre las versiones de cada idioma: buscar "Duplicada, Google eligió otra
+   canónica" apuntando siempre al mismo idioma.
+4. Pista en Semrush/Screaming Frog con JS activado: picos de "Incorrect pages in sitemap" (todas
+   las URL de los idiomas que no son el del país del bot) y de "hreflang language mismatch".
+
+**Corrección recomendada:** mantener la detección de país para lo que la necesite (moneda,
+tarifas), pero **sin cambiar la URL ni el idioma de una página pedida explícitamente**; como
+mucho, un aviso para cambiar de idioma. El middleware debe respetar las URL con prefijo y el
+selector manual debe navegar (`router.push`), no reescribir. Desaconsejar la exclusión de
+Googlebot (es cloaking). Las redirecciones automáticas por IP o por `Accept-Language` van
+contra la guía de Google para sitios multirregionales. Si la ruta afectada también sirve
+subdominios de aplicación (portales de clientes), verificar que su comportamiento no cambie.
+
+### Error 11: Buscar `hreflang` distinguiendo mayúsculas en sitios React/Next.js
+
+Next.js serializa el atributo como `hrefLang` (camelCase) en el HTML. Un `grep hreflang` o un
+regex sin `-i` / `re.I` da "no hay hreflang en el `<head>`" cuando sí lo hay. Buscar siempre sin
+distinguir mayúsculas. En Next.js 15.2+ revisar además si la metadata va en el `<body>`
+(metadata en streaming, ver `javascript-seo`).
+
 ## Single-language, multi-region sites
 
 A single-language site targeting multiple regions of the same language

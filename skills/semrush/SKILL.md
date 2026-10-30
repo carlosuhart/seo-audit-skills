@@ -8,6 +8,42 @@ user-invokable: false
 
 # Semrush — Knowledge Base
 
+## Menú lateral verificado (2026-08-24)
+
+```
+Dashboard
+Site Performance
+Site Audit
+Position Tracking
+Competitive Analysis
+  Domain Overview
+  Organic Rankings
+  Top Pages
+  Compare Domains
+  Keyword Gap
+  Backlink Gap
+Keyword Research
+  Keyword Overview
+  Keyword Magic Tool
+  Keyword Strategy Builder
+  Content Ideas
+  SEO Writing Assistant
+  Topic Research
+Link Building
+  Backlinks
+  Referring Domains
+  Backlink Audit
+Extras
+  Sensor
+  SEOquake
+  Semrush Rank
+Other
+  On Page SEO Checker
+  Organic Traffic Insights
+```
+
+Dashboard/Site Performance/Site Audit/Position Tracking son herramientas de **Project** (requieren un proyecto ya creado para el dominio). El resto son secciones globales, no dependen de un proyecto.
+
 ## Rol en el flujo de auditoría
 
 Semrush complementa SE Ranking y Screaming Frog con:
@@ -23,7 +59,7 @@ Semrush complementa SE Ranking y Screaming Frog con:
 
 ## Organic Research
 
-Ruta: Semrush > Organic Research > dominio del cliente
+Ruta: **Competitive Analysis → Domain Overview** (resumen) o **Competitive Analysis → Organic Rankings** (listado de keywords). Nomenclatura verificada 2026-08-24 — el menú de Semrush ya no usa "SEO Toolkit"/"Organic Research" como sección, esos reports viven dentro de **Competitive Analysis**.
 
 ### Qué muestra
 
@@ -53,7 +89,7 @@ Ruta: Semrush > Organic Research > dominio del cliente
 
 ## Keyword Gap (competitor analysis)
 
-Ruta: Semrush > Keyword Gap > introducir dominio cliente + dominios competidores
+Ruta: **Competitive Analysis → Keyword Gap** > introducir dominio cliente + hasta 4 dominios competidores en la vista Venn (se pueden cambiar los 4 y re-comparar sin límite ni proyecto nuevo)
 
 ### Filtros más útiles para identificar oportunidades
 
@@ -81,7 +117,7 @@ Ruta: Semrush > Keyword Gap > introducir dominio cliente + dominios competidores
 
 ## Backlink Gap
 
-Ruta: Semrush > Backlink Gap
+Ruta: **Competitive Analysis → Backlink Gap** (no está en la sección Link Building — verificado 2026-08-24)
 
 Compara el perfil de backlinks del cliente vs competidores para identificar dominios que enlazan a los competidores pero no al cliente.
 
@@ -117,7 +153,56 @@ Semrush Site Audit es un crawler básico. En el flujo de auditoría:
 
 ### Issues de Site Audit: falsos positivos frecuentes
 
-Los mismos que Screaming Frog en modo Spider. Ver skill `screaming-frog` > sección Falsos Positivos.
+Los mismos que Screaming Frog en modo Spider (ver skill `screaming-frog` > sección Falsos
+Positivos), más estos, verificados en vivo en auditorías reales:
+
+| Issue de Semrush | Por qué suele ser falso | Cómo confirmarlo |
+|---|---|---|
+| Invalid robots.txt | Directivas válidas que Semrush no reconoce (`Content-Signal`, `License`) | Validar con el probador de GSC |
+| Broken external links 429 / 403 | `wa.me`, LinkedIn y varios medios devuelven 429/403 a HEAD o a bots y 200 en GET desde navegador | `curl` con GET y UA de navegador |
+| Blocked / noindex | Noindex deliberado (login, registro, páginas de filtro) | Revisar la intención con el cliente |
+| Low text to HTML ratio | Frameworks JS (Next.js, Astro) inflan el HTML con el payload de hidratación | Contar palabras visibles: páginas con miles de palabras salen con ratio 0,02 |
+| HTTPS "Not implemented" | El proyecto quedó configurado con `scheme: http` | `siteaudit/info`; corregir el proyecto, no el sitio |
+| International SEO "Not implemented" / hreflang 0 | Metadata en el `<body>` (Next.js 15.2+ con metadata en streaming): Semrush ignora el hreflang fuera del `<head>` | Ver skill `javascript-seo` |
+| Hreflang language mismatch | Página de ~40 palabras con el formulario renderizado solo en cliente, o listados de nombres propios | Leer el HTML del servidor |
+| Http homepage sin 301 | Responde 308, que es equivalente | `curl -I` |
+| Link text "Learn more" sin descripción | La tarjeta también enlaza con el nombre del producto y el botón lleva `aria-label` descriptivo | Inspeccionar el DOM |
+| Structured data: SoftwareApplication sin `aggregateRating`/`offers` | Decisión correcta de no fabricar reseñas ni precios | Documentar la decisión |
+| Incorrect pages in sitemap + hreflang mismatch masivos tras activar JS | El sitio redirige por IP en el cliente y el bot rastrea desde EE. UU. (lo manda al idioma inglés) | Ver skill `hreflang`, error de redirección por IP |
+
+### Revisar errores, warnings y notices de todos los proyectos
+
+Procesar solo los warnings, o solo el proyecto principal, deja fuera problemas reales: en una
+auditoría con varios dominios, los errores de los dominios secundarios escondían dos hallazgos
+nuevos (un logo roto y title/meta duplicados). Protocolo por proyecto:
+
+1. `siteaudit/info` → recorrer `errors`, `warnings` y `notices` con count > 0.
+2. Para cada issue, sus URL (`snapshot/{snapshot_id}/issue/{issue_id}`).
+3. Verificar cada una en vivo y clasificar: real nuevo / ya cubierto por una corrección pedida /
+   falso positivo.
+4. `new_count` > 0 con `delta` 0 es rotación de URLs, no aumento.
+
+### Site Audit por API REST — trampas verificadas
+
+La API REST con API key funciona aunque el MCP de Semrush esté sin autenticar.
+
+- Endpoints útiles: `reports/v1/projects/{id}/siteaudit/info` (configuración + `current_snapshot`
+  con errores/warnings/notices, `delta` y `new_count`), `meta/issues` (nombres de cada issue),
+  `siteaudit/history?limit=1` (último snapshot), `snapshot/{sid}/issue/{iid}` (URL afectadas),
+  `siteaudit/launch` (relanzar).
+- **`management/v1/projects/{id}/siteaudit/save` sobrescribe toda la configuración.** Leer antes
+  `siteaudit/info` y reenviar todos los campos; guardar un respaldo del JSON previo.
+- `save` exige `pageLimit` en camelCase (con `pages_limit` responde 400 "pageLimit must not be null").
+  Body que funciona: `domain` (sin protocolo; con protocolo da 400 RFC 1035), `pageLimit`,
+  `userAgentType`, `scheduleDay`, `crawlSubdomains`, `respectCrawlDelay`, `scheme` (campo no
+  documentado, `"https"`), `crawlSourceType`, `crawlSourceUrl`, `notify`, `allow`, `disallow`,
+  `removedParameters`, `jsRendering`.
+- **Con `crawlSourceType` = sitemap, si el save no envía `crawlSourceUrl` queda en null:** el
+  rastreo programado se salta sin registrar fallo (`last_failed_audit` sigue en 0) y `launch`
+  devuelve 500 "Internal Server Error". Se arregla reenviando la URL del sitemap.
+- `jsRendering: RENDER_ALL` cambia los resultados en sitios JS: desaparecen falsos "Missing h1"
+  y aparecen problemas que antes no veía. Comparar el Site Health antes y después del cambio de
+  configuración, no contra el rastreo anterior como si fuera evolución del sitio.
 
 ---
 

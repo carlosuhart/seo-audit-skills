@@ -317,6 +317,44 @@ Identifica páginas donde los usuarios orgánicos llegan y se van — señal de 
 | Self-referral | El propio dominio aparece como fuente | Añadir dominio en GA4 Admin > Data Streams > Configure Tag Settings > List unwanted referrals |
 | Conversiones duplicadas | Mismo evento marcado como conversión en GTM y en GA4 | Marcar solo en uno de los dos |
 | Tráfico directo excesivo | Dark social, email sin UTM, copia-pega de URL | Normal hasta ~20-25%; por encima, revisar UTMs de newsletters y social |
+| Datos personales en la URL | `page_location` con tokens de sesión, enlaces de restablecimiento, correos o contraseñas | Ver sección siguiente |
+
+---
+
+## Datos personales en la cadena de consulta — exportar sin query string
+
+En sitios con login, registro o aplicaciones (portales de clientes, cotizadores, SaaS) es
+frecuente que las URL completas que guarda GA4 contengan **tokens de inicio de sesión y de
+restablecimiento, códigos de validación, correos e incluso contraseñas** en la cadena de
+consulta. En una auditoría real, 13 archivos de datos de trabajo (exportaciones para informes y
+análisis de conversión) acumularon más de 1.200 apariciones de esos valores, una contraseña
+incluida, y se sincronizaban a diario a una nube.
+
+**Regla al extraer por API o exportar:**
+- Usar `pagePath` / `landingPage` (sin cadena de consulta). Evitar `pageLocation`,
+  `landingPagePlusQueryString` y "Landing page + query string" salvo que sea imprescindible.
+- Si hace falta la cadena (UTMs, parámetros de filtro), quitar los valores de los parámetros
+  sensibles antes de guardar el archivo.
+- Revisar los extractores existentes antes de volver a correrlos; los archivos ya generados
+  se limpian o eliminan.
+- Reportarlo al cliente como hallazgo de seguridad **informativo** (qué se ve, sin copiar
+  ningún valor en el informe). El arreglo de fondo es del lado de la aplicación (no pasar
+  credenciales por GET) y de GA4 (redacción de datos en el flujo web).
+
+---
+
+## Cambios de medición — marcar la fecha antes de comparar períodos
+
+Un banner de cookies, Consent Mode, un cambio de etiquetas, de eventos de conversión o de filtros
+mueve sesiones, conversiones y leads atribuidos sin que cambie el negocio real.
+
+- Antes de publicar un cambio así: avisar la fecha al equipo que reporta KPIs y al de Ads, con
+  la lista de indicadores que pueden moverse y si el total real (p. ej. leads en el CRM) cambia o no.
+- Anotar la fecha en GA4 (anotaciones del informe).
+- En todo informe que compare períodos a ambos lados de esa fecha, marcarla como cambio de
+  medición y no atribuir la variación a SEO, a un update de Google ni al negocio.
+- Separar en la entrega los cambios que tocan la medición de los que no, para que los segundos
+  no esperen al aviso.
 
 ---
 

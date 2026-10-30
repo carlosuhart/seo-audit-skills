@@ -103,9 +103,26 @@ Guardar el JSON crudo en el directorio de auditorias del proyecto.
 - Quick wins y canibalización se calculan sobre el período pedido; un período corto (<28 días) da señal débil, avisarlo.
 - El z-score de anomalías es sensible a series cortas o con mucho ruido natural (sitios de bajo volumen): con <30 días de datos, no reportar anomalías, decirlo explícitamente en vez de forzar un cálculo poco confiable.
 - Esto es diagnóstico, no prescripción de contenido. Para el plan de qué escribir/reescribir en una página con quick wins, encadenar con `mineria-de-impresiones`.
+- Un dato de URL Inspection de ayer puede haber cambiado hoy (Google rastreó entremedio). Antes de entregar un documento que cite el estado de indexación de una URL, reinspeccionarla el mismo día.
+
+## Solicitudes manuales de indexación — el cupo no es público
+
+Cuando el diagnóstico termina en una lista de URL para "Solicitar indexación" en la UI de GSC:
+
+- Google no publica el cupo de solicitudes manuales. Observado en uso real: se agota con una
+  tanda de unas 10 URL, y al día siguiente solo dejó pedir 2 más tras una tanda hecha por la
+  tarde, lo que apunta a una ventana móvil de 24 h y no a un reinicio a medianoche (hipótesis,
+  no confirmada). No afirmar que cada propiedad tiene su propio cupo.
+- Una sola tanda por día, ordenada por prioridad de negocio; lo que sobra pasa a la cola del día
+  siguiente, pedida a una hora posterior a la de la tanda anterior.
+- Cada URL de la tanda se valida en vivo antes de entregarla: 200, indexable, canonical propia y
+  todavía sin indexar en URL Inspection (las que Google indexó entremedio salen de la lista).
+- No volver a pedir una URL ya solicitada: reinspeccionarla a los 3-4 días.
+- En inspecciones largas por API, timeout en cada consulta y salida sin buffer (`python -u`)
+  para que un cuelgue no pierda el lote.
 
 ## Dependencias
 
 - Si el usuario pide el plan de contenido para las queries detectadas → `mineria-de-impresiones`
 - Si el usuario pide comparar contra el período anterior por caída → `seo-gsc-drops`
-- Si el hallazgo de canibalización lleva a decidir consolidar o no un artículo nuevo → `feedback_cannibalization_check.md`
+- Si el hallazgo de canibalización lleva a decidir consolidar o no un artículo nuevo → `blog-cannibalization` (si está instalada) o una revisión manual del solapamiento de intención

@@ -300,6 +300,28 @@ No confundir CTR bajo con posición baja: una página en posición 8-10 puede te
 CTR bajo simplemente por la posición, no por el title. Filtrar por posición 1-5 +
 CTR bajo para identificar casos donde el title es el problema.
 
+### Sitios maduros — acotar el cambio a lo que dice GSC y dejar lista la reversión
+
+En un sitio que ya posiciona, una propuesta de title/meta/H1 "mejor redactada" puede quitar del
+title justo la consulta que trae los clics. Caso real: una reescritura de titles eliminaba la
+consulta principal de una guía y cambiaba la página con el mejor CTR del sitio (5,35%). Antes de
+dar por lista cualquier propuesta, cruzar cada página con sus consultas con clics (GSC, 90 días)
+y su CTR de 28 días:
+
+| Situación de la página | Qué se cambia |
+|---|---|
+| CTR bajo o sin impresiones | Title, meta y H1, conservando en el title las palabras de las consultas con clics |
+| CTR bueno | Solo la meta description (no afecta al ranking); title y H1 se mantienen |
+| La de mejor rendimiento del sitio o de su grupo | No se toca |
+
+Todo cambio deja preparada su base de seguimiento, en una sección "Seguimiento" del entregable:
+- Línea base de GSC por página y por consulta antes del cambio, guardada con fecha.
+- Consultas vigiladas (las que traen clics hoy).
+- Páginas de control del mismo tipo que no se tocan.
+- Captura del HTML (drift) para confirmar qué se publicó realmente.
+- Criterio explícito para volver atrás, p. ej.: una consulta vigilada con clics baja más de
+  3 posiciones a 28 días sin que baje el control.
+
 ---
 
 ## Verificación de claims antes de publicar

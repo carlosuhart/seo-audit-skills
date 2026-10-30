@@ -311,6 +311,22 @@ interacts with the gallery. The main product image should be `loading="eager"`.
 
 ---
 
+## Product galleries — hover zoom is a UX finding
+
+Hover zoom (the magnified view follows the cursor) takes control away from the shopper: the
+zoom can't be held on the part they want to read (label, ingredients, certification marks),
+it disappears when the cursor moves toward the price or the buy button, and it does not work
+on mobile, touch or keyboard (WCAG 1.4.13, content on hover or focus). If the product page
+doesn't let people see the product, they go back to the results page or don't buy.
+
+When auditing or proposing a gallery, recommend user-controlled zoom: opens on click or tap,
+shows the image large, zooms with buttons, wheel or pinch, pans by dragging, stays open until
+closed, and loads the large file only when opened (no extra weight on page load). Report an
+existing hover zoom as a UX problem that hurts conversion and interaction signals. Do not sell
+it as a direct ranking factor beyond Core Web Vitals.
+
+---
+
 ## Diagnostic commands — live site image audit
 
 ### Detect oversized images (>200 KB) on any URL

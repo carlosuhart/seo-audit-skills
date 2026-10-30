@@ -404,6 +404,110 @@ GTM has already run.
 
 ---
 
+## Consent Mode en sitios con navegación sin recarga (SPA, Astro ClientRouter, Next.js)
+
+Patrones verificados en auditorías reales. Casi todos fallan en silencio: el banner se ve bien,
+el código "parece" correcto y las etiquetas igual disparan antes de aceptar, o nunca disparan
+en la visita que acepta.
+
+### 1. Primero comprobar que el consentimiento se registra de verdad — el shim de gtag
+
+```javascript
+// INCORRECTO — rest params o función flecha empujan un Array
+window.gtag = window.gtag || function (...args) { window.dataLayer.push(args); };
+
+// CORRECTO — GTM solo procesa como comando gtag el objeto `arguments`
+window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+```
+
+Con el shim incorrecto, `consent default` y `consent update` se ignoran y **todas las etiquetas
+disparan sin consentimiento**. Señales: `google_tag_data.ics.entries` muestra las cuatro señales
+como `{"implicit":true}` y los hits llevan `gcd=13l3l3l3l1l1`. Es un error típico de quien
+"moderniza" el snippet a ES6.
+
+**Prueba obligatoria (no basta leer el código):** navegador automatizado en contexto limpio,
+leer `google_tag_data.ics.entries` y contar peticiones antes de aceptar a `g/collect`,
+`clarity.ms`, `doubleclick.net`, `googlesyndication.com`, `googleadservices.com` y `google.com/ccm`.
+Un regex que omita alguno de esos dominios da un falso "no sale nada".
+
+### 2. Etiqueta bloqueada en Initialization: actualizar el consentimiento no la reevalúa
+
+Si la etiqueta exige consentimiento adicional (`analytics_storage`) y su único activador es
+Initialization, con default `denied` queda bloqueada por completo. Al aceptar, `consent update`
+**no la vuelve a evaluar**. Hace falta un evento después del update y un activador de ese evento:
+
+```javascript
+gtag('consent', 'update', { analytics_storage: 'granted' });
+window.dataLayer.push({ event: 'consent_update' });
+```
+
+### 3. Nunca "Una vez por página" en una etiqueta que se reactiva con consent_update
+
+Con `once_per_load`, el intento bloqueado en Initialization **gasta la única activación de la
+página** (en el runtime de gtm.js el registro de "una vez por página" envuelve también el
+`onFailure`). Al aceptar, la etiqueta no dispara y **la primera visita que acepta queda sin
+page_view**. Correcto:
+
+- Opción de activación: "Una vez por evento".
+- Empujar `consent_update` **solo desde el clic en Aceptar**, nunca desde la función que
+  reaplica la preferencia guardada en cada carga o navegación.
+- Guarda contra duplicados: empujar solo si la preferencia previa no era "aceptado" (cubre
+  reabrir el banner y aceptar otra vez, y listeners apilados por la navegación sin recarga).
+
+### 4. Google tag de Google Ads (AW-) sin consentimiento adicional = modo avanzado
+
+Con default `denied`, la Google tag de Ads sin consentimiento adicional igual envía en cada carga
+un ping sin cookies a `pagead2.googlesyndication.com/ccm/collect` con URL, IP y gclid, **también
+después de rechazar**. Si el requisito es que no salga nada antes del consentimiento: exigir
+`ad_storage` como consentimiento adicional y activarla con `consent_update`. Costo que hay que
+comunicar: Google Ads pierde esa señal para modelar conversiones. La cookie `_gcl_aw` la escribe
+la propia Google tag AW al aceptar; no depende del vinculador de conversiones.
+
+### 5. Quién envía los page_view siguientes en una navegación sin recarga
+
+La "página" de GTM dura toda la navegación interna: Initialization y `gtm.js` no se repiten.
+Los page_view de las páginas siguientes los envía la medición mejorada de GA4 por cambios del
+historial (`enhancedMeasurementSettings.pageChangesEnabled`, consultable con la Admin API
+v1alpha). Comprobar que esté activa antes de afirmar que no hay pérdidas ni duplicados. Si el
+banner corre en el evento de carga de cada página (p. ej. `astro:page-load`) y reaplica la
+elección guardada, no empujar `consent_update` desde ahí (ver punto 3).
+
+### 6. Criterios de aceptación para validar un cambio de consentimiento
+
+| Escenario | Resultado esperado |
+|---|---|
+| Primera visita, sin interactuar | Ningún disparo de etiquetas que exigen consentimiento |
+| Aceptar | Un disparo y exactamente un page_view de la página de llegada (DebugView) |
+| Navegación interna tras aceptar | Un page_view por página |
+| Recarga | Preferencia persistente, sin banner, un page_view |
+| Rechazar | Ningún disparo; etiquetas de Ads según la decisión del punto 4 |
+| Cada idioma o plantilla | Repetir la tabla |
+
+### 7. Excepción de bloqueo para todos los eventos (filtrar entornos de prueba)
+
+Activador de evento personalizado con regex `.*` + condición (p. ej. Page Hostname distinto del
+de producción), usado como excepción en todas las etiquetas. En el contenedor compilado,
+Initialization, Consent Initialization, `gtm.js` y los clics son predicados sobre la misma
+variable `_event` que los eventos personalizados (`_eq _event gtm.init`), así que `.*` también
+los cubre. Si alguien lo objeta, se refuta mostrando los predicados del gtm.js publicado; igual
+conviene pedir que la Vista previa muestre bloqueadas las Google tags de Initialization.
+
+### 8. Clic en un elemento hijo de un enlace
+
+Con el activador "Clic - Solo enlaces", GTM toma como Click Element el `<a>` más cercano aunque
+el clic caiga en un `<span>` interno, así que "Atributo del elemento" y Click URL leen el enlace.
+El riesgo de atributo vacío es del activador "Todos los elementos" (ahí sí hace falta
+`closest()`). Pedir igual una prueba de clic sobre el hijo en la validación.
+
+### 9. Todo cambio de consentimiento mueve los KPIs
+
+Un banner nuevo, Consent Mode o un cambio de etiquetas sube o baja sesiones, conversiones y leads
+atribuidos sin que cambie el negocio. Antes de publicar: avisar la fecha a quien reporta KPIs y
+a quien gestiona Ads, listar qué indicadores pueden moverse, anotar la fecha en GA4 y marcarla
+como cambio de medición en toda comparación de períodos posterior.
+
+---
+
 ## Container Snippets — Verificación de instalación
 
 ### Verificar que GTM está cargando

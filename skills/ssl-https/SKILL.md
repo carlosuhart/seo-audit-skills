@@ -253,7 +253,7 @@ Header always set Referrer-Policy "strict-origin-when-cross-origin"
 | Header | Purpose | Recommended value |
 |--------|---------|------------------|
 | `Strict-Transport-Security` | Enforce HTTPS | `max-age=31536000; includeSubDomains` |
-| `X-Frame-Options` | Prevent clickjacking | `SAMEORIGIN` |
+| `X-Frame-Options` | Prevent clickjacking | `DENY` (or CSP `frame-ancestors 'none'`); `SAMEORIGIN` only with a confirmed need — see below |
 | `X-Content-Type-Options` | Prevent MIME sniffing | `nosniff` |
 | `Referrer-Policy` | Control referrer data | `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | Restrict browser features | Deny unused: `geolocation=(), microphone=()` |
@@ -287,6 +287,77 @@ every active subdomain serves valid HTTPS can break subdomains that aren't HTTPS
 `preload` is a further commitment (submission to browser preload lists is difficult to
 reverse) — treat it as a separate decision made only after `includeSubDomains` has
 been live and confirmed safe, not as one more parameter to add at the same time.
+In a written fix this does not need its own gated phase: put `preload` in the same
+header block with an explicit caution note next to it (see "Delivery format" below).
+
+### Default values and wording that hold up in review
+
+- **`frame-ancestors` / `X-Frame-Options`: start from `'none'` / `DENY`.** `'self'` /
+  `SAMEORIGIN` is justified only by a confirmed need to frame the site. "Same origin" means the
+  exact origin, not "another domain of the same company group": framing from a sister domain
+  needs an explicit `frame-ancestors https://sister.example` allowlist, not `SAMEORIGIN`.
+  The minimal snippets above use `SAMEORIGIN` because it never breaks anything; in a written
+  recommendation, default to the restrictive value and relax it when a real use case appears.
+- **`Cross-Origin-Opener-Policy: same-origin` can break OAuth, payment popups and cross-window
+  integrations**, including ones opened by a third-party widget on a site with no visible login.
+  Add a functional check of those flows to the validation.
+- **A Report-Only period is evidence only if the reports land somewhere.** Before treating
+  3-5 days of Report-Only as clearance to enforce, confirm the `report-uri` / `report-to`
+  endpoint exists and stores reports. Otherwise the "monitoring" is fictitious.
+- **Risk wording:** a missing header is not a confirmed vulnerability. Write "without CSP the
+  site loses a mitigation layer against some XSS scenarios", not "the site is exposed to XSS".
+  Overstating it is less precise, not more rigorous.
+- **Delivery format that gets implemented:** one "new state" block with all headers together
+  (HSTS with `includeSubDomains; preload` on the same line), and the cautions (audit subdomains
+  before preload, verify the report endpoint, test OAuth/popups) as notes next to the block or
+  as validation items — not as numbered phases each gated on the previous one. The only
+  sequence worth keeping explicit: CSP always starts in Report-Only and is enforced only after
+  a real monitoring period with no unexpected violations.
+- **Security findings outside the SEO scope** (tokens in URLs, exposed panels, PII in analytics)
+  are reported as informative items: what is visible and why it matters, never the values.
+
+### CSP Report-Only in "learning mode" — HTTP 500/504 from oversized headers
+
+Seen on several WordPress sites on shared hosting, with identical symptoms each time: the whole
+domain returns 500 (or the origin hangs with 504 behind Cloudflare) on every route that runs PHP,
+**nothing in `error_log`**, and restoring a backup does not help. The host, if it answers at all,
+mentions "header size limit reached".
+
+**Cause:** a security plugin with a CSP *learning mode* (e.g. Really Simple Security) writes the
+policy into `wp-content/advanced-headers.php`, loaded on every request via `auto_prepend_file`
+(from `.htaccess` / `.user.ini`) before WordPress boots. In learning mode the plugin keeps
+appending every third-party domain it sees to `Content-Security-Policy-Report-Only`. On sites
+with programmatic ads the list never stabilises: one case reached 11,850 characters and 388
+ad-tech domains. Once the header exceeds the server limit, every response fails. Backups don't
+help because the file was already bloated when they were taken.
+
+**Diagnosis:**
+```bash
+# Size of the generated header file (over ~8 KB is a red flag)
+ls -l wp-content/advanced-headers.php
+grep -c "Report-Only" wp-content/advanced-headers.php
+# Header size on a working response
+curl -sI https://example.com/ | wc -c
+```
+
+**Fix:**
+1. Remove the Report-Only line from `advanced-headers.php` (keep a dated backup). The site comes
+   back immediately.
+2. Turn learning mode off in the plugin (in Really Simple Security: Content Security Policy →
+   exit learning mode → save), or the plugin will regenerate the line. Check afterwards that the
+   plugin rewrote the *definitive* file: in one case it only regenerated
+   `advanced-headers-test.php` and the line had to be removed by hand.
+3. Uninstalling the plugin does **not** delete `advanced-headers.php` or the `auto_prepend_file`
+   directive — remove both by hand.
+4. Check every other site with the same plugin: same plugin + ad stack = same time bomb.
+
+**False leads to avoid:** a WAF rule blocking requests to paths containing `advanced-headers`
+does nothing (the file is included server-side, never requested over HTTP). The host naming the
+file is not evidence of malware: read its contents before assuming a compromise. If 502/503/504
+errors persist at a lower rate after the fix, check the database engine: MyISAM tables written
+on every ad impression or click (ad plugins, analytics, Action Scheduler) cause lock contention
+that looks like a capacity problem; converting them to InnoDB took the error rate in one case
+from ~20% to ~4%.
 
 ### X-Powered-By exposure
 
