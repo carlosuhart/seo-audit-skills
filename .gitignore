@@ -16,3 +16,12 @@ Thumbs.db
 !.claude-plugin/plugin.json
 reports/
 audits/
+
+# Binarios de terceros que se descargan con su script de instalación (axe-core, MPL-2.0)
+skills/*/vendor/
+
+# Python
+__pycache__/
+
+# Anexos privados de cada skill (solo en la copia local de .claude/skills)
+casos-privados.md
