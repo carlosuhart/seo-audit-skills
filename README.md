@@ -2,7 +2,7 @@
 
 Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search
 
-A knowledge base of 39 skills for technical SEO audits with Claude Code.
+A knowledge base of 41 skills for technical SEO, UX and accessibility audits with Claude Code.
 Each skill encodes real-world patterns: documented CMS bugs, fix-ready code
 snippets, audit checklists, and edge cases that generic AI training data misses.
 
@@ -16,6 +16,7 @@ the tools SEOs actually use.
 - **SEO tools**: Screaming Frog, SE Ranking, Semrush
 - **Technical**: robots.txt (+ indexability), sitemap, canonical tags, redirects, on-page fundamentals, Core Web Vitals, cache, images, SSL/HTTPS, schema markup, hreflang, third-party scripts, JavaScript SEO
 - **AI/GEO**: GEO (Generative Engine Optimization), AI crawler access, llms.txt, Wikidata entity, brand citation signals
+- **UX and accessibility**: Nielsen heuristic evaluation of live sites and Figma designs, safe form-state testing, WCAG 2.2 AA audits with axe-core and a real keyboard walk
 
 All knowledge is anonymized and GDPR compliant — no client data, no domains,
 no identifying information. The pattern matters, not the source.
@@ -86,6 +87,13 @@ Each skill lives in `skills/<name>/SKILL.md`. The details (bugs, fixes, checklis
 | `seo-negativo` | Negative SEO monitoring: link bombing, scraping, penalties, fake reviews, disavow |
 | `seo-quote` | Client-ready `.docx` audit with an hours estimate and a USD quote |
 
+### UX and accessibility
+
+| Skill | What it covers |
+|---|---|
+| `ux-heuristica` | Heuristic UX/UI evaluation of live sites and Figma designs: Nielsen's 10 heuristics by task (B2B lead forms, ecommerce search to checkout), severity 1-4, annotated screenshot required per finding. Scripts test a form in four states without sending anything (all network writes, navigations and third-party pixels blocked), measure the UI at 360/768/1280 px and annotate findings (+ `references/`, `scripts/`) |
+| `accesibilidad-wcag` | WCAG 2.2 AA audit: axe-core 4.14 by state, real keyboard walk (visible focus by pixel diff, focus obscured by cookie banners, focus in hidden dialogs, traps, skip link), reflow, text spacing, coverage of all 55 criteria (never claims "conforms"), manual protocol and dated legal context (EAA, Spain, ADA, Chile, Brazil). axe-core (MPL-2.0) is downloaded and hash-checked by `scripts/setup_axe.py`, not bundled (+ `references/`, `scripts/`) |
+
 ### Privacy (8 jurisdictions)
 
 `privacidad` is the orchestrator: it detects which laws apply from the site's targeting (not mere accessibility), runs one shared discovery pass and consolidates the results. Each sub-skill also works on its own and returns a score, an article-by-article table and penalties in local currency.
@@ -120,8 +128,13 @@ git clone --depth 1 https://github.com/carlosuhart/seo-audit-skills.git
 powershell -ExecutionPolicy Bypass -File seo-audit-skills\install.ps1
 ```
 
-All scripts copy each `skills/*/SKILL.md` to `~/.claude/skills/[name]/SKILL.md`.
-Running them again updates existing skills.
+Both scripts copy each skill folder in full (`SKILL.md`, `references/`, `scripts/`) to
+`~/.claude/skills/[name]/`, skipping `vendor/` and Python caches. Running them again updates
+existing skills without deleting local files that are not in the repo.
+
+Skills with scripts need Python 3.11+; the browser-based ones also need Playwright
+(`pip install playwright` and `playwright install chromium`) and `accesibilidad-wcag` needs Node.js
+for its one-time `py scripts/setup_axe.py`.
 
 ## Works well with
 
