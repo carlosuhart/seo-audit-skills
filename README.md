@@ -2,7 +2,7 @@
 
 Desarrollado por [Zythos Media](https://zythos.media) — Especialistas en SEO & IA Search
 
-A knowledge base of 41 skills for technical SEO, UX and accessibility audits with Claude Code.
+A knowledge base of 45 skills for technical SEO, UX and accessibility audits with Claude Code.
 Each skill encodes real-world patterns: documented CMS bugs, fix-ready code
 snippets, audit checklists, and edge cases that generic AI training data misses.
 
@@ -78,6 +78,8 @@ Each skill lives in `skills/<name>/SKILL.md`. The details (bugs, fixes, checklis
 | `seo-interlinking` | Internal-linking audit from Screaming Frog + GSC: orphans, depth, anchors, hubs (+ script) |
 | `ga4-ai-traffic` | Real referral traffic from AI assistants in GA4, reported as a floor (+ script) |
 | `geo-ai-discoverability` | Signals for AI citation: crawler access, llms.txt, Wikidata, schema, citable passages |
+| `seo-logs` | Server log analysis: how to get logs per platform (Apache, Nginx, LiteSpeed, Cloudflare, Vercel), bot verification by DNS or published IP ranges (43 bots with sources), crawl waste, crossing with sitemap and GSC (+ `references/`, `scripts/`, stdlib only) |
+| `ads-asistentes-ia` | Advertising inside AI assistants (ChatGPT Ads, ads in and around AI Overviews and AI Mode, Copilot): where it is sold, by country and language, with dated sources (+ `references/`) |
 
 ### Verticals, defense and commercial
 
@@ -86,6 +88,8 @@ Each skill lives in `skills/<name>/SKILL.md`. The details (bugs, fixes, checklis
 | `seo-educacion` | Higher-education SEO: enrollment funnel, seasonality, Course schema, keyword tiers |
 | `seo-negativo` | Negative SEO monitoring: link bombing, scraping, penalties, fake reviews, disavow |
 | `seo-quote` | Client-ready `.docx` audit with an hours estimate and a USD quote |
+| `seo-conversion` | Conversion-led SEO for leads and sales: classifies the business (B2B, SaaS, local, ecommerce), GA4 measurement gate, buying intent in GSC, money pages and content-to-money linking (+ `references/`, `scripts/`) |
+| `vigencia-skills` | Monthly freshness review of a skill catalog: expired or undated skills, the sources that change SEO practice, and a patch proposal with dated evidence (+ `scripts/`) |
 
 ### UX and accessibility
 
