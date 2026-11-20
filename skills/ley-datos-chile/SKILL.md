@@ -8,9 +8,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: PubliUp SEO
-  version: "1.3.0"
+  version: "1.3.1"
   category: legal-compliance
-  revisar: "2026-12-15"
+  revisar: "2027-01-15"
 ---
 
 # Auditoría Ley 21.719 — Protección de Datos Personales (Chile)
@@ -721,20 +721,26 @@ Siempre indicar este alcance en la sección de notas metodológicas del informe.
 ## Actualización normativa
 
 - **Ley 21.719** publicada el 13 de diciembre de 2024.
-- **Vigencia:** el primer día del mes 24 tras la publicación, es decir, **01/12/2026**
-  (artículo primero transitorio), según el texto publicado vigente en la BCN al 20/11/2026.
-- **Postergación en trámite:** el Boletín 18.623-07, despachado por el Congreso el 17/11/2026
-  y en aprobación presidencial, mueve la vigencia al 15/10/2027 y amplía el Consejo de la
-  Agencia de 3 a 5 miembros, sin cambiar obligaciones ni multas. **Hasta que se publique en
-  el Diario Oficial la fecha legal sigue siendo el 01/12/2026**: antes de citar una fecha,
-  revisar diariooficial.interior.gob.cl y la ficha de la BCN. Mientras la ley no rija, sigue
-  la Ley 19.628 original (sin interés legítimo como base ni Agencia): presentar la auditoría
-  como preparación.
+- **Vigencia: 15/10/2027.** La ley de postergación (Boletín 18.623-07, despachada por el
+  Congreso el 17/11/2026 sin modificaciones) sustituye la regla original del artículo
+  primero transitorio (01/12/2026) por esa fecha fija. Amplía el Consejo Directivo de la
+  Agencia de 3 a 5 miembros, con mandato de 6 años sin reelección y renovación parcial, y
+  pide enviar la primera nómina al Senado al menos 9 meses antes de la vigencia. **No
+  cambia obligaciones ni multas.** El régimen de amonestación para empresas de menor tamaño
+  durante los primeros 12 meses (artículo sexto transitorio) se mantiene; se rechazó
+  extenderlo a todas las empresas.
+  - Al 20/11/2026 faltaba la publicación en el Diario Oficial: cuando se publique, anotar
+    aquí el número de ley y la fecha de publicación (diariooficial.interior.gob.cl y la
+    ficha de la BCN, idNorma 1209272).
+  - Hasta el 15/10/2027 sigue rigiendo la Ley 19.628 original, sin interés legítimo como
+    base de licitud y sin Agencia: presentar la auditoría como **preparación para la
+    vigencia**, no como incumplimiento actual sancionable.
 - **Reglamentos:** sin publicar al 20/11/2026; pueden precisar adecuación de países,
   certificación y modelo de prevención.
 - **Agencia de Protección de Datos Personales:** se constituye con la vigencia de la ley. El
   CPLT no ejerce sus funciones en ningún momento (art. 31: solo coordinación).
-- **Versión de esta skill:** 1.3.0 (2026-11-20). Cambios: artículos verificados en el texto
+- **Versión de esta skill:** 1.3.1 (2026-11-20). Vigencia al 15/10/2027 (ley de postergación,
+  Boletín 18.623-07). Versión 1.3.0 (2026-11-20). Cambios: artículos verificados en el texto
   oficial de la BCN (idNorma 1209272): delegado voluntario (art. 50), encargado (art. 15 bis),
   información (14 ter), seguridad (14 quinquies), vulneraciones (14 sexies), transferencias
   (27-29), sanciones y reincidencia (35-36); el CPLT no asume funciones; sin exigencia de
