@@ -723,12 +723,16 @@ Siempre indicar este alcance en la sección de notas metodológicas del informe.
 - **Ley 21.719** publicada el 13 de diciembre de 2024.
 - **Vigencia: 15/10/2027.** La ley de postergación (Boletín 18.623-07, despachada por el
   Congreso el 17/11/2026 sin modificaciones) sustituye la regla original del artículo
-  primero transitorio (01/12/2026) por esa fecha fija. Amplía el Consejo Directivo de la
-  Agencia de 3 a 5 miembros, con mandato de 6 años sin reelección y renovación parcial, y
-  pide enviar la primera nómina al Senado al menos 9 meses antes de la vigencia. **No
-  cambia obligaciones ni multas.** El régimen de amonestación para empresas de menor tamaño
-  durante los primeros 12 meses (artículo sexto transitorio) se mantiene; se rechazó
-  extenderlo a todas las empresas.
+  primero transitorio (01/12/2026) por esa fecha fija. Texto despachado: Oficio 378/SEC/26
+  del Senado, 17/11/2026. Amplía el Consejo Directivo de la Agencia de 3 a 5 miembros
+  (quórum para sesionar de 2 a 3), con mandato de 6 años sin reelección y renovación parcial
+  cada 2 años. La primera nómina se propone al Senado dentro de los 10 días siguientes a la
+  publicación de la ley (en un solo acto: 2 consejeros por 6 años, 2 por 4 y 1 por 2), se
+  vota en bloque con dos tercios de los senadores en ejercicio y, si se rechaza, el
+  Presidente presenta otra en 15 días; se elimina la aprobación tácita por silencio del
+  Senado. **No cambia obligaciones ni multas**, ni el régimen de amonestación para empresas
+  de menor tamaño durante los primeros 12 meses (artículo sexto transitorio). No fija plazo
+  para los reglamentos.
   - Al 20/11/2026 faltaba la publicación en el Diario Oficial: cuando se publique, anotar
     aquí el número de ley y la fecha de publicación (diariooficial.interior.gob.cl y la
     ficha de la BCN, idNorma 1209272).
