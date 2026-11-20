@@ -338,9 +338,12 @@ Ruta: Elementor > Tools > Replace URL / Converter.
 se generan dos `BreadcrumbList` conflictivos. Desactivar breadcrumbs en Schema Pro
 y dejar solo el de Yoast.
 
-**FAQPage schema en sitios e-commerce:** Google restringió FAQ rich results a
-sitios gov/salud desde 2023. No genera rich results en e-commerce. No añadir
-nuevas implementaciones de FAQPage en sitios comerciales.
+**FAQPage schema en sitios e-commerce:** Google retiró por completo los rich
+results de FAQ el 07/05/2026, también para sitios de gobierno y salud. No
+prometer rich results de FAQ en Google. El marcado se mantiene igual: Bing y
+Yahoo siguen mostrando FAQ, los asistentes de IA extraen las preguntas y
+respuestas, y Google lo lee como señal semántica. Si el bloque FAQ es visible y
+útil, implementarlo; nunca reportar FAQPage como issue. Detalle en `schema-markup`.
 
 **Product schema ausente:** WooCommerce no genera automáticamente `Product` +
 `Offer` schema sin Yoast WooCommerce SEO add-on o Schema Pro correctamente

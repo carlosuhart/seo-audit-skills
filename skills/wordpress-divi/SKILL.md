@@ -435,8 +435,10 @@ sub-sitemaps hijos, eliminar los hijos — el índice ya los incluye.
 
 **Síntoma:** `<meta name="viewport" content="..., user-scalable=0">`
 
-**Impacto:** Falla Mobile Usability en GSC + viola WCAG 2.1 SC 1.4.4.
-Relevante desde que mobile-first indexing es universal (julio 2024).
+**Impacto:** Viola WCAG 2.1 SC 1.4.4 (la auditoría `meta-viewport` de Lighthouse
+lo marca). Ya no se puede ver en GSC: Google retiró el informe Mobile Usability y
+el Mobile-Friendly Test el 01/12/2023 y remite a Lighthouse. Relevante desde que
+mobile-first indexing es universal (julio 2024).
 
 **Solución:** `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
 

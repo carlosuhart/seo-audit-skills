@@ -839,7 +839,7 @@ Validar con Search Console > Configuración > robots.txt.
 | `noindex` | Google excluye la página del índice |
 | `follow` | Google sigue los links de la página (default) |
 | `nofollow` | Google no pasa PageRank a través de los links |
-| `noarchive` | Google no muestra el enlace de caché en SERP |
+| `noarchive` | Sin efecto en Google: "no longer used by Google Search" porque "the cached link feature no longer exists". Otros buscadores pueden respetarlo |
 | `nosnippet` | Google no muestra meta description ni fragmento en SERP |
 | `noimageindex` | Google no indexa las imágenes de la página |
 | `none` | Equivale a `noindex, nofollow` |

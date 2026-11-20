@@ -93,7 +93,7 @@ Si no: WebFetch de `https://pagespeed.web.dev/report?url=<url>` para extraer sco
 
 Registrar:
 - Performance score (Lighthouse)
-- LCP, INP/FID, CLS valores si visibles
+- LCP, INP, CLS valores si visibles (FID dejó de ser Core Web Vital en marzo de 2024; no reportarlo)
 - Mobile vs Desktop si hay diferencia notable
 
 ### 1.6 Autoridad de dominio (DataForSEO backlinks)
