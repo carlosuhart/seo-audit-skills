@@ -5,6 +5,8 @@ description: >
   WPML, TranslatePress, Yoast, HFCM, reciprocidad, x-default y errores comunes. Usar
   cuando el sitio tiene varios idiomas o regiones o hay issues de hreflang en GSC.
 user-invokable: false
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Hreflang — Guía Técnica SEO

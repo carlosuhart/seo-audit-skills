@@ -6,6 +6,8 @@ description: >
   WooCommerce, PrestaShop) e impacto en CTR. Usar en auditorías de contenido u
   optimización de CTR.
 user-invokable: false
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # On-Page Fundamentals — Title, Meta Description, H1

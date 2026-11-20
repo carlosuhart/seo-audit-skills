@@ -4,6 +4,8 @@ description: >
   Core Web Vitals diagnosis and fixes (LCP, CLS, INP, TTFB): field vs lab data, CrUX, a
   diagnostic tree per metric and fixes for WordPress (Divi, Elementor, WP Rocket),
   PrestaShop and Shopify. Use for CWV scores or performance issues.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Core Web Vitals — Technical SEO

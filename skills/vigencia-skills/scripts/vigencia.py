@@ -25,7 +25,11 @@ RX_EU = r"(\d{1,2})/(\d{1,2})/(20\d{2})"
 RX_REVISAR = re.compile(r"(?im)^\s*(?:revisar|review|next_review|revisión|revision)\s*:\s*['\"]?(" + RX_ISO + r"|" + RX_EU + r")")
 RX_REVISAR_TXT = re.compile(r"(?i)revisar(?: el| antes del)?\s+(" + RX_EU + r"|" + RX_ISO + r")")
 RX_FUENTE = re.compile(r"(?i)(?:fuentes?|sources?)[^\n]{0,80}?(" + RX_ISO + r"|" + RX_EU + r")")
-RX_FUENTE2 = re.compile(r"(?i)(?:le[ií]das? el|consultad[oa]s? el|retrieved|fechad[oa]s?(?: al)?)\s+(" + RX_EU + r"|" + RX_ISO + r")")
+RX_FUENTE2 = re.compile(
+    r"(?i)(?:le[ií]d[oa]s? (?:el|en)|consultad[oa]s?(?: el)?|verificad[oa]s?(?: el)?|"
+    r"revisad[oa]s?(?: el)?|actualizad[oa]s?(?: el)?|publicad[oa]s?(?: el)?|"
+    r"retrieved|checked(?: on)?|verified(?: on)?|updated(?: on)?|published(?: on)?|"
+    r"as of|fechad[oa]s?(?: al)?)[^\n]{0,60}?(" + RX_EU + r"|" + RX_ISO + r")")
 
 
 def parse_fecha(s: str) -> dt.date | None:
@@ -56,7 +60,14 @@ def analizar(skill_md: Path, hoy: dt.date, dias_aviso: int, fuente_max: int) -> 
     t = skill_md.read_text(encoding="utf-8", errors="replace")
     nombre = skill_md.parent.name
     rev = fechas(RX_REVISAR, t) + fechas(RX_REVISAR_TXT, t)
-    fue = fechas(RX_FUENTE, t) + fechas(RX_FUENTE2, t)
+    # Las fuentes fechadas suelen vivir en references/: se leen también, pero la fecha de
+    # revisión solo cuenta desde el SKILL.md (es la que manda).
+    refs = ""
+    ref_dir = skill_md.parent / "references"
+    if ref_dir.is_dir():
+        refs = "\n".join(p.read_text(encoding="utf-8", errors="replace") for p in sorted(ref_dir.glob("*.md")))
+    hoy_max = hoy + dt.timedelta(days=1)  # una fecha futura no es una fuente
+    fue = [f for f in fechas(RX_FUENTE, t + "\n" + refs) + fechas(RX_FUENTE2, t + "\n" + refs) if f <= hoy_max]
     mtime = dt.date.fromtimestamp(skill_md.stat().st_mtime)
     r: dict[str, Any] = {"skill": nombre, "modificado": mtime.isoformat()}
     if rev:

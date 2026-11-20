@@ -86,8 +86,9 @@ Cada estado miembro tiene una autoridad de control nacional (Art. 51). Las princ
 | SE | Integritetsskyddsmyndigheten (IMY) | imy.se |
 | EEE-NO | Datatilsynet | datatilsynet.no |
 
-Comité Europeo de Protección de Datos (CEPD / EDPB): emite directrices vinculantes
-para las autoridades nacionales. Citar directrices CEPD relevantes cuando apliquen.
+Comité Europeo de Protección de Datos (CEPD / EDPB): emite directrices (no vinculantes,
+de referencia para las autoridades) y solo adopta decisiones vinculantes en la resolución
+de conflictos del Art. 65. Citar directrices CEPD relevantes cuando apliquen.
 
 ---
 
@@ -183,7 +184,7 @@ Si es **WordPress**, continuar con detección de page builder y plugins.
 - Brevo (Sendinblue) — `sendinblue.com` → UE
 - Klaviyo — `klaviyo.com` → EE.UU.
 
-**E-commerce (datos de pago + historial de compras — categoría especial de tratamiento):**
+**E-commerce (datos de pago e historial de compras: datos financieros sensibles en la práctica, pero no categoría especial del Art. 9):**
 - WooCommerce — `woocommerce`, `/wc-ajax=`, `wc_cart_hash`
 - Pasarelas: Stripe (`js.stripe.com`), PayPal (`paypalobjects.com`), Redsys
 
@@ -211,7 +212,7 @@ Si es **WordPress**, continuar con detección de page builder y plugins.
 | **Fastly** | Header `X-Served-By` con `cache-` | EE.UU. |
 | **Akamai** | Header `X-Check-Cacheable`, `akamaized.net` | EE.UU. |
 | **Bunny.net** | `b-cdn.net` | UE (Eslovenia) |
-| **KeyCDN** | `kxcdn.com` | UE (Suiza) |
+| **KeyCDN** | `kxcdn.com` | Suiza (fuera de la UE, con adecuación de la CE) |
 | **jsDelivr** | `cdn.jsdelivr.net` | UE (Polonia) |
 
 Nota: CDNs fuera de la UE/EEE implican transferencia internacional de datos técnicos
@@ -360,15 +361,16 @@ Verificar que la política incluya explícitamente (1 pt por ítem, máx. 15):
 - [ ] **Art. 13.2(a):** Plazos de conservación o criterios para determinarlos
 - [ ] **Art. 13.2(b):** Derechos del interesado: acceso, rectificación, supresión, limitación,
       portabilidad, oposición (Art. 15-21)
-- [ ] **Art. 13.2(b):** Derecho a no ser objeto de decisiones individuales automatizadas
-      incluido el perfilado (Art. 22)
-- [ ] **Art. 13.2(b):** Derecho a retirar el consentimiento en cualquier momento cuando la
+- [ ] **Art. 13.2(c):** Derecho a retirar el consentimiento en cualquier momento cuando la
       base sea Art. 6.1(a) o Art. 9.2(a), sin que ello afecte a la licitud del tratamiento previo
-- [ ] **Art. 13.2(c):** Derecho a presentar reclamación ante la autoridad de control competente
+- [ ] **Art. 13.2(d):** Derecho a presentar reclamación ante la autoridad de control competente
       (citar la autoridad por nombre, p.ej. AEPD)
-- [ ] **Art. 13.2(d):** Si la comunicación de datos es un requisito legal o contractual, y las
+- [ ] **Art. 13.2(e):** Si la comunicación de datos es un requisito legal o contractual, y las
       consecuencias de no facilitar los datos
-- [ ] **Art. 13.2(e):** Uso de cookies y tecnologías de rastreo (ePrivacy Dir. Art. 5.3)
+- [ ] **Art. 13.2(f):** Existencia de decisiones automatizadas, incluido el perfilado (Art. 22),
+      con información significativa sobre la lógica aplicada y sus consecuencias
+- [ ] **Información de cookies y rastreo:** no viene del Art. 13 sino del Art. 5.3 de la
+      Directiva ePrivacy y de su ley nacional; se verifica en el Bloque 5
 - [ ] **Verificación de legibilidad:** los elementos esenciales están expresados en lenguaje
       claro y sencillo — sin jerga legal inaccesible (Art. 12.1)
 - [ ] **Información por capas (recomendación CEPD):** existe al menos un resumen de primer nivel
@@ -395,7 +397,10 @@ Verificar:
       un contrato con el interesado (Art. 6.1b prevalece)
 - [ ] Cuando se invoca "interés legítimo" (Art. 6.1f), se identifica cuál es y se indica
       que el responsable ha realizado el test de equilibrio (el test en sí no es auditable
-      externamente, pero su mención es señal de cumplimiento)
+      externamente, pero su mención es señal de cumplimiento). Criterio: Directrices CEPD
+      1/2024 sobre el Art. 6.1(f), versión 2.0 final adoptada el 10/11/2026: tres
+      condiciones acumulativas (interés lícito, concreto y presente; necesidad; ponderación
+      documentada antes de tratar). https://www.edpb.europa.eu/system/files/2026-11/edpb_guidelines_202401_legitimateinterest_v2_en.pdf
 - [ ] Las finalidades de marketing directo no se basan en interés legítimo sin mención
       explícita al derecho de oposición (Art. 21.2)
 - [ ] Los formularios de captación no usan casillas pre-marcadas para el consentimiento
@@ -415,7 +420,17 @@ Peso: 15 pts
 La Directiva ePrivacy 2002/58/CE Art. 5(3) exige consentimiento previo e informado para
 almacenar información o acceder a la información almacenada en el dispositivo del usuario,
 salvo que sea estrictamente necesario para prestar un servicio solicitado por el usuario.
-El Reglamento ePrivacy (propuesta de 2017) sigue en tramitación a la fecha de esta skill.
+El Art. 5.3 no se limita a las cookies: según las Directrices CEPD 2/2023 (versión final
+del 07/10/2024) también cubre píxeles de seguimiento, local storage, fingerprinting y el
+seguimiento por URL o IP. Un píxel que se dispara sin consentimiento es el mismo
+incumplimiento que una cookie.
+
+**Estado legislativo:** la Comisión retiró en 2025 la propuesta de Reglamento ePrivacy de
+2017. Sigue vigente la Directiva 2002/58/CE con su transposición nacional. El Digital
+Omnibus (2025/0360(COD)) propone cambios en el RGPD y en las cookies, incluida una lista
+cerrada de usos exentos de consentimiento; está en negociación y no hay nada aprobado.
+No aplicar sus excepciones hasta que se publique en el DOUE.
+
 Las cookies analíticas, publicitarias y de rastreo de terceros NO son estrictamente necesarias
 y requieren consentimiento activo. Las cookies de sesión, autenticación y carrito de compra
 sí son estrictamente necesarias y no requieren consentimiento.
@@ -523,7 +538,8 @@ El RGPD define como categorías especiales los datos que revelen:
 
 **Evaluación de Impacto en la Protección de Datos / EIPD (Art. 35):**
 Es obligatoria cuando el tratamiento conlleva alto riesgo para los derechos de los
-interesados. Indicadores que la hacen probable (CEPD directriz WP 248):
+interesados. Indicadores que la hacen probable (directrices WP 248 del Grupo de Trabajo
+del Artículo 29, asumidas por el CEPD):
 - Evaluación sistemática de aspectos personales / perfilado
 - Tratamiento a gran escala de categorías especiales
 - Monitorización sistemática a gran escala de zonas de acceso público
@@ -566,15 +582,17 @@ Aplicar la edad del estado miembro detectado (ver tabla en sección de variacion
 ### Bloque 8 — Transferencias internacionales (Art. 44–49)
 Peso: 10 pts
 
-**Países con decisión de adecuación de la CE (Art. 45) — lista vigente a 2026-07:**
-Andorra · Argentina · Canadá (organizaciones comerciales) · Islas Feroe ·
-Guernsey · Israel · Isla de Man · Japón · Jersey · Nueva Zelanda ·
-República de Corea · Suiza · Reino Unido · Uruguay ·
+**Países con decisión de adecuación de la CE (Art. 45) — lista revisada el 20/11/2026:**
+Andorra · Argentina · Brasil (Decisión (UE) 2026/179, 26/01/2026) · Canadá
+(organizaciones comerciales) · Islas Feroe · Guernsey · Israel · Isla de Man · Japón ·
+Jersey · Nueva Zelanda · República de Corea · Suiza · Reino Unido (renovada hasta el
+27/12/2031) · Uruguay ·
 EE.UU. — solo entidades adheridas al Marco de Privacidad de Datos UE–EE.UU. (DPF,
 desde julio 2023; verificar en la lista de la CE si el receptor está inscrito).
 
-Nota: la adecuación de EE.UU. mediante el DPF puede estar sujeta a revisión judicial.
-Si hay cambios desde esta versión de la skill, verificar en el registro de la CE.
+Nota: el Tribunal General confirmó el DPF el 03/09/2025 (asunto Latombe, T-553/23) y el
+recurso de casación C-703/25 P está pendiente ante el TJUE. Si hay sentencia, verificar
+en el registro de la CE antes de dar por válidas las transferencias a EE.UU.
 
 **Transferencias detectables en el Paso 0:**
 - Google Analytics GA4 → EE.UU. (Google LLC adherida al DPF)
@@ -703,15 +721,18 @@ Reincidencia y atenuantes: la autoridad considera el carácter doloso o negligen
 las medidas adoptadas para paliar los daños, el grado de cooperación y la categoría
 de datos afectados (Art. 83.2).
 
-**Crítico** (bloquea cumplimiento mínimo — riesgo Art. 83(5)):
-- Política de privacidad inexistente → Art. 12/13
-- Sin base jurídica declarada para ninguna finalidad → Art. 6
-- Cookies no esenciales activas sin consentimiento previo → Art. 6/7 + Dir. ePrivacy
-- Datos de categorías especiales tratados sin consentimiento explícito o base Art. 9.2 → Art. 9
-- Sin mecanismo de ejercicio de derechos → Art. 12/15-22
-- Sin HTTPS → Art. 32
-- Responsable fuera de la UE sin representante designado → Art. 27
-- DPD obligatorio según Art. 37.1 y no designado → Art. 37
+**Crítico** (bloquea cumplimiento mínimo):
+- Política de privacidad inexistente → Art. 12/13 (riesgo Art. 83(5))
+- Sin base jurídica declarada para ninguna finalidad → Art. 6 (riesgo Art. 83(5))
+- Cookies, píxeles u otro rastreo no esencial activos sin consentimiento previo → Art. 5.3
+  ePrivacy, sancionado por la ley nacional (ES: art. 22.2 LSSI; FR: art. 82 de la Loi
+  Informatique et Libertés; DE: § 25 TDDDG, antes TTDSG; IT: art. 122 del Codice privacy).
+  El Art. 83 RGPD aplica al tratamiento posterior de esos datos
+- Datos de categorías especiales tratados sin consentimiento explícito o base Art. 9.2 → Art. 9 (riesgo Art. 83(5))
+- Sin mecanismo de ejercicio de derechos → Art. 12/15-22 (riesgo Art. 83(5))
+- Sin HTTPS → Art. 32 (riesgo Art. 83(4))
+- Responsable fuera de la UE sin representante designado → Art. 27 (riesgo Art. 83(4))
+- DPD obligatorio según Art. 37.1 y no designado → Art. 37 (riesgo Art. 83(4))
 
 **Medio** (gap relevante — riesgo Art. 83(5) o Art. 83(4), plazo recomendado 30–60 días):
 - Política existe pero falta base jurídica por finalidad → Art. 6
@@ -882,12 +903,19 @@ Siempre indicar este alcance en la sección de notas metodológicas del informe.
 
 - **RGPD** en vigor desde el **25 de mayo de 2018**. Sin período de transición.
 - **España:** Ley Orgánica 3/2018 (LOPDGDD) — adaptación nacional. Edad de menores: 14 años.
-- **ePrivacy:** Directiva 2002/58/CE sigue en vigor. El Reglamento ePrivacy (propuesta 2017)
-  está en tramitación legislativa a la fecha de esta versión de la skill — verificar estado al usar.
-- **Decisiones de adecuación:** verificar en ec.europa.eu/info/law/law-topic/data-protection
-  si ha habido cambios en la lista, especialmente para EE.UU. (DPF — sujeto a revisión judicial).
-- **CEPD / EDPB:** emite directrices vinculantes para autoridades nacionales. Consultar
-  edpb.europa.eu para directrices recientes sobre IA, cookies, datos biométricos.
-- **Versión de esta skill:** 1.0.0 (2026-07-08).
-  Actualizar cuando: se apruebe el Reglamento ePrivacy, cambien las decisiones de adecuación,
-  el CEPD emita directrices relevantes, o la autoridad competente emita instrucciones generales.
+- **ePrivacy:** Directiva 2002/58/CE sigue en vigor. La Comisión retiró en 2025 la propuesta
+  de Reglamento ePrivacy de 2017. El Digital Omnibus (2025/0360(COD)) está en negociación,
+  sin nada aprobado: vigilar su publicación en el DOUE.
+- **Alemania:** el TTDSG pasó a llamarse TDDDG el 14/05/2024 (§ 25, cookies).
+- **Reglamento (UE) 2025/2518** (procedimiento en asuntos transfronterizos): en vigor desde el
+  01/01/2026, aplicable desde el 02/04/2027 a investigaciones nuevas.
+- **Decisiones de adecuación:** Brasil desde el 26/01/2026; Reino Unido renovada hasta el
+  27/12/2031; DPF confirmado por el Tribunal General (03/09/2025), casación C-703/25 P pendiente.
+- **CEPD / EDPB:** directrices no vinculantes. Recientes y relevantes para sitios web:
+  2/2023 (alcance técnico del Art. 5.3 ePrivacy, 07/10/2024) y 1/2024 (interés legítimo,
+  v2.0 del 10/11/2026).
+- **Versión de esta skill:** 1.1.0 (2026-11-20). Revisada contra EUR-Lex, el CEPD y la CE
+  el 20/11/2026.
+  Actualizar cuando: se apruebe el Digital Omnibus, cambien las decisiones de adecuación,
+  se resuelva el C-703/25 P, el CEPD emita directrices relevantes o cambie una ley nacional
+  de cookies.

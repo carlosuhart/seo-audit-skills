@@ -3,6 +3,8 @@ name: wordpress-divi
 description: >
   WordPress + Divi en auditorías SEO: issues recurrentes, soluciones y checklist. Usar
   cuando el sitio corre Divi o se menciona "Divi", "Elegant Themes" o "Divi Builder".
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # WordPress + Divi — Guía SEO Técnica

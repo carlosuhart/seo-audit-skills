@@ -8,8 +8,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: PubliUp SEO
-  version: "1.2.1"
+  version: "1.3.0"
   category: legal-compliance
+  revisar: "2026-12-15"
 ---
 
 # Auditoría Ley 21.719 — Protección de Datos Personales (Chile)
@@ -35,16 +36,20 @@ Dos figuras distintas con nombres similares — no confundir:
 
 - **Encargado del tratamiento** (data processor): empresa o persona que trata datos
   por cuenta del responsable (proveedor de email marketing, CRM, hosting). Regulado
-  en Art. 24. No visible externamente — queda fuera del scope de esta auditoría.
-- **Encargado de Protección de Datos / EPD** (Data Protection Officer): figura de
-  supervisión interna del responsable. Regulado en Art. 36. Auditado en Bloque 10.
+  en el art. 15 bis ("tercero mandatario o encargado"). No visible externamente — queda
+  fuera del scope de esta auditoría.
+- **Delegado de protección de datos personales** (Data Protection Officer): figura de
+  supervisión interna del responsable. Regulado en el art. 50 y **voluntario** ("podrá
+  designar"); forma parte del modelo de prevención de infracciones de los arts. 49 a 52.
+  Auditado en Bloque 10.
 
 ## Nota sobre la autoridad de control
 
-La Ley 21.719 crea la **Agencia de Protección de Datos Personales (APDP)** como
-autoridad de control. Durante el período de transición hasta que la APDP esté
-operativa (estimado 2026–2027), el **Consejo para la Transparencia (CPLT)** asume
-sus funciones. En el informe citar siempre: "APDP (y transitoriamente CPLT)".
+La Ley 21.719 crea la **Agencia de Protección de Datos Personales** como autoridad de
+control. Empieza a operar con la entrada en vigencia de la ley; antes no hay autoridad
+de control con potestad sancionadora. El **Consejo para la Transparencia (CPLT) no la
+reemplaza ni asume sus funciones**: el art. 31 solo regula la coordinación entre ambos
+órganos. En el informe citar "Agencia de Protección de Datos Personales".
 
 ---
 
@@ -248,20 +253,22 @@ Evaluar cada bloque. Asignar uno de cuatro estados:
 - **No cumple** — ausente o incorrecto
 - **No evaluable** — requiere acceso al backend o no es visible externamente
 
-### Bloque 1 — Identificación del responsable del tratamiento (Art. 5)
+### Bloque 1 — Identificación del responsable del tratamiento (art. 14 ter)
 Peso: 10 pts
 
 Verificar que en la política de privacidad aparezca:
 - [ ] Nombre o razón social del responsable
 - [ ] RUT o identificación legal
-- [ ] Domicilio en Chile (o representante legal designado en Chile si es entidad extranjera sin domicilio en el país)
+- [ ] Domicilio
 - [ ] Dirección de correo o medio de contacto directo
 
 Parcial si aparece el nombre pero faltan RUT o domicilio.
-Si la entidad es extranjera sin domicilio en Chile, verificar que la política
-designe explícitamente un representante en Chile — su ausencia es issue crítico.
+Si la entidad no tiene domicilio en Chile y trata datos de personas que residen en el
+país, la ley **no exige representante**: exige "señalar y mantener actualizado y
+operativo, un correo electrónico u otro medio de contacto idóneo" para los titulares y la
+Agencia. Su ausencia es issue grave.
 
-### Bloque 2 — Política de privacidad: existencia y acceso (Art. 14)
+### Bloque 2 — Política de privacidad: existencia y acceso (art. 14 ter)
 Peso: 5 pts
 
 - [ ] Existe una política de privacidad publicada
@@ -270,7 +277,7 @@ Peso: 5 pts
 - [ ] Redactada en español (o idioma del sitio)
 - [ ] Fecha de última actualización visible
 
-### Bloque 3 — Política de privacidad: contenido mínimo (Art. 14 a–k)
+### Bloque 3 — Política de privacidad: contenido mínimo (art. 14 ter, deber de información y transparencia)
 Peso: 15 pts
 
 Verificar que la política incluya explícitamente:
@@ -286,8 +293,10 @@ Verificar que la política incluya explícitamente:
      prorrogables una vez por 30; bloqueo temporal en 2 días hábiles — art. 11)
 - [ ] **h)** Transferencias internacionales (si aplica) y garantías adoptadas
 - [ ] **i)** Uso de cookies y tecnologías de rastreo
-- [ ] **j)** Contacto del Encargado de Protección de Datos / EPD (si aplica)
-- [ ] **k)** Derecho a reclamar ante la APDP (y transitoriamente ante el CPLT)
+- [ ] **j)** Contacto del delegado de protección de datos (si se designó)
+- [ ] **k)** Derecho a reclamar ante la Agencia de Protección de Datos Personales
+
+Las letras de esta lista son un orden de trabajo de la skill, no las letras del art. 14 ter.
 
 Adicionalmente, la ley exige que los elementos esenciales (categorías de datos,
 finalidades, derechos del titular) sean **visibles de forma destacada** en el sitio
@@ -296,7 +305,7 @@ o que la política sea de lectura razonablemente directa.
 
 Puntuación parcial: 1 pt por ítem presente, máx. 15.
 
-### Bloque 4 — Base legal del tratamiento declarada (Art. 12)
+### Bloque 4 — Base legal del tratamiento declarada (arts. 12 y 13: consentimiento en el 12, las demás bases en el 13)
 Peso: 10 pts
 
 La Ley 21.719 reconoce seis bases legales válidas. Verificar que la política:
@@ -380,7 +389,7 @@ Verificar:
 - [ ] Se mencionan los **siete** derechos, incluidos Portabilidad, Limitación y el
      derecho frente a decisiones automatizadas
 - [ ] Se indica qué información debe adjuntar el titular al hacer la solicitud
-- [ ] Se menciona el derecho a reclamar ante la APDP (y transitoriamente el CPLT)
+- [ ] Se menciona el derecho a reclamar ante la Agencia de Protección de Datos Personales
      si la solicitud no es atendida o es rechazada
 
 **Decisiones automatizadas — verificación adicional:**
@@ -389,23 +398,25 @@ créditos o cualquier sistema de decisión automatizado con efectos sobre el tit
 - [ ] ¿La política menciona este tipo de tratamiento?
 - [ ] ¿Existe canal para solicitar revisión humana de la decisión?
 
-### Bloque 7 — Datos sensibles (Art. 2 + 16)
+### Bloque 7 — Datos sensibles (art. 2 g y art. 16) y datos de niños, niñas y adolescentes
 Peso: 10 pts
 
-Primero determinar si el sitio recoge datos sensibles. La Ley 21.719 define como
-datos sensibles (lista exhaustiva):
-- Origen racial o étnico
+Primero determinar si el sitio recoge datos sensibles. El art. 2 g) define como datos
+sensibles los que revelen:
+- Origen étnico o racial
+- Afiliación política, sindical o gremial
 - Situación socioeconómica
 - Convicciones ideológicas o filosóficas
 - Creencias religiosas
-- Afiliación política o sindical
-- Afiliaciones profesionales o gremiales
-- Datos de salud, estado físico o psíquico
-- Vida sexual y orientación sexual
-- Datos biométricos destinados a la identificación unívoca
-- Datos de menores de edad (⚠️ verificar en texto oficial el umbral exacto de edad;
-  la skill usa 14 años por analogía con la legislación civil chilena, pero el
-  reglamento de la ley puede especificar un umbral distinto)
+- Datos relativos a la salud
+- Perfil biológico humano
+- Datos biométricos
+- Vida sexual, orientación sexual e identidad de género
+
+**Los datos de niños, niñas y adolescentes no son datos sensibles: tienen un régimen
+propio** (art. 16 quáter). La propia ley fija los tramos: niños y niñas son los menores
+de 14 años, y adolescentes los mayores de 14 y menores de 18. Para menores de 14 años se
+requiere el consentimiento de padres o representantes legales.
 
 **Si el sitio no recoge ninguna de estas categorías:** bloque N/A, asignar 10 pts automáticamente.
 
@@ -437,7 +448,7 @@ datos sensibles (lista exhaustiva):
 - [ ] Datos financieros tratados con garantías adicionales (base legal 5 — obligaciones
      económico-financieras — o consentimiento explícito)
 
-### Bloque 8 — Transferencias internacionales (Art. 26)
+### Bloque 8 — Transferencias internacionales (arts. 27 a 29)
 Peso: 10 pts
 
 Detectar transferencias probables: CDNs, plataformas de email marketing, CRMs,
@@ -445,15 +456,17 @@ herramientas de análisis, servicios en la nube con sede fuera de Chile.
 
 - [ ] La política declara si se realizan transferencias internacionales
 - [ ] Se identifican los países o regiones de destino
-- [ ] Se indica la garantía adoptada. Las garantías válidas bajo Ley 21.719 son:
-  - País con nivel de protección adecuado reconocido por la APDP
-  - Contrato con cláusulas estándar de protección de datos
+- [ ] Se indica la garantía adoptada. Las vías de los arts. 27 y 28 son:
+  - País con nivel de protección adecuado, determinado por la Agencia (art. 28)
+  - Cláusulas contractuales u otros instrumentos jurídicos con garantías adecuadas
   - Normas corporativas vinculantes / Binding Corporate Rules (BCR)
-  - Mecanismo de certificación reconocido por la APDP
-  - Consentimiento explícito del titular para la transferencia concreta
+  - Modelo de cumplimiento o certificación
+  - Sin esas garantías, solo transferencias **específicas y no habituales** en los casos
+    que la ley enumera (por ejemplo, con consentimiento expreso). El consentimiento no
+    sirve como garantía general para flujos habituales, como la analítica
 - [ ] Si no se realizan transferencias internacionales, se indica explícitamente
 
-### Bloque 9 — Seguridad técnica (Art. 19)
+### Bloque 9 — Seguridad técnica (art. 14 quinquies) y vulneraciones (art. 14 sexies)
 Peso: 5 pts
 
 La ley exige medidas que garanticen **confidencialidad, integridad, disponibilidad
@@ -470,27 +483,29 @@ y resiliencia** del tratamiento. Verificar lo observable externamente:
 - [ ] CSP (Content-Security-Policy) configurado
 - [ ] X-Frame-Options o frame-ancestors configurado
 
-### Bloque 10 — Encargado de Protección de Datos / EPD (Art. 36)
+**Vulneraciones (art. 14 sexies):** el responsable debe reportarlas a la Agencia "por los
+medios más expeditos posibles y sin dilaciones indebidas", y comunicarlas también a los
+titulares cuando afecten datos sensibles, datos de menores de 14 años o datos de
+obligaciones económicas, financieras, bancarias o comerciales.
+- [ ] La política describe cómo se gestionan y comunican las vulneraciones de seguridad
+
+### Bloque 10 — Delegado de protección de datos (art. 50, voluntario)
 Peso: 5 pts
 
-⚠️ Nota: Los criterios de obligatoriedad del EPD en la Ley 21.719 son distintos
-de los del RGPD Art. 37. Bajo la ley chilena, el EPD es una figura obligatoria
-principalmente en el contexto de los **modelos de cumplimiento certificados** y
-para ciertos organismos públicos. Para empresas privadas fuera de ese contexto,
-la obligatoriedad específica depende del reglamento aún en elaboración.
+⚠️ Nota: a diferencia del RGPD (Art. 37), la ley chilena **no obliga** a designar un
+delegado: el art. 50 dice que el responsable "podrá designar" uno, que nombra la máxima
+autoridad directiva. Es una pieza del modelo de prevención de infracciones (arts. 49 a
+52), que también es voluntario y, si se certifica, puede atenuar la responsabilidad.
 
 Verificar:
-- [ ] La política indica si existe o no un EPD designado
-- [ ] Si existe: nombre o rol del EPD publicado
-- [ ] Si existe: dirección de contacto del EPD publicada
-- [ ] Si no existe: se indica que no aplica (o que el responsable evalúa su designación)
+- [ ] Si existe delegado: nombre o rol publicado
+- [ ] Si existe delegado: dirección de contacto publicada
+- [ ] Si no existe: no es un incumplimiento; registrar "Delegado no designado (voluntario,
+      art. 50)" y asignar pts completos
 
-Si el sitio menciona estar acogido a un modelo de cumplimiento certificado:
+Si el sitio menciona estar acogido a un modelo de prevención certificado:
 - [ ] Indica el organismo certificador
 - [ ] Menciona el alcance y vigencia de la certificación
-
-Para PYME sin tratamiento masivo ni datos sensibles: registrar como "No aplica EPD —
-organización fuera del ámbito de obligatoriedad actual" y asignar pts completos.
 
 ---
 
@@ -519,12 +534,17 @@ en cada issue del informe para contextualizar el impacto económico real.
 
 | Nivel | Multa máxima | Ejemplos de conductas |
 |-------|-------------|----------------------|
-| Gravísima | 20.000 UTM (~USD 1.590.000) o 2–4% ingresos anuales | Tratar datos sensibles sin consentimiento; transferir datos internacionalmente sin garantías; vulnerar datos sin notificar |
-| Grave | 10.000 UTM (~USD 795.000) | No atender derechos del titular; falta de política de privacidad; no tener base legal declarada |
-| Leve | 5.000 UTM (~USD 397.500) | Política incompleta; falta de enlace en footer; plazos de retención no especificados |
+| Gravísima | Hasta 20.000 UTM | Tratar datos sensibles sin consentimiento; transferir datos internacionalmente sin garantías; vulnerar datos sin notificar |
+| Grave | Hasta 10.000 UTM | No atender derechos del titular; falta de política de privacidad; no tener base legal declarada |
+| Leve | Amonestación escrita o hasta 5.000 UTM | Política incompleta; falta de enlace en footer; plazos de retención no especificados |
 
-Reincidencia: hasta 3× la multa original.
-UTM = Unidad Tributaria Mensual (valor mensual actualizado).
+Montos del art. 35. **Reincidencia** (art. 36): hay reincidencia cuando el responsable fue
+sancionado dos o más veces en los últimos treinta meses. En ese caso la multa puede llegar
+al triple y, si no es empresa de menor tamaño (Ley 20.416), al 2 % de los ingresos
+anuales en infracciones graves o al 4 % en gravísimas. Las empresas de menor tamaño pueden
+recibir amonestación en vez de multa durante los primeros 12 meses de vigencia (art. sexto
+transitorio). UTM = Unidad Tributaria Mensual: convertir a CLP con el valor del mes de la
+auditoría (sii.cl) y no usar equivalencias en USD sin fecha.
 
 **Crítico** (bloquea cumplimiento mínimo — riesgo gravísimo o grave):
 - Política de privacidad inexistente → riesgo grave
@@ -533,7 +553,7 @@ UTM = Unidad Tributaria Mensual (valor mensual actualizado).
 - Datos sensibles tratados sin consentimiento explícito diferenciado → riesgo gravísimo
 - Sin HTTPS → riesgo grave (falla en integridad y confidencialidad)
 - Sin base legal declarada para ninguna finalidad → riesgo grave
-- Entidad extranjera sin representante en Chile designado → riesgo grave
+- Entidad sin domicilio en Chile que no informa un correo u otro medio de contacto idóneo y operativo → riesgo grave
 
 **Medio** (gap relevante — riesgo grave o leve, plazo recomendado 30–60 días):
 - Política existe pero falta base legal por finalidad → riesgo grave
@@ -545,7 +565,7 @@ UTM = Unidad Tributaria Mensual (valor mensual actualizado).
 
 **Bajo** (mejora de postura — riesgo leve):
 - Falta fecha de actualización en la política
-- EPD no mencionado en sitios donde no aplica
+- Delegado de protección de datos no mencionado (voluntario, solo informativo)
 - Política sin enlace desde formularios secundarios
 - Plazos de retención no especificados para algún tipo de dato
 - Política no menciona los cuatro atributos de seguridad
@@ -687,11 +707,11 @@ Esta auditoría cubre lo verificable externamente sin acceso al backend:
 - Headers HTTP
 
 Quedan fuera de scope sin acceso interno:
-- Contratos con encargados del tratamiento (data processors) — Art. 24
+- Contratos con encargados del tratamiento (data processors) — art. 15 bis
 - Registros de actividades de tratamiento — Art. 15
 - Procedimientos internos de respuesta a solicitudes de derechos
 - Medidas de seguridad técnicas internas (cifrado en reposo, control de accesos)
-- Notificaciones de brechas a la APDP (y transitoriamente al CPLT)
+- Reportes de vulneraciones a la Agencia (art. 14 sexies)
 - Modelos de cumplimiento certificados y su contenido interno
 
 Siempre indicar este alcance en la sección de notas metodológicas del informe.
@@ -701,9 +721,23 @@ Siempre indicar este alcance en la sección de notas metodológicas del informe.
 ## Actualización normativa
 
 - **Ley 21.719** publicada el 13 de diciembre de 2024.
-- **Período de adecuación:** 24 meses para la mayoría de obligaciones (plazo: diciembre 2026).
-- **Reglamento:** en elaboración a la fecha de esta versión — puede refinar requisitos
-  de implementación (umbral de edad para menores, criterios EPD, adecuación de países
-  terceros, mecanismos de certificación). Señalar esta contingencia en el informe cuando afecte a un bloque.
-- **APDP:** en proceso de constitución; el CPLT ejerce sus funciones durante la transición.
-- **Versión de esta skill:** 1.2.2 (2026-10-01). Cambios: plazo de respuesta a solicitudes de derechos corregido a 30 días corridos prorrogables por 30, y bloqueo temporal en 2 días hábiles (art. 11, verificado en el texto oficial de la BCN), en Bloques 3 y 6; endpoint JSON de la BCN para obtener el texto oficial. Versión anterior: 1.2.1 (2026-07-03) — crédito Zythos Media añadido al inicio de ejecución, plantilla Markdown y pie de página del .docx. Verificar actualizaciones cuando se publique el reglamento o cuando la APDP emita sus primeras instrucciones.
+- **Vigencia:** el primer día del mes 24 tras la publicación, es decir, **01/12/2026**
+  (artículo primero transitorio), según el texto publicado vigente en la BCN al 20/11/2026.
+- **Postergación en trámite:** el Boletín 18.623-07, despachado por el Congreso el 17/11/2026
+  y en aprobación presidencial, mueve la vigencia al 15/10/2027 y amplía el Consejo de la
+  Agencia de 3 a 5 miembros, sin cambiar obligaciones ni multas. **Hasta que se publique en
+  el Diario Oficial la fecha legal sigue siendo el 01/12/2026**: antes de citar una fecha,
+  revisar diariooficial.interior.gob.cl y la ficha de la BCN. Mientras la ley no rija, sigue
+  la Ley 19.628 original (sin interés legítimo como base ni Agencia): presentar la auditoría
+  como preparación.
+- **Reglamentos:** sin publicar al 20/11/2026; pueden precisar adecuación de países,
+  certificación y modelo de prevención.
+- **Agencia de Protección de Datos Personales:** se constituye con la vigencia de la ley. El
+  CPLT no ejerce sus funciones en ningún momento (art. 31: solo coordinación).
+- **Versión de esta skill:** 1.3.0 (2026-11-20). Cambios: artículos verificados en el texto
+  oficial de la BCN (idNorma 1209272): delegado voluntario (art. 50), encargado (art. 15 bis),
+  información (14 ter), seguridad (14 quinquies), vulneraciones (14 sexies), transferencias
+  (27-29), sanciones y reincidencia (35-36); el CPLT no asume funciones; sin exigencia de
+  representante para extranjeros (basta un medio de contacto); datos sensibles según el
+  art. 2 g) y menores con régimen propio; estado del Boletín 18.623-07.
+  Versión anterior: 1.2.2 (2026-10-01). Cambios: plazo de respuesta a solicitudes de derechos corregido a 30 días corridos prorrogables por 30, y bloqueo temporal en 2 días hábiles (art. 11, verificado en el texto oficial de la BCN), en Bloques 3 y 6; endpoint JSON de la BCN para obtener el texto oficial. Versión anterior: 1.2.1 (2026-07-03) — crédito Zythos Media añadido al inicio de ejecución, plantilla Markdown y pie de página del .docx. Verificar actualizaciones cuando se publique el reglamento o cuando la APDP emita sus primeras instrucciones.

@@ -35,7 +35,10 @@ llega a un entregable. Esta skill convierte el "mantenerse al día" en un proces
 py "<carpeta de la skill>\scripts\vigencia.py" "C:\Users\<usuario>\.claude\skills" -o "<scratchpad>\vigencia.json"
 ```
 
-Clasifica cada skill según su SKILL.md:
+Clasifica cada skill según su SKILL.md. La fecha `revisar:` se lee solo del SKILL.md; las
+fechas de fuentes se buscan también en `references/*.md` ("fuentes", "sources", "consultado",
+"verificado", "checked", "updated", "as of" y similares), y una fecha futura nunca cuenta como
+fuente:
 
 | Estado | Criterio |
 |---|---|
@@ -44,6 +47,10 @@ Clasifica cada skill según su SKILL.md:
 | `fuentes_viejas` | Sin `revisar:` y con fuentes de más de 180 días (`--fuente-max-dias`) |
 | `sin_fecha` | Sin fecha de revisión ni de fuentes |
 | `vigente` / `vigente_por_fuentes` | El resto |
+
+Antes de reportar una `fuentes_viejas`, abrir la línea que generó la fecha: una fecha de
+plantilla o de ejemplo ("Last updated" de un formulario) no es una fuente vieja, y una skill
+de terceros con fuentes viejas se corrige con un parche o al actualizar la suite, no a mano.
 
 Las skills `sin_fecha` no son un error en sí: muchas son de terceros o de procedimiento. Se
 priorizan las que hacen afirmaciones sobre plataformas externas (Google, IA, anuncios, leyes).

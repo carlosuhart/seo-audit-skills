@@ -9,8 +9,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
   category: legal-compliance
+  revisar: "2027-01-15"
 ---
 
 # CCPA / CPRA — Auditoría de Cumplimiento (California, EE.UU.)
@@ -32,11 +33,25 @@ metadata:
   Modificaciones en vigor desde el **1 de enero de 2023**. Crea la CPPA.
 - **CPPA**: California Privacy Protection Agency — autoridad de cumplimiento creada
   por la CPRA. Sustituye parcialmente la aplicación por el Attorney General.
-  Web: cppa.ca.gov
+  Web: cppa.ca.gov (también usa la marca pública "CalPrivacy" y privacy.ca.gov; el nombre
+  legal no cambió).
 - **Attorney General de California**: mantiene competencia concurrente en algunas áreas.
-- **Reglamentos de la CPPA** (en continua evolución, verificar fecha): incluyen
-  reglas sobre opt-out signals (GPC), contratos con contratistas/proveedores de
-  servicios, y obligaciones sobre datos de menores.
+- **Reglamentos de la CPPA**: opt-out signals (GPC), contratos con contratistas y
+  proveedores de servicios, datos de menores y, desde el 01/01/2026, el paquete aprobado
+  por la OAL el 23/09/2025 (https://cppa.ca.gov/announcements/2025/20250923.html):
+  - **Evaluaciones de riesgo:** obligatorias desde el 01/01/2026 para quien vende o
+    comparte datos (publicidad entre contextos incluida) o trata datos sensibles; la
+    primera entrega a la CPPA vence el 01/04/2028.
+  - **Decisiones automatizadas (ADMT) en decisiones significativas:** aviso previo,
+    opt-out y acceso desde el 01/01/2027.
+  - **Auditorías de ciberseguridad:** primeras entregas el 01/04/2028, 2029 o 2030 según
+    facturación (más de USD 100 millones, de 50 a 100 millones, menos de 50 millones).
+- **Delete Act y DROP:** los data brokers deben registrarse y, desde el 01/08/2026,
+  procesar cada 45 días las solicitudes de borrado de la plataforma DROP (abierta a
+  consumidores el 01/01/2026), con multa de USD 200 por solicitud y día. Solo aplica si
+  el sitio vende datos de consumidores con los que no tiene relación directa.
+- **AB 566 (Opt Me Out Act, firmada el 08/10/2025):** obliga a los navegadores a ofrecer
+  una señal de opt-out desde el 01/01/2027; más usuarios llegarán con GPC activo.
 
 ⚠️ **CCPA ≠ RGPD**: La CCPA aplica un modelo **opt-out** (el consumidor opta por
 salir), no un modelo opt-in como el RGPD. No requiere base jurídica para cada
@@ -57,8 +72,8 @@ y cumplen **al menos uno** de estos tres umbrales:
 
 | Umbral | Criterio |
 |--------|---------|
-| **A** | Ingresos brutos anuales > USD 25 millones |
-| **B** | Compra, venta, recepción o compartición de datos personales de ≥ 100.000 consumidores o unidades familiares en California por año |
+| **A** | Ingresos brutos anuales > USD 26.625.000 en el año natural anterior (ajuste por IPC desde el 01/01/2025; el próximo ajuste bienal toca en 2027) |
+| **B** | Compra, venta o compartición de datos personales de ≥ 100.000 consumidores o unidades familiares en California por año (§ 1798.140(d)(1)(B); la CPRA quitó "recepción") |
 | **C** | ≥ 50% de los ingresos anuales provienen de la venta o compartición de datos personales de consumidores |
 
 **Proceso:**
@@ -128,7 +143,7 @@ Peso: 10 pts
 Verificar en la política de privacidad (Privacy Policy):
 - [ ] Nombre o razón social del negocio
 - [ ] Datos de contacto para ejercicio de derechos: email designado O formulario web
-- [ ] Teléfono gratuito (toll-free) — exigido si el negocio opera en California con consumidores directos (§ 1798.130(a)(1))
+- [ ] Teléfono gratuito (toll-free) — exigido salvo que el negocio opere exclusivamente en línea y tenga relación directa con el consumidor: en ese caso basta un email (§ 1798.130(a)(1)(A))
 - [ ] Sede o domicilio del responsable (no exigido pero buena práctica)
 - [ ] Fecha de "última actualización" de la política de privacidad
 
@@ -197,7 +212,9 @@ directo en el RGPD.
 
 **Requisitos:**
 - [ ] Enlace "Do Not Sell or Share My Personal Information" o "Do Not Sell My PI"
-  visible en el footer de la página de inicio y de todas las páginas donde se recojan datos
+  visible en el footer de la página de inicio y de todas las páginas donde se recojan datos,
+  o el enlace alternativo único "Your Privacy Choices" con el ícono oficial (Reglamentos
+  CPPA § 7015)
 - [ ] El enlace es funcional y lleva a un mecanismo de opt-out
 - [ ] El mecanismo de opt-out es gratuito
 - [ ] No se exige crear una cuenta para ejercer el opt-out
@@ -207,6 +224,12 @@ directo en el RGPD.
 **Global Privacy Control (GPC) — § 1798.135(b) + Reglamentos CPPA:**
 - [ ] El sitio reconoce y respeta la señal GPC (obligatorio para negocios sujetos a CPRA)
 - [ ] La política menciona la señal GPC o "señales de preferencia del usuario"
+- [ ] **Prueba en vivo:** con GPC activo en el navegador, los píxeles publicitarios no se
+  disparan, incluso con la sesión iniciada. Es lo que ya se sanciona: Honda
+  (USD 632.500, marzo de 2025), Todd Snyder (USD 345.178, mayo de 2025) y Tractor Supply
+  (USD 1.350.000, 30/09/2025), más un barrido conjunto de California, Colorado y
+  Connecticut sobre GPC (09/09/2025). Fuente:
+  https://cppa.ca.gov/announcements/2025/20250930.html
 
 **Nota:** Si se detectan cookies de publicidad comportamental activas (antes de cualquier opt-out) pero no hay enlace "Do Not Sell or Share": issue crítico.
 
@@ -226,6 +249,8 @@ propio de limitación ("Limit the Use of My Sensitive Personal Information").
 - Datos biométricos procesados para identificar unívocamente a una persona
 - Datos de salud (diagnóstico, tratamiento)
 - Datos sobre vida sexual u orientación sexual
+- Credenciales de acceso a una cuenta (usuario más contraseña o pregunta de seguridad)
+- Datos neuronales (añadidos por SB 1223, desde el 01/01/2025)
 
 **Si el sitio NO recoge ni usa SPI:** marcar N/A, 10 pts.
 
@@ -241,11 +266,14 @@ propio de limitación ("Limit the Use of My Sensitive Personal Information").
 Peso: 15 pts
 
 La CCPA/CPRA reconoce 8 derechos. Plazo de respuesta: **45 días calendario**
-(prorrogables 45 días adicionales con notificación). Máximo 2 solicitudes por categoría
-por período de 12 meses:
+(prorrogables 45 días adicionales con notificación). El negocio puede limitar a 2 al año
+las solicitudes de acceso (saber y portabilidad, § 1798.130(a)(2)(B)); no hay ese límite
+para los demás derechos:
 
 1. **Derecho a saber** (§ 1798.110): qué PI se recopila, de dónde, con qué fin,
-   con quién se comparte; período de los últimos 12 meses
+   con quién se comparte; por defecto los últimos 12 meses, pero para datos recogidos
+   desde el 01/01/2022 el consumidor puede pedir un periodo mayor, salvo que sea
+   imposible o desproporcionado (§ 1798.130(a)(2)(B))
 2. **Derecho a eliminar** (§ 1798.105): solicitar eliminación de PI recopilada;
    aplican excepciones (legal, seguridad, fraude, etc.)
 3. **Derecho a corregir** (§ 1798.106 — CPRA): solicitar corrección de PI inexacta
@@ -258,12 +286,13 @@ por período de 12 meses:
 7. **Derecho a no ser discriminado** (§ 1798.125): el negocio no puede negar servicios,
    cobrar más o dar calidad inferior por ejercer derechos CCPA
 8. **Derecho a opt-out de decisiones automatizadas** (§ 1798.185(a)(16) — Reglamento
-   CPPA): en tramitación; verificar estado actual en cppa.ca.gov
+   CPPA): reglamento aprobado el 23/09/2025; para decisiones significativas, aviso
+   previo, opt-out y acceso exigibles desde el 01/01/2027
 
 **Menores (§ 1798.120(c)):**
 - < 13 años: prohibición de venta salvo consentimiento opt-in del padre/tutor
 - 13–15 años: prohibición de venta salvo consentimiento opt-in del propio menor
-- Infracción con menores: multa de USD 7.500 por incidente (vs. USD 2.500 otros casos)
+- Infracción con menores: multa de USD 7.988 por violación (vs. USD 2.663 otros casos; importes ajustados por IPC desde el 01/01/2025)
 
 Verificar:
 - [ ] Todos los derechos mencionados en la política
@@ -273,7 +302,7 @@ Verificar:
 - [ ] Proceso de verificación de identidad descrito (razonable, no excesivamente oneroso)
 - [ ] Declaración explícita de no discriminación por ejercer derechos
 
-### Bloque 7 — Acuerdos con proveedores de servicios y contratistas (§ 1798.140(ag)/(e))
+### Bloque 7 — Acuerdos con proveedores de servicios y contratistas (§ 1798.140(ag) y (j))
 Peso: 10 pts
 
 La CPRA establece tres tipos de terceros receptores de PI:
@@ -302,8 +331,9 @@ La CCPA no establece medidas de seguridad específicas, pero exige medidas
 
 **Derecho de acción privada por brechas (§ 1798.150):**
 Los consumidores cuyos datos fueron comprometidos en una brecha por falta de
-medidas de seguridad razonables tienen derecho a daños de **USD 100 a USD 750**
-por consumidor por incidente, o los daños reales si son mayores.
+medidas de seguridad razonables tienen derecho a daños de **USD 107 a USD 799**
+por consumidor por incidente (importes ajustados por IPC desde el 01/01/2025), o los
+daños reales si son mayores.
 Esto es un derecho de acción privada — no requiere intervención de la CPPA.
 
 Verificar:
@@ -364,24 +394,29 @@ Score = suma de puntos obtenidos / 100
 **Sanciones administrativas (CPPA — § 1798.155):**
 | Conducta | Sanción por violación |
 |---|---|
-| Violación no intencional | USD 2.500 |
-| Violación intencional | USD 7.500 |
-| Violación con datos de menores < 16 | USD 7.500 siempre (no existe la escala "no intencional") |
+| Violación no intencional | USD 2.663 |
+| Violación intencional | USD 7.988 |
+| Violación con datos de menores < 16 | USD 7.988 siempre (no existe la escala "no intencional") |
+
+Importes ajustados por IPC desde el 01/01/2025 (antes USD 2.500 y USD 7.500), en
+§ 1798.155 y § 1798.199.90. Fuente: https://cppa.ca.gov/regulations/cpi_adjustment.html
+(17/12/2024). El próximo ajuste bienal toca en 2027: verificar antes de citar.
 
 No hay límite global establecido por ley, pero el CPPA puede multar por cada
 "violación" — y si se afecta a miles de consumidores, las multas se multiplican.
 
 **Derecho de acción privada (§ 1798.150):**
-- USD 100–750 por consumidor por incidente de brecha de datos
+- USD 107–799 por consumidor por incidente de brecha de datos
 - Los daños reales si son mayores
 - Acciones de clase son posibles
 
 **Críticos:**
 - Sin enlace "Do Not Sell or Share" cuando el sitio claramente vende/comparte PI → § 1798.120/121
-- Trackers publicitarios activos sin declaración ni opt-out → USD 7.500/violación intencional
+- Trackers publicitarios activos sin declaración ni opt-out → USD 7.988/violación intencional
+- Píxeles publicitarios que se disparan con GPC activo → riesgo ya sancionado (Honda, Todd Snyder, Tractor Supply)
 - Sin política de privacidad publicada → § 1798.130
 - Sin mecanismo para ejercer derechos → § 1798.130
-- Venta/compartición de datos de menores < 16 sin opt-in → USD 7.500 por violación
+- Venta/compartición de datos de menores < 16 sin opt-in → USD 7.988 por violación
 - Sin HTTPS → § 1798.150 (riesgo de acción privada en caso de brecha)
 
 **Medios:**
@@ -406,7 +441,7 @@ Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_ccpa_[fecha].md` o `.
 
 Modo `--docx`: misma estructura que `rgpd`, adaptada:
 - Autoridad: CPPA (cppa.ca.gov) + Attorney General de California
-- Sanciones: USD 2.500 / USD 7.500 por violación; USD 100–750 acción privada por brecha
+- Sanciones: USD 2.663 / USD 7.988 por violación; USD 107–799 acción privada por brecha (importes de 2025)
 - Umbral de aplicabilidad: incluir sección de "Alcance y aplicabilidad" al inicio
 - Idioma del informe: inglés (si el sitio auditado es en inglés) o español
 - Pie de página: hipervínculo "Zythos Media" → https://zythos.media
@@ -417,7 +452,14 @@ Modo `--docx`: misma estructura que `rgpd`, adaptada:
 
 - **CCPA base**: en vigor desde 1 enero 2020.
 - **CPRA modificaciones**: en vigor desde 1 enero 2023.
-- **Reglamentos CPPA**: en evolución continua — verificar cppa.ca.gov antes de auditorías.
-- **GPC**: obligatorio reconocerlo per Reglamentos CPPA; verificar si se ha expandido.
-- **Derecho a opt-out de decisiones automatizadas**: en proceso reglamentario — verificar estado.
-- **Versión de esta skill:** 1.0.0 (2026-07-08).
+- **Ajuste por IPC**: umbral USD 26.625.000, multas USD 2.663 / 7.988, acción privada
+  USD 107–799, desde el 01/01/2025. Próximo ajuste en 2027.
+- **Reglamentos CPPA (aprobados 23/09/2025, vigentes 01/01/2026)**: evaluaciones de
+  riesgo desde 01/01/2026 (primera entrega 01/04/2028); ADMT desde 01/01/2027; auditorías
+  de ciberseguridad 2028-2030 según facturación.
+- **GPC**: obligatorio; sanciones aplicadas en 2025. AB 566 obliga a los navegadores a
+  ofrecer la señal desde el 01/01/2027.
+- **Delete Act / DROP**: DROP abierto a consumidores el 01/01/2026; brokers procesan
+  desde el 01/08/2026.
+- **Versión de esta skill:** 1.1.0 (2026-11-20). Revisada contra cppa.ca.gov y el
+  Civil Code el 20/11/2026.

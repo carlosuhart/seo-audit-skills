@@ -9,8 +9,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
   category: legal-compliance
+  revisar: "2027-05-20"
 ---
 
 # UK GDPR + PECR — Auditoría de Cumplimiento
@@ -38,23 +39,34 @@ Si el usuario no especifica formato, preguntar antes de generar el documento.
   nacionales (tratamiento de datos de empleados, inteligencia, etc.).
 - **PECR 2003** (Privacy and Electronic Communications Regulations): transpone la
   Directiva ePrivacy 2002/58/CE. Regula cookies, comunicaciones de marketing y
-  redes de comunicación electrónica. Sigue en vigor hasta eventual reforma.
+  redes de comunicación electrónica. Reformada por la DUAA 2025: nuevas excepciones
+  al consentimiento de cookies (Anexo A1) y multas alineadas con el UK GDPR, ambas
+  desde el 05/02/2026.
 - **Children's Code (Age Appropriate Design Code, 2021)**: código de la ICO para
   servicios online dirigidos a menores de 18 años. Establece 15 estándares de
   privacidad por diseño para este segmento.
-- **Data (Use and Access) Act**: en tramitación a la fecha de esta versión —
-  puede introducir modificaciones al UK GDPR. Verificar estado cuando se use.
+- **Data (Use and Access) Act 2025 (DUAA)**: sanción real el 19/06/2025. El grueso de
+  la Parte 5, que modifica el UK GDPR, la DPA 2018 y las PECR, rige desde el 05/02/2026
+  (SI 2026/82, https://www.legislation.gov.uk/uksi/2026/82/made). El deber de gestionar
+  reclamaciones rige desde el 19/06/2026, y la Information Commission sustituye al
+  Information Commissioner desde el 30/09/2026. Cambios que importan en una auditoría
+  web: excepciones nuevas al consentimiento de cookies, intereses legítimos reconocidos,
+  decisiones automatizadas (Arts. 22A-22D), reclamaciones ante el responsable y multas
+  PECR de hasta £17.500.000 o el 4 %.
 
 ⚠️ El UK GDPR es normativa británica independiente desde Brexit. No confundir
-con el RGPD europeo (UE). La UE tiene decisión de adecuación para el Reino Unido
-(reconoce el nivel de protección de UK como adecuado). Son dos marcos jurídicos
-distintos con articulación bilateral.
+con el RGPD europeo (UE). La UE renovó su decisión de adecuación para el Reino Unido
+el 19/12/2025, con vigencia hasta el 27/12/2031. Son dos marcos jurídicos distintos
+con articulación bilateral.
 
 ---
 
 ## Nota sobre la autoridad de control
 
-**Information Commissioner's Office (ICO)**
+**Information Commission (sigue usando la sigla ICO)**
+Desde el 30/09/2026 la autoridad es la Information Commission, un órgano colegiado
+que sucede al Information Commissioner con las mismas funciones (DUAA 2025). En los
+informes se puede seguir escribiendo "ICO".
 Web: ico.org.uk | Notificación de brechas: ico.org.uk/report-a-breach
 Registro de responsables: ico.org.uk/registration (obligatorio para la mayoría)
 
@@ -155,21 +167,46 @@ Verificar los mismos ítems del skill `rgpd` Bloque 4.
 Añadir verificación específica UK:
 - [ ] Si se invoca "interés legítimo" (Art. 6.1f): menciona el Legitimate Interests
       Assessment (LIA) — equivalente UK al test de equilibrio europeo
+- [ ] Excepción desde el 05/02/2026: para los **intereses legítimos reconocidos** del
+      Anexo 1 del UK GDPR (añadido por la DUAA: seguridad nacional, emergencias,
+      prevención de delitos, protección de personas vulnerables, entre otros) no se
+      exige el test de ponderación. En un sitio comercial es raro que apliquen: la
+      analítica y la publicidad siguen necesitando LIA o consentimiento
 
 ### Bloque 5 — Consentimiento, cookies y marketing directo (Art. 7 UK GDPR + PECR 2003)
 Peso: 15 pts
 
-**Marco de cookies: PECR 2003 Regulation 6**
+**Marco de cookies: PECR 2003 Regulation 6 y Anexo A1 (DUAA 2025)**
 Las PECR exigen consentimiento previo e informado para almacenar información o
-acceder a información en el dispositivo del usuario, salvo cookies estrictamente
-necesarias. El estándar de consentimiento debe cumplir el UK GDPR Art. 7.
-La ICO ha confirmado que el modelo de "consentimiento implícito por continuar
+acceder a información en el dispositivo del usuario. El estándar de consentimiento
+debe cumplir el UK GDPR Art. 7, y el consentimiento "implícito por continuar
 navegando" no es válido.
+
+**Excepciones sin consentimiento desde el 05/02/2026** (sección 112 y Anexo 12 de la
+DUAA, nuevo Anexo A1 de las PECR, https://www.legislation.gov.uk/ukpga/2025/18/schedule/12):
+- Lo estrictamente necesario para el servicio que pide el usuario, y la transmisión.
+- **Estadísticas propias** para mejorar el servicio o el sitio, solo si: se usan solo
+  para eso, no se comparten salvo para esa mejora, se informa con claridad y hay un
+  medio **simple y gratuito para oponerse**.
+- **Apariencia o funcionalidad** del sitio (preferencias del usuario), con las mismas
+  condiciones.
+- Geolocalización en emergencias.
+
+La publicidad, el perfilado y la analítica de terceros que reutiliza los datos siguen
+exigiendo consentimiento. La ICO publicó su guía final sobre tecnologías de
+almacenamiento y acceso el 29/04/2026; según los resúmenes publicados, lee la excepción
+de analítica de forma estrecha (medir el rendimiento del propio sitio entra; conocer a la
+audiencia con fines comerciales, no). Antes de un informe de cliente, leer la guía en
+ico.org.uk para confirmar el alcance exacto. Si un cliente declara su analítica como exenta, la auditoría verifica
+las cuatro condiciones, en especial que el medio de oposición exista y funcione.
 
 **Banner de cookies:**
 - [ ] Existe banner o CMP
 - [ ] El banner bloquea cookies no esenciales hasta obtener consentimiento activo
-- [ ] No hay cookies de analítica, publicidad o rastreo activas antes del consentimiento
+- [ ] No hay cookies de publicidad o rastreo activas antes del consentimiento
+- [ ] Si hay analítica activa sin consentimiento: cumple las cuatro condiciones de la
+      excepción estadística (uso propio para mejora, sin compartir, información clara,
+      medio simple y gratuito para oponerse). Si falta una, es un incumplimiento
 - [ ] Opción de rechazo tan accesible como la aceptación
 - [ ] Configuración granular por categoría
 - [ ] Enlace a política de cookies en el propio banner
@@ -200,16 +237,25 @@ online dirigidos a ellos.
 ### Bloque 6 — Derechos del interesado (Art. 15–22 UK GDPR + Art. 12)
 Peso: 15 pts
 
-Los ocho derechos del UK GDPR son idénticos al RGPD europeo (misma numeración):
-acceso (15), rectificación (16), supresión (17), limitación (18), portabilidad (20),
-oposición (21), no ser objeto de decisiones automatizadas (22), retirada del
-consentimiento (7.3). Plazo de respuesta: **un mes** (Art. 12.3).
+Los derechos de acceso (15), rectificación (16), supresión (17), limitación (18),
+portabilidad (20), oposición (21) y retirada del consentimiento (7.3) conservan la
+numeración del RGPD. Plazo de respuesta: **un mes** (Art. 12.3).
+
+**Decisiones automatizadas: Arts. 22A-22D UK GDPR desde el 05/02/2026** (sustituyen al
+Art. 22, sección 80 de la DUAA). Se permite la decisión automatizada significativa,
+salvo con datos de categorías especiales, si hay salvaguardas: informar de ella,
+permitir impugnarla y obtener intervención humana.
 
 Verificar los mismos ítems del skill `rgpd` Bloque 6.
 
 Verificación adicional UK:
 - [ ] Se menciona el derecho a reclamar ante la **ICO** (no otras DPAs europeas)
 - [ ] Se indica cómo presentar una Data Subject Access Request (DSAR)
+- [ ] **Reclamaciones ante el responsable (desde el 19/06/2026):** la política ofrece un
+      medio para reclamar directamente (formulario o correo). El responsable debe acusar
+      recibo en 30 días y responder sin demora indebida
+- [ ] Si hay decisiones automatizadas significativas: la política las informa y explica
+      cómo impugnarlas y pedir intervención humana (Arts. 22A-22D)
 
 ### Bloque 7 — Categorías especiales y menores (Art. 9 UK GDPR + Children's Code)
 Peso: 10 pts
@@ -243,11 +289,13 @@ de la lista de la Comisión Europea. La ICO la mantiene en ico.org.uk.
 Argentina · Canada · Faroe Islands · Guernsey · Israel · Isle of Man · Japan ·
 Jersey · New Zealand · Republic of Korea · Switzerland · Uruguay ·
 EEA countries (todos los estados miembro de la UE + Noruega + Islandia + Liechtenstein) ·
-**EE.UU.**: UK-US Data Bridge operativo desde octubre 2023 (organizaciones certificadas
+**EE.UU.**: UK-US Data Bridge en vigor desde el 12/10/2023 (organizaciones certificadas
 en el marco del DPF de EE.UU. con extensión UK; verificar registro en la lista del DOC)
 
-Nota: La UE también tiene decisión de adecuación para UK (flujo UK → UE es libre).
-Los flujos UE → UK también son libres bajo la decisión de adecuacia de la CE para UK.
+Nota: los flujos UK → UE son libres por la lista de adecuación británica, y los flujos
+UE → UK por la decisión de adecuación de la Comisión Europea, renovada el 19/12/2025
+hasta el 27/12/2031. Desde el 05/02/2026 la DUAA cambió el criterio británico para
+nuevas adecuaciones ("data protection test"); las existentes siguen valiendo.
 
 **Garantías válidas cuando no hay adecuación UK:**
 - Cláusulas de transferencia internacional (IDTA — International Data Transfer Agreement,
@@ -303,15 +351,20 @@ El UK GDPR mantiene la estructura de dos niveles de sanción del RGPD, en GBP:
 
 | Nivel | Multa máxima | Artículos típicos |
 |-------|-------------|-------------------|
-| **Superior** | £17.500.000 o 4% facturación mundial anual | Art. 5, 6, 7, 9, 12–22, 44–49 |
-| **Estándar** | £8.750.000 o 2% facturación mundial anual | Art. 8, 25, 32, 33–34, 37–39 |
+| **Superior** | £17.500.000 o 4% facturación mundial anual | Art. 5, 6, 7, 9, 12–22D, 44–49 |
+| **Estándar** | £8.700.000 o 2% facturación mundial anual | Art. 8, 25, 32, 33–34, 37–39 |
 
 La ICO aplica el mayor de los dos valores. Considera atenuantes y agravantes
-similares a los del RGPD (Art. 83.2 UK GDPR).
+similares a los del RGPD (Art. 83.2 UK GDPR). Importes de la DPA 2018, sección 157.
+
+**Cookies y marketing se multan por las PECR, no por el Art. 83.** Para conductas desde
+el 05/02/2026 la multa PECR llega a **£17.500.000 o el 4 % de la facturación mundial
+anual**, lo que sea mayor, y ya no exige "daño sustancial" (sección 115 de la DUAA).
+Antes de esa fecha el tope era £500.000.
 
 **Issues críticos** (riesgo nivel superior):
 - Política de privacidad inexistente
-- Cookies no esenciales activas sin consentimiento (PECR Reg. 6)
+- Cookies no esenciales activas sin consentimiento ni excepción del Anexo A1 (PECR Reg. 6; multa PECR hasta £17.500.000 o 4 %)
 - Sin base jurídica declarada
 - Datos de categorías especiales sin consentimiento explícito
 - Sin HTTPS
@@ -357,7 +410,7 @@ Fecha: [fecha] | Sector: [sector] | Score: [X/100]
 ## Notas metodológicas
 - Verificado externamente
 - Pendiente de acceso al backend
-- Nota: Data (Use and Access) Act en tramitación — verificar estado
+- Marco aplicado: UK GDPR y PECR tal como quedaron tras la DUAA 2025 (05/02/2026)
 ```
 
 Guardar en `<directorio-de-auditorias>/[cliente]/auditoria_uk-gdpr_[fecha].md`.
@@ -382,8 +435,12 @@ Adicional UK: el registro en la ICO no es auditable externamente.
 
 - **UK GDPR**: en vigor desde el 1 de enero de 2021 (post-Brexit).
 - **Children's Code**: en vigor desde septiembre 2021.
-- **UK-US Data Bridge**: operativo desde el 17 de octubre de 2023.
+- **UK-US Data Bridge**: en vigor desde el 12/10/2023.
 - **IDTA**: aprobada por ICO en marzo 2022; addendum a CCT europeas aprobado en marzo 2022.
-- **Data (Use and Access) Act**: en tramitación a la fecha de esta versión — puede
-  modificar disposiciones del UK GDPR. Verificar estado antes de usar.
-- **Versión de esta skill:** 1.0.0 (2026-07-08).
+- **Data (Use and Access) Act 2025**: sanción real 19/06/2025; grueso de la Parte 5 desde
+  el 05/02/2026; reclamaciones desde el 19/06/2026; Information Commission desde el
+  30/09/2026.
+- **Guía final de la ICO sobre tecnologías de almacenamiento y acceso:** 29/04/2026.
+- **Adecuación UE → UK:** renovada el 19/12/2025, vigente hasta el 27/12/2031.
+- **Versión de esta skill:** 1.1.0 (2026-11-20). Revisada contra legislation.gov.uk y la
+  Comisión Europea el 20/11/2026.

@@ -9,8 +9,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
   category: legal-compliance
+  revisar: "2027-05-20"
 ---
 
 # nFADP / revDSG — Auditoría de Cumplimiento (Suiza)
@@ -39,8 +40,9 @@ metadata:
 
 Suiza **no es** miembro de la UE ni del EEE. La nFADP es derecho suizo independiente,
 aunque está fuertemente inspirada en el RGPD. La UE tiene decisión de adecuación
-para Suiza (flujo UE → Suiza permitido). Suiza considera adecuados los países de la
-UE/EEE y otros listados por el FDPIC.
+para Suiza (flujo UE → Suiza permitido). Los Estados con protección adecuada los fija
+el **Consejo Federal** en el Anexo 1 de la Ordenanza (OPDo), conforme al Art. 16.1 nLPD;
+incluye a la UE/EEE.
 
 ⚠️ **Diferencia crítica respecto al RGPD:** Las sanciones de la nFADP son **penales**
 y recaen sobre las **personas físicas** responsables (no sobre la empresa).
@@ -102,8 +104,11 @@ Verificar en la declaración de protección de datos (Datenschutzerklärung):
 - [ ] Domicilio o sede del responsable
 - [ ] Datos de contacto (email o formulario) para ejercicio de derechos
 - [ ] UID (número de identificación de empresa) — no obligatorio pero habitual en Suiza
-- [ ] Si el responsable no tiene domicilio en Suiza pero trata datos de titulares en Suiza
-      (Art. 3 nFADP): ¿designa un representante en Suiza?
+- [ ] Representante en Suiza (Art. 14 nFADP): solo es obligatorio para responsables
+      privados con sede fuera de Suiza que cumplen **todas** estas condiciones: ofrecen
+      bienes o servicios a personas en Suiza u observan su comportamiento, a gran escala,
+      de forma regular y con alto riesgo para la personalidad. Si no se cumplen, su
+      ausencia no es un incumplimiento
 
 ### Bloque 2 — Declaración de protección de datos: existencia y acceso (Art. 19 nFADP)
 Peso: 5 pts
@@ -123,16 +128,17 @@ El Art. 19 establece la obligación de informar sobre (1 pt por ítem):
 - [ ] **Art. 19.2(a):** Identidad y datos de contacto del responsable
 - [ ] **Art. 19.2(b):** Finalidad del tratamiento
 - [ ] **Art. 19.2(c):** Destinatarios o categorías de destinatarios si se comunican datos
-- [ ] **Art. 19.2(d):** País de destino en transferencias internacionales (si aplica)
-- [ ] **Art. 19.2(e):** Existencia de decisiones individuales automatizadas (si aplica)
-      y la lógica utilizada (Art. 21)
-- [ ] **Art. 19.3:** Si los datos no se recogen directamente del titular: también la
-      fuente de los datos
+- [ ] **Art. 19.3:** Si los datos no se recogen directamente del titular: también las
+      categorías de datos tratados
+- [ ] **Art. 19.4:** Si se comunican al extranjero: Estado u organismo de destino y, si no
+      tiene protección adecuada, las garantías del Art. 16.2 o la excepción del Art. 17
+- [ ] **Art. 21 (deber aparte):** si hay decisiones individuales automatizadas, informarlas y
+      permitir que el titular exprese su punto de vista y pida revisión por una persona
 - [ ] Categorías de datos tratados
 - [ ] Períodos de conservación o criterios para determinarlos
 - [ ] Derechos del titular: acceso, rectificación, eliminación, portabilidad,
       oposición a decisiones automatizadas
-- [ ] Procedimiento para ejercer derechos y plazo de respuesta (30 días — Art. 25)
+- [ ] Procedimiento para ejercer derechos y plazo de respuesta (30 días — Art. 25.7)
 - [ ] Uso de cookies y tecnologías de rastreo
 - [ ] Derecho a reclamar ante el **FDPIC**
 - [ ] Si se realizan transferencias internacionales: países y garantías adoptadas
@@ -168,9 +174,16 @@ y no viola las prohibiciones de los Arts. 30-31 (datos sensibles):
 ### Bloque 5 — Cookies, consentimiento y perfilado (Art. 6 + Art. 21 + DSG-Praxis)
 Peso: 15 pts
 
-La nFADP no regula cookies específicamente. El FDPIC ha indicado que las cookies
-de rastreo no esenciales requieren consentimiento informado conforme al Art. 6.
-La práctica suiza (DSG-Praxis) se alinea en este punto con el RGPD.
+**Las cookies en Suiza no siguen el modelo del RGPD.** Las regula el Art. 45c de la Ley
+de Telecomunicaciones (LTC/FMG): hay que **informar y ofrecer la posibilidad de rechazo**
+(opt-out), en principio antes de activar las cookies no necesarias. El consentimiento
+expreso solo se exige si el tratamiento es inesperado para el usuario, de alto riesgo
+(por ejemplo, perfilado de alto riesgo) o con datos sensibles. Un banner informativo con
+opción de rechazo, sin bloqueo previo, no es por sí solo un incumplimiento. Fuente: hoja
+informativa del FDPIC sobre cookies (27/03/2026,
+https://www.edoeb.admin.ch/dam/de/sd-web/ByXs53ExpIEy/20260327%20Merkblatt%20Cookies_DE.pdf).
+Si el sitio también apunta a la UE, auditar además con `rgpd`, que sí exige consentimiento
+previo.
 
 **Perfilado (Art. 5(f)) y perfilado de alto riesgo (Art. 5(g)):**
 - **Perfilado**: cualquier tratamiento automatizado de datos para evaluar aspectos
@@ -180,9 +193,10 @@ La práctica suiza (DSG-Praxis) se alinea en este punto con el RGPD.
   una de las justificaciones del Art. 31
 
 **Banner de cookies:**
-- [ ] Existe banner o CMP
-- [ ] El banner bloquea cookies no esenciales hasta obtener consentimiento
-- [ ] No hay cookies de análisis, publicidad o rastreo activas antes del consentimiento
+- [ ] Existe información sobre las cookies (banner, CMP o aviso visible)
+- [ ] Existe una forma clara de rechazar las cookies no necesarias (Art. 45c LTC)
+- [ ] Si hay perfilado de alto riesgo, datos sensibles o tratamiento inesperado: se pide
+      consentimiento expreso antes de activarlas
 - [ ] Opción de rechazo tan accesible como la aceptación
 - [ ] Configuración granular por categoría
 - [ ] El consentimiento es revocable fácilmente
@@ -192,7 +206,7 @@ La práctica suiza (DSG-Praxis) se alinea en este punto con el RGPD.
 - [ ] Finalidad concreta declarada antes de enviar
 
 **Perfilado:**
-- [ ] Si el sitio realiza perfilado: declarado en la Datenschutzerklärung (Art. 19.2(e))
+- [ ] Si el sitio realiza perfilado: declarado en la Datenschutzerklärung (Art. 19 y deber de información del Art. 21)
 - [ ] Si es perfilado de alto riesgo: consentimiento expreso o justificación Art. 31
 
 **Marketing directo:**
@@ -202,8 +216,9 @@ La práctica suiza (DSG-Praxis) se alinea en este punto con el RGPD.
 ### Bloque 6 — Derechos del titular (Art. 25–32 nFADP)
 Peso: 15 pts
 
-La nFADP reconoce los siguientes derechos, con plazo de respuesta de **30 días**
-(Art. 25.5), prorrogable hasta 3 meses con notificación:
+La nFADP reconoce los siguientes derechos. Plazo de respuesta al acceso: **30 días**
+(Art. 25.7). Si no es posible, hay que avisar al titular dentro de ese plazo e indicar en
+qué fecha se responderá (Art. 18 OPDo); la ley no fija un tope de prórroga:
 
 1. **Derecho de acceso** (Art. 25): información sobre si se tratan sus datos y,
    en caso afirmativo, qué datos, con qué finalidad, conservación, destinatarios y
@@ -224,7 +239,7 @@ parte de esta función).
 
 Verificar:
 - [ ] Existe mecanismo para ejercer derechos (email, formulario)
-- [ ] Se menciona el plazo de **30 días** (prorrogable a 3 meses)
+- [ ] Se menciona el plazo de **30 días** (con aviso de la nueva fecha si se necesita más)
 - [ ] Se mencionan los derechos: acceso, rectificación, supresión, portabilidad,
       oposición a decisiones automatizadas
 - [ ] Se indica qué información debe adjuntar el titular (identificación)
@@ -264,9 +279,9 @@ escala, perfilado de alto riesgo, monitorización sistemática de zonas pública
 Peso: 10 pts
 
 La nFADP permite transferencias a países con nivel de protección adecuado
-reconocido por el Consejo Federal suizo (Art. 16). El FDPIC publica y mantiene
-la lista. Países incluidos: todos los estados de la UE/EEE + varios más
-(ver edoeb.admin.ch para la lista actualizada).
+fijado por el Consejo Federal suizo en el Anexo 1 de la OPDo (Art. 16.1). Incluye
+todos los estados de la UE/EEE y varios más. EE.UU.: solo organizaciones certificadas en
+el Swiss-US Data Privacy Framework, incluidas en el Anexo 1 desde el 15/09/2024.
 
 **Para transferencias a países sin nivel adecuado (Art. 16.2 + Art. 17):**
 - Cláusulas contractuales tipo aprobadas por el FDPIC (o equivalentes)
@@ -280,7 +295,7 @@ Las organizaciones de EE.UU. certificadas bajo el DPF + extensión suiza
 tienen nivel adecuado para transferencias desde Suiza.
 
 Verificar:
-- [ ] La declaración informa sobre transferencias internacionales (Art. 19.2(d))
+- [ ] La declaración informa sobre transferencias internacionales (Art. 19.4)
 - [ ] Se identifican los países o regiones de destino
 - [ ] Se indica la garantía adoptada (adecuación suiza, DPF, SCCs suizas)
 - [ ] Si hay trackers de EE.UU. activos: ¿se menciona el Swiss-US DPF o SCCs?
@@ -339,15 +354,24 @@ Score = suma de puntos obtenidos / 100
 ## Paso 5 — Clasificación de issues y sanciones (Art. 60–66 nFADP)
 
 ⚠️ Las sanciones de la nFADP son **penales** y recaen sobre **personas físicas**
-(directivos, responsables de protección de datos, empleados infractores) — no
-directamente sobre la empresa. Multa penal de hasta **CHF 250.000** por persona
-física. La empresa puede responder subsidiariamente si la investigación de la
-persona responsable sería desproporcionada (Art. 64).
+(directivos y empleados responsables), no directamente sobre la empresa. Multa de hasta
+**CHF 250.000**, solo por **dolo** (no por negligencia) y **a instancia de parte**; las
+imponen las autoridades penales cantonales, no el FDPIC. La empresa solo responde, con un
+máximo de **CHF 50.000**, si identificar a la persona responsable exigiría medidas
+desproporcionadas (Art. 64). Fuente: https://www.edoeb.admin.ch/en/criminal-law
 
-| Conducta sancionable | Máximo |
+**Solo son punibles las conductas de los Arts. 60 a 63:**
+
+| Conducta sancionable (dolosa) | Artículo |
 |---|---|
-| Incumplir el deber de informar (Art. 19), no atender derechos del titular (Art. 25-32), no cumplir requisitos de transferencia internacional (Art. 16-17) | CHF 250.000 |
-| Incumplir disposiciones de la OPDa sobre seguridad o EIPD | CHF 250.000 |
+| Información falsa o incompleta al informar (Art. 19, 21) o al responder un acceso (Art. 25) | Art. 60 |
+| Comunicar datos al extranjero sin cumplir los Arts. 16-17; encargar a un tercero sin cumplir el Art. 9; no cumplir los requisitos mínimos de seguridad del Consejo Federal | Art. 61 |
+| Violar el deber de confidencialidad profesional | Art. 62 |
+| Desobedecer una decisión del FDPIC | Art. 63 |
+
+**No son punibles**: no hacer una EIPD, no notificar una violación de seguridad ni no
+atender una rectificación o supresión. Son incumplimientos que el FDPIC puede ordenar
+corregir, y desobedecer esa orden sí es punible (Art. 63).
 
 **Críticos:**
 - Sin declaración de protección de datos → Art. 19
@@ -359,9 +383,10 @@ persona responsable sería desproporcionada (Art. 64).
 **Medios:**
 - Declaración existe pero falta contenido mínimo Art. 19
 - Derechos mencionados sin canal ni plazo (30 días)
-- Perfilado de alto riesgo no declarado → Art. 19.2(e) + Art. 21
-- EIPD probable pero no mencionada → Art. 22
-- Cookies no esenciales sin consentimiento previo
+- Perfilado de alto riesgo no declarado → Art. 19 + Art. 21
+- EIPD probable pero no mencionada → Art. 22 (no punible, pero el FDPIC puede ordenarla)
+- Cookies no necesarias sin información ni posibilidad de rechazo (Art. 45c LTC); o sin
+  consentimiento expreso cuando hay perfilado de alto riesgo o datos sensibles
 
 **Bajos:**
 - Falta fecha de actualización
@@ -386,6 +411,11 @@ Modo `--docx`: misma estructura que `rgpd`, adaptada:
 
 - **nFADP**: en vigor desde el 1 de septiembre de 2023.
 - **OPDa** (Ordenanza): en vigor desde el 1 de septiembre de 2023.
-- **Swiss-US DPF**: operativo. Verificar estado en edoeb.admin.ch.
-- **Lista de países con adecuación**: mantiene el FDPIC en edoeb.admin.ch.
-- **Versión de esta skill:** 1.0.0 (2026-07-08).
+- **Swiss-US DPF**: operativo; organizaciones certificadas en el Anexo 1 de la OPDo desde
+  el 15/09/2024.
+- **Lista de países con adecuación**: la fija el Consejo Federal en el Anexo 1 de la OPDo.
+- **Cookies**: Art. 45c LTC (información y rechazo); hoja informativa del FDPIC del
+  27/03/2026.
+- **Versión de esta skill:** 1.1.0 (2026-11-20). Revisada contra edoeb.admin.ch el
+  20/11/2026: régimen de cookies, sanciones penales (Arts. 60-64), representante (Art. 14),
+  Art. 19 y plazos del Art. 25.

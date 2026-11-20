@@ -6,6 +6,8 @@ description: >
   "cotización SEO", "presupuesto SEO" o "/seo-quote".
 user-invokable: true
 argument-hint: "<url> [--rate <usd/h>] [--lang es|en]"
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # SEO Quote Report Generator

@@ -8,6 +8,12 @@ user-invokable: false
 
 # SE Ranking — Knowledge Base
 
+> **Sin mantenimiento desde octubre de 2026.** Esta skill dejó de usarse en producción y
+> no se verifica contra la herramienta desde esa fecha. Las pantallas, menús, límites y la
+> API de SE Ranking pueden haber cambiado: antes de citar un dato o una ruta de menú,
+> confirmarlo en la herramienta. El criterio de interpretación (cruces con Screaming Frog,
+> Semrush y GSC, y la fiabilidad de cada dato) sigue siendo válido.
+
 ## Rol en el flujo de auditoría
 
 SE Ranking es la fuente principal de:

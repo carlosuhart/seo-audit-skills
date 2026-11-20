@@ -4,6 +4,8 @@ description: >
   HTTPS and SSL/TLS audits: certificates, mixed content, HTTPS redirect chains, HSTS and
   security headers. Use for mixed content, HTTP URLs, certificate issues or HTTP to
   HTTPS migrations.
+metadata:
+  revisar: "2027-03-01"
 ---
 
 # SSL/HTTPS — Technical SEO
@@ -39,6 +41,52 @@ Let's Encrypt automatically. Verify auto-renewal is active, not just installed.
 **Monitoring:** Set a calendar reminder 30 days before expiry, or use
 uptime monitoring tools that alert on certificate expiry (UptimeRobot,
 Better Uptime).
+
+### Shorter certificate lifetimes (CA/Browser Forum ballot SC-081v3)
+
+Public TLS certificates now expire much faster, so manual renewal stops being viable.
+Maximum validity by issuance date (Baseline Requirements section 6.3.2, read
+20/11/2026 at https://github.com/cabforum/servercert/blob/main/docs/BR.md; ballot
+approved 11/04/2025, https://cabforum.org/2025/04/11/ballot-sc081v3-introduce-schedule-of-reducing-validity-and-data-reuse-periods/):
+
+| Issued on or after | Issued before | Maximum validity |
+|---|---|---|
+| | 15/03/2026 | 398 days |
+| 15/03/2026 | 15/03/2027 | 200 days |
+| 15/03/2027 | 15/03/2029 | 100 days |
+| 15/03/2029 | | 47 days |
+
+Domain validation data can be reused for less time too: the ballot takes SAN validation
+reuse from 398 days down to 10 days by March 2029.
+
+Audit consequences:
+- **Any certificate renewed by hand is a future outage.** A paid OV/EV certificate bought
+  "for a year" and installed manually on a CDN, load balancer or second server is the
+  classic case: from 15/03/2026 it lasts 200 days at most, and from 15/03/2027 only 100.
+  Ask how every certificate in the chain of hosts (origin, CDN, subdomains, mail, API)
+  is renewed, and treat "someone does it" as a finding.
+- **Automate with ACME** (Let's Encrypt, ZeroSSL, the CA's own ACME endpoint, or the
+  CDN's managed certificates) and check the renewal job runs and reloads the server.
+- **Expiry monitoring becomes critical, not optional:** alert at least 14 days before
+  expiry, not 30, because with 47-day certificates a 30-day alert fires on day 17.
+
+### Chrome asks before opening public HTTP sites (Chrome 154, October 2026)
+
+Google turned on "Always Use Secure Connections" by default for public sites in Chrome
+154 (October 2026), after enabling it in Chrome 147 (April 2026) for users with Enhanced
+Safe Browsing. Chrome "will ask for the user's permission before the first access to any
+public site without HTTPS". Private sites, such as intranets, are excluded by default.
+Source: Chrome Security Team, 28/10/2025, https://blog.google/security/https-by-defau/
+(read 20/11/2026).
+
+Audit consequences:
+- **Any public URL still reachable only over HTTP now shows an interstitial** before the
+  first visit: old landing pages, campaign subdomains, a `http://` link in an email or a
+  QR code that reaches a host without HTTPS. Users bounce on the warning.
+- **A redirect does not avoid it if the first hop is HTTP on a host without a
+  certificate.** Check that every host that receives traffic (including bare and `www`
+  variants, old subdomains and tracking domains) answers on HTTPS before redirecting.
+- HSTS, and HSTS preload for the main domain, removes the first HTTP request entirely.
 
 ---
 
@@ -428,6 +476,8 @@ MONITORING
 ```
 CRITICAL
 [ ] Valid SSL certificate (not expired)
+[ ] Every certificate (origin, CDN, subdomains) renews automatically (ACME or managed); none by hand
+[ ] Every host that receives public traffic answers on HTTPS (Chrome 154+ warns before HTTP-only public sites)
 [ ] HTTP redirects to HTTPS (301)
 [ ] No active mixed content (blocked scripts/CSS/iframes over HTTP)
 [ ] No redirect loops
@@ -443,7 +493,7 @@ MEDIUM
 [ ] Security headers: X-Frame-Options, X-Content-Type-Options, Referrer-Policy
 [ ] HTTPS consistent in sitemap URLs
 [ ] HTTPS consistent in canonical tags
-[ ] Certificate auto-renewal active
+[ ] Certificate expiry alert at 14 days or more before expiry
 
 LOW
 [ ] HSTS preload list submission (optional but good for high-traffic sites)

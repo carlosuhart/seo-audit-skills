@@ -43,7 +43,7 @@ Each skill lives in `skills/<name>/SKILL.md`. The details (bugs, fixes, checklis
 | `google-tag-manager` | GTM diagnosis: events not reaching GA4, dataLayer, Consent Mode v2, firing order |
 | `ga4-analysis` | GA4 analysis: organic vs paid, attribution, channel groupings, period comparison, GSC crossing |
 | `screaming-frog` | Crawl modes, CMS configuration, key reports, integrations and known false positives |
-| `se-ranking` | Reading SE Ranking data: rank tracking, Site Audit, keywords, competitor gap |
+| `se-ranking` | Reading SE Ranking data: rank tracking, Site Audit, keywords, competitor gap. Not maintained since October 2026: verify menus and API against the tool |
 | `semrush` | Semrush in audits: Organic Research, Keyword and Backlink Gap, Site Audit, data reliability |
 
 ### Technical

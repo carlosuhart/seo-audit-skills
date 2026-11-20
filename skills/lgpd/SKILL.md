@@ -9,8 +9,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
   category: legal-compliance
+  revisar: "2027-05-20"
 ---
 
 # LGPD — Auditoría de Cumplimiento (Lei 13.709/2018, Brasil)
@@ -33,21 +34,27 @@ Si el usuario no especifica formato, preguntar antes de generar el documento.
 
 - **LGPD (Lei 13.709/2018)**: Ley General de Protección de Datos Personales.
   En vigor desde septiembre 2020. Aplicación de sanciones desde agosto 2021.
-- **ANPD (Autoridade Nacional de Proteção de Dados)**: autoridad reguladora.
-  Creada por la LGPD, constituida en noviembre 2020. Emite resoluciones y directrices.
+- **ANPD (Agência Nacional de Proteção de Dados)**: autoridad reguladora. Creada por la
+  LGPD como Autoridade Nacional (constituida en noviembre 2020); la Lei 15.352 (25/02/2026)
+  la convirtió en agencia reguladora con naturaleza de autarquía especial. Mantiene la
+  sigla ANPD. Emite resoluciones y guías.
+- **ECA Digital (Lei 15.211/2025)**: protección de niños y adolescentes en entornos
+  digitales, en vigor desde el 17/03/2026 (ver Bloque 5).
 - **Ámbito de aplicación (Art. 3)**: aplica a cualquier operación de tratamiento
   realizada en Brasil, o cuyos datos hayan sido recogidos en Brasil, o que tenga
   por objeto ofrecer bienes o servicios a personas en Brasil, independientemente
   de dónde esté el responsable.
 
 ⚠️ La LGPD es normativa brasileña. No confundir con el RGPD europeo, aunque
-tiene estructura similar. Son marcos jurídicos independientes. Brasil tiene
-decisión de adecuación de la UE (flujo UE → Brasil permitido sin garantías adicionales).
+tiene estructura similar. Son marcos jurídicos independientes. La adecuación es mutua
+desde el 26/01/2026: la Comisión Europea reconoció a Brasil y la ANPD reconoció a la UE y
+el EEE (Resolução CD/ANPD nº 32/2026).
 
-**Nota sobre madurez regulatoria:** La ANPD es una autoridad en proceso de
-consolidación. Algunas disposiciones de la LGPD (en particular sobre transferencias
-internacionales y el listado de países con adecuación) estaban aún siendo
-reglamentadas a la fecha de esta versión. Señalar esta contingencia en el informe.
+**Resoluciones de la ANPD que usa esta skill:** Res. 2/2022 (agentes de pequeño porte),
+Res. 4/2023 (dosimetría de sanciones), Res. 15/2024 (comunicación de incidentes),
+Res. 18/2024 (encarregado), Res. 19/2024 (transferencias internacionales y cláusulas
+modelo), Res. 32/2026 (adecuación UE/EEE). Lista oficial:
+https://www.gov.br/anpd/pt-br/acesso-a-informacao/institucional/atos-normativos/regulamentacoes_anpd
 
 ---
 
@@ -128,7 +135,7 @@ Verificar en el aviso de privacidade:
 - [ ] Razão social (razón social) o nombre completo del controlador
 - [ ] CNPJ o CPF del controlador (no obligatorio por la LGPD pero su presencia
       permite identificación y es práctica estándar en Brasil)
-- [ ] Endereço (domicilio) en Brasil, o representante en Brasil si es entidad extranjera
+- [ ] Endereço (domicilio) del controlador (la LGPD no exige en general un representante local; si es extranjero, basta un canal de contacto operativo y el encarregado)
 - [ ] Dirección de email o canal de contacto para el encarregado de dados (Art. 41.1)
 - [ ] Datos de contacto del encarregado de dados publicados (ver Bloque 10)
 
@@ -201,9 +208,11 @@ Verificar:
 ### Bloque 5 — Consentimento, cookies e marketing direto (Art. 7.I + Art. 8)
 Peso: 15 pts
 
-La LGPD no tiene un artículo específico de cookies — los requisitos derivan de
-las reglas generales de consentimento (Art. 7.I) y de la práctica de la ANPD.
-La ANPD ha señalado que las cookies de rastreo no esenciales requieren consentimento
+La LGPD no tiene un artículo específico de cookies. La referencia es la Guía orientativa
+de cookies de la ANPD (octubre de 2022): las cookies necesarias pueden basarse en otras
+bases legales, y para las no necesarias la Guía orienta al consentimento en la mayoría de
+los casos (publicidad, perfilado, terceros), sin imponerlo en todos. La auditoría verifica
+que haya una base declarada por categoría y que el consentimento, cuando sea la base, sea
 previo, libre, informado e inequívoco.
 
 **Banner de cookies:**
@@ -221,11 +230,20 @@ previo, libre, informado e inequívoco.
 - [ ] Finalidade concreta declarada antes de enviar
 
 **Consentimento de crianças e adolescentes (Art. 14):**
-La LGPD protege especialmente dados de **crianças** (hasta 12 años) y
-**adolescentes** (13-17 años), conforme el Estatuto da Criança e do Adolescente (ECA):
-- [ ] Si el sitio capta crianças (menores de 12): consentimento parental específico
-      y en el mejor interés del menor (Art. 14.1)
+Según el Estatuto da Criança e do Adolescente (ECA), **criança** es la persona de hasta
+12 años incompletos y **adolescente** la de 12 a 18. Para crianças, el Art. 14.1 pide
+consentimento de uno de los padres o del responsable; el Enunciado CD/ANPD 1/2023 admite
+también las bases de los Arts. 7 y 11, siempre en el mejor interés del menor.
+- [ ] Si el sitio capta crianças: base legal declarada y, si es consentimento, el de los padres
 - [ ] Si el sitio no va dirigido a menores: declararlo explícitamente
+
+**ECA Digital (Lei 15.211/2025, en vigor desde el 17/03/2026)** para productos y servicios
+digitales dirigidos a menores o de acceso probable por ellos:
+- [ ] Verificación de edad que no se base solo en la autodeclaración (Art. 9)
+- [ ] Sin perfilado de menores para publicidad (Art. 22)
+- [ ] Herramientas de supervisión parental (Arts. 17-18)
+- Multa de hasta el 10 % de la facturación en Brasil o hasta R$ 50.000.000 (Art. 35).
+  Fuente: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15211.htm
 
 **Marketing direto:**
 - [ ] Si hay newsletter o comunicações comerciais: mecanismo de descadastramento claro
@@ -234,9 +252,9 @@ La LGPD protege especialmente dados de **crianças** (hasta 12 años) y
 ### Bloque 6 — Direitos do titular: canal habilitado (Art. 18 + Art. 20)
 Peso: 15 pts
 
-La LGPD reconoce **9 derechos** del titular (Art. 18). Todos ejercibles ante
-el controlador con confirmación de atendimento en plazo razonable (la LGPD no
-fija plazo exacto; la ANPD puede establecerlo por regulación):
+La LGPD reconoce **9 derechos** del titular (Art. 18). La confirmación de existencia o el
+acceso completo deben darse en **15 días** desde la solicitud (Art. 19.II); para los demás
+derechos la ley no fija un plazo exacto:
 
 1. **Confirmação** da existência de tratamento (18.I)
 2. **Acesso** aos dados (18.II)
@@ -277,9 +295,9 @@ La LGPD define como dados sensíveis los relativos a:
 - Dado referente à saúde ou à vida sexual
 - Dado genético ou biométrico vinculado a pessoa natural
 
-⚠️ La lista de dados sensíveis de la LGPD es más reducida que la del RGPD — no
-incluye orientación sexual como categoría autónoma (está implícita en "vida sexual")
-ni afiliación sindical por separado.
+⚠️ La lista de dados sensíveis de la LGPD (Art. 5.II) no incluye la orientación sexual
+como categoría autónoma (está implícita en "vida sexual"). Sí incluye expresamente la
+filiação a sindicato.
 
 **Si el sitio no recoge dados sensíveis:** bloque N/A, asignar 10 pts.
 
@@ -297,8 +315,8 @@ ni afiliación sindical por separado.
 - [ ] El consentimento es específico y destacado del consentimento general
 - [ ] Se indican medidas de seguridad reforzadas
 
-**Crianças e adolescentes (Art. 14):**
-- [ ] Si el sitio capta crianças (hasta 12 años): consentimento dos pais o responsável legal
+**Crianças e adolescentes (Art. 14 + ECA Digital):**
+- [ ] Si el sitio capta crianças (hasta 12 años incompletos): base legal declarada y, si es consentimento, el de los padres o responsável legal
 - [ ] Si el sitio no va dirigido a menores: declararlo en el aviso
 - [ ] No se usa a crianças como pretexto para captación de dados de los padres
 
@@ -312,21 +330,22 @@ Peso: 10 pts
 
 La LGPD (Art. 33) permite transferencias internacionales de dados pessoais cuando:
 
-1. **País com grau de proteção adequado** reconocido por la ANPD (Art. 33.I)
-   — La ANPD no había publicado su lista de países con adecuación a la fecha de
-   esta versión. Verificar el estado en gov.br/anpd antes de citar este mecanismo.
+1. **País com grau de proteção adequado** reconocido por la ANPD (Art. 33.I): por ahora
+   la UE y el EEE (Resolução CD/ANPD nº 32/2026, 26/01/2026)
 2. **Garantias suficientes** (Art. 33.II):
-   - Cláusulas contratuais específicas para transferência internacional
-   - Cláusulas padrão contratuais (modelo ANPD — verificar si publicado)
+   - **Cláusulas padrão contratuais de la Res. CD/ANPD 19/2024** (23/08/2024): se usan
+     sin modificaciones y debían incorporarse a los contratos antes del 23/08/2025
+   - Cláusulas contratuais específicas aprobadas por la ANPD
    - Normas corporativas globais (BCR equivalente)
-   - Selos, certificados e códigos de conduta regulares — si existen en Brasil
+   - Selos, certificados e códigos de conduta regularmente emitidos
 3. **Cooperação jurídica internacional** (Art. 33.III) — para autoridades públicas
-4. **Consentimento específico** del titular para la transferencia (Art. 33.VIII)
-5. **Necessidade para execução de contrato** (Art. 33.V)
-6. **Exercício regular de direitos** (Art. 33.VI)
+4. **Autorização da ANPD** (Art. 33.V)
+5. **Consentimento específico e em destaque** del titular para la transferencia (Art. 33.VIII)
+6. **Execução de contrato o exercício regular de direitos** (Art. 33.IX, que remite al
+   Art. 7, II, V y VI)
 
-Nota: la ANPD emitió normativa sobre transferencias internacionales en 2023-2024.
-Verificar el estado de implementación actual en gov.br/anpd.
+Para herramientas de EE.UU. (analítica, publicidad, CRM) la vía habitual son las
+cláusulas modelo de la Res. 19/2024: verificar que el aviso las mencione.
 
 Verificar:
 - [ ] El aviso declara si se realizan transferências internacionais
@@ -349,22 +368,22 @@ Verificar lo observable externamente:
 - [ ] El aviso menciona medidas de segurança adoptadas
 
 **Incidentes de segurança (Art. 48):**
-Ante un incidente que pueda generar riesgo o daño a los titulares, el controlador
-debe comunicarlo a la ANPD y a los titulares afectados en plazo razonable
-(la ANPD ha reglamentado este plazo — verificar normativa vigente).
+Ante un incidente que pueda generar riesgo o daño relevante a los titulares, el
+controlador debe comunicarlo a la ANPD y a los titulares afectados en **3 días hábiles**
+(Res. CD/ANPD 15/2024); el plazo es el doble para agentes de pequeño porte.
 - [ ] El aviso menciona el procedimiento ante incidentes de segurança
 
 ### Bloque 10 — Encarregado de Dados (Art. 41)
 Peso: 5 pts
 
-⚠️ El Encarregado de Dados es **obligatorio para todos los controladores** bajo
-la LGPD (Art. 41), independientemente del tamaño de la organización o del volumen
-de datos tratados. Esta es una diferencia clave respecto al RGPD, donde el DPO
-solo es obligatorio en los casos del Art. 37.1.
+⚠️ El Encarregado de Dados es **obligatorio como regla general** (Art. 41), a diferencia
+del RGPD, donde el DPO solo es obligatorio en los casos del Art. 37.1.
 
-Excepción: la ANPD puede establecer requisitos diferenciados para pequenos
-tratamentos (pequeños tratamientos). Verificar si la ANPD ha publicado resolución
-al respecto.
+**Excepción:** los agentes de tratamiento de pequeño porte (microempresas, empresas de
+pequeño porte, startups y similares, salvo que hagan tratamiento de alto riesgo) están
+dispensados de designarlo (Res. CD/ANPD 2/2022), pero deben ofrecer un canal de
+comunicación con el titular. Los requisitos del encarregado (identidad y contacto
+publicados de forma clara en el sitio) están en la Res. CD/ANPD 18/2024.
 
 Funciones del Encarregado (Art. 41.2):
 - Aceitar reclamações e comunicações dos titulares
@@ -377,8 +396,8 @@ Verificar:
 - [ ] El aviso identifica al Encarregado de Dados
 - [ ] Nombre o cargo del Encarregado publicado (Art. 41.1)
 - [ ] Dirección de **email** del Encarregado publicada (obligatorio — es el canal principal)
-- [ ] Si no existe Encarregado: issue crítico (obligatorio para todos los controladores)
-- [ ] Si la ANPD ha publicado excepciones para pequenos tratamentos: verificar si aplica
+- [ ] Si no existe Encarregado: issue crítico, salvo agente de pequeño porte sin
+      tratamiento de alto riesgo (Res. 2/2022), que solo necesita un canal de contacto
 
 ---
 
@@ -412,20 +431,21 @@ La LGPD establece un sistema de sanciones administrativas (Art. 52):
 | **Suspensão** | Suspensión parcial del banco de datos por hasta 6 meses |
 | **Proibição** | Prohibición parcial o total de actividades de tratamiento |
 
-La ANPD aplica la multa más alta calculada como 2% de facturación en Brasil o
-R$ 50.000.000, lo que resulte más restrictivo para el infractor.
+La multa simple llega hasta el **2 % de la facturación** del grupo en Brasil en el último
+ejercicio, con un **tope de R$ 50.000.000 por infracción** (Art. 52.II). El cálculo y la
+clasificación de infracciones (leves, medias y graves) siguen el reglamento de dosimetría,
+Res. CD/ANPD 4/2023.
 
 **Críticos** (bloquean cumplimento mínimo):
 - Aviso de privacidade inexistente → Art. 9
-- Sin Encarregado de Dados designado → Art. 41 (obligatorio para todos)
+- Sin Encarregado de Dados designado → Art. 41 (salvo pequeño porte, Res. 2/2022)
 - Sin base legal para ninguna finalidade → Art. 7
-- Cookies no esenciales sin consentimento previo → Art. 7.I
-- Dados sensíveis sin consentimento específico → Art. 11.I
+- Dados sensíveis sin consentimento específico ni otra base del Art. 11 → Art. 11
 - Sin mecanismo de exercício de direitos → Art. 18
 - Sin HTTPS → Art. 46
-- Entidad extranjera sin representante en Brasil → Art. 3
 
 **Medios** (plazo recomendado 30–60 días):
+- Cookies de publicidad o perfilado sin consentimento previo ni otra base declarada → Art. 7 + Guía de cookies ANPD
 - Aviso existe pero falta base legal por finalidade → Art. 7
 - Direitos mencionados sin canal ni plazo de atendimento → Art. 18
 - Transferências internacionais no declaradas → Art. 33
@@ -491,9 +511,12 @@ Adicional LGPD: el Relatório de Impacto (RIPD) es un documento interno.
 ## Atualização normativa
 
 - **LGPD** (Lei 13.709/2018): en vigor septiembre 2020; sanciones desde agosto 2021.
-- **ANPD**: en proceso de maduración regulatoria. Resoluciones relevantes disponibles en gov.br/anpd.
-- **Transferências internacionais**: normativa de la ANPD en evolución a la fecha de esta versión.
-  Verificar el estado antes de usar el Bloque 8.
-- **Lista de países com adequação**: pendiente de publicación por la ANPD a la fecha de esta versión.
-- **Pequeños tratamientos**: posibles excepciones al Encarregado obligatorio — verificar en ANPD.
-- **Versão desta skill:** 1.0.0 (2026-07-08).
+- **ANPD**: Agência Nacional de Proteção de Dados desde la Lei 15.352 (25/02/2026).
+- **Transferências internacionais**: Res. 19/2024; cláusulas modelo obligatorias desde el
+  23/08/2025.
+- **Adequação**: UE y EEE (Res. 32/2026); la UE reconoció a Brasil el 26/01/2026.
+- **Incidentes**: 3 días hábiles (Res. 15/2024). **Encarregado**: Res. 18/2024, con
+  dispensa para pequeño porte (Res. 2/2022).
+- **ECA Digital** (Lei 15.211/2025): en vigor desde el 17/03/2026.
+- **Versão desta skill:** 1.1.0 (2026-11-20). Revisada contra planalto.gov.br y gov.br/anpd
+  el 20/11/2026.

@@ -9,8 +9,9 @@ argument-hint: "<url> [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
   category: legal-compliance
+  revisar: "2027-05-20"
 ---
 
 # Ley 25.326 — Auditoría de Cumplimiento (Argentina)
@@ -38,14 +39,18 @@ ejecutivo en formato Word.
   Constitución Nacional. Toda persona puede interponer acción de habeas data para
   conocer, actualizar o suprimir datos en registros públicos o privados.
 - **Decisión de adecuación UE**: Argentina tiene decisión de adecuación de la
-  Comisión Europea desde 2003 (flujo UE → Argentina permitido sin garantías adicionales).
+  Comisión Europea desde 2003, confirmada en la revisión de enero de 2024 (flujo
+  UE → Argentina permitido sin garantías adicionales).
+- **Convenio 108 del Consejo de Europa**: Argentina es parte desde el 01/06/2019
+  (Ley 27.483). El Protocolo que lo moderniza (Convenio 108+) fue aprobado por la
+  Ley 27.699 (BO 30/11/2022).
+- **Régimen sancionatorio vigente**: Resolución AAIP 126/2024 (BO 24/05/2024, vigente
+  desde el 01/06/2024; ver Paso 5).
 
-⚠️ **Nota de reforma — verificar antes de usar:**
-La Ley 25.326 data del año 2000 y ha sido objeto de proyectos de reforma para
-alinearse con estándares RGPD. Puede existir una nueva ley o modificaciones
-sustanciales en vigor a la fecha de uso de este skill. Verificar el estado
-legislativo en argentina.gob.ar/aaip antes de finalizar cualquier informe.
-Si se ha sancionado una nueva ley, referenciar ese texto y ajustar los artículos.
+⚠️ **Estado de la reforma (verificado el 20/11/2026):** no hay ley nueva. La Ley 25.326
+sigue vigente; hay proyectos en la Cámara de Diputados sin avance comprobado. Revisar
+argentina.gob.ar/aaip y el Boletín Oficial antes de un informe de cliente: si se
+sanciona una ley nueva, referenciar ese texto y ajustar los artículos.
 
 ---
 
@@ -109,19 +114,19 @@ Peso: 10 pts
 Verificar en la política de privacidad:
 - [ ] Nombre o razón social del responsable del archivo o banco de datos
 - [ ] CUIT o número de persona jurídica (no obligatorio por ley pero estándar en Argentina)
-- [ ] Domicilio en Argentina, o representante en Argentina si es entidad extranjera
+- [ ] Domicilio del responsable (Art. 6 b)
 - [ ] Dirección de correo electrónico o canal de contacto directo para ejercicio de derechos
 
-**Entidad extranjera (Art. 12 + Decreto 1558/2001):**
-Si el responsable no tiene domicilio en Argentina pero trata datos de titulares argentinos
-o usa medios situados en Argentina:
-- [ ] ¿Se identifica un representante con domicilio en Argentina?
-- [ ] ¿El representante tiene datos de contacto publicados?
+**Entidad extranjera:**
+La Ley 25.326 no exige en general un representante con domicilio en Argentina. Si el
+responsable no tiene domicilio en el país pero trata datos de titulares argentinos:
+- [ ] ¿Hay un canal de contacto operativo para que los titulares ejerzan sus derechos?
+- [ ] (Buena práctica, no obligación legal) ¿Identifica un representante local?
 
 ### Bloque 2 — Política de privacidad: existencia y acceso
 Peso: 5 pts
 
-La Ley 25.326 exige informar al titular sobre el tratamiento (Art. 6.2).
+La Ley 25.326 exige informar al titular sobre el tratamiento (Art. 6).
 Aunque no prescribe una "política de privacidad" con ese nombre, es el instrumento
 habitual para cumplir con el deber de información:
 - [ ] Existe política de privacidad o aviso de privacidad publicado
@@ -134,12 +139,17 @@ habitual para cumplir con el deber de información:
 Peso: 15 pts
 
 Verificar que la política incluya (1 pt por ítem):
-- [ ] **Art. 6.1:** Finalidad del tratamiento — para qué se usan los datos
-- [ ] **Art. 6.2(a):** Identidad del responsable del archivo o banco de datos
-- [ ] **Art. 6.2(b):** Existencia del archivo o banco de datos, su finalidad y destinatarios
-- [ ] **Art. 6.2(c):** Carácter obligatorio o facultativo de los datos solicitados
-- [ ] **Art. 6.2(d):** Consecuencias de proporcionar los datos o negarse a hacerlo
-- [ ] **Art. 6.2(e):** Posibilidad del titular de ejercer derechos de acceso, rectificación y supresión
+- [ ] **Art. 6 a):** Finalidad del tratamiento y quiénes pueden ser sus destinatarios
+- [ ] **Art. 6 b):** Existencia del archivo o banco de datos, e identidad y domicilio de su responsable
+- [ ] **Art. 6 c):** Carácter obligatorio o facultativo de las respuestas
+- [ ] **Art. 6 d):** Consecuencias de proporcionar los datos, de negarse o de su inexactitud
+- [ ] **Art. 6 e):** Posibilidad de ejercer los derechos de acceso, rectificación y supresión
+- [ ] **Leyenda de la AAIP (Res. AAIP 14/2018, art. 3):** "La Agencia de Acceso a la
+      Información Pública, en su carácter de Órgano de Control de la Ley N° 25.326, tiene la
+      atribución de atender las denuncias y reclamos que interpongan quienes resulten
+      afectados en sus derechos por incumplimiento de las normas vigentes en materia de
+      protección de datos personales." La resolución apunta a bancos destinados a dar
+      informes, pero en la práctica se usa en cualquier política: su ausencia es issue bajo
 - [ ] Tipos de datos que se recogen
 - [ ] Destinatarios o categorías de destinatarios (terceros, cesionarios)
 - [ ] Plazos de conservación o criterios para determinarlos
@@ -147,7 +157,7 @@ Verificar que la política incluya (1 pt por ítem):
 - [ ] Uso de cookies y tecnologías de rastreo
 - [ ] Derecho de habeas data (Art. 43 CN) — mención como derecho constitucional
 - [ ] Derecho a reclamar ante la AAIP
-- [ ] Procedimiento para ejercer derechos ARCO y plazo de respuesta (30 días — Art. 14.3)
+- [ ] Procedimiento para ejercer derechos y plazos de respuesta (acceso: 10 días corridos, art. 14.2; rectificación, actualización o supresión: 5 días hábiles, art. 16.2)
 - [ ] Datos sensibles tratados (si aplica — Art. 7)
 
 ### Bloque 4 — Consentimiento y base jurídica (Art. 5 + Art. 6)
@@ -158,20 +168,25 @@ La Ley 25.326 centra el tratamiento lícito principalmente en el **consentimient
 bases jurídicas alternativas:
 
 **Excepciones al consentimiento (Art. 5.2):**
-No se requiere consentimiento cuando:
-- Los datos provienen de fuentes de acceso público irrestricto
-- Se recaban para el ejercicio de funciones propias de los poderes del Estado
-- Se trate de listados de datos limitados (nombre, CUIT/CUIL, domicilio para
-  empresas de publicidad directa — con derecho de oposición)
-- Se deriven de una relación contractual con el titular
-- Los datos sean de personas jurídicas (solo aplica a personas físicas)
+No se requiere consentimiento cuando los datos:
+- **a)** Se obtienen de fuentes de acceso público irrestricto
+- **b)** Se recaban para el ejercicio de funciones propias de los poderes del Estado o
+  en virtud de una obligación legal
+- **c)** Son listados limitados a nombre, DNI, identificación tributaria o previsional,
+  ocupación, fecha de nacimiento y domicilio
+- **d)** Derivan de una relación contractual, científica o profesional del titular y son
+  necesarios para su desarrollo o cumplimiento
+- **e)** Se refieren a operaciones de entidades financieras con sus clientes (Ley 21.526)
 
 Verificar:
 - [ ] Cuando la base es el consentimiento: el checkbox no está pre-marcado
 - [ ] El consentimiento es libre, expreso e informado (Art. 5.1)
 - [ ] Cuando se invocan excepciones al consentimiento: se identifica cuál
-- [ ] Para datos sensibles: consentimiento siempre requerido, no hay excepciones
-      salvo razones de salud y emergencia (Art. 7.2-3)
+- [ ] Para datos sensibles: nadie está obligado a proporcionarlos (Art. 7.1). Solo pueden
+      recolectarse y tratarse por razones de interés general autorizadas por ley, o con
+      fines estadísticos o científicos cuando no se identifique al titular (Art. 7.2). Está
+      prohibido formar bancos de datos que revelen directa o indirectamente datos
+      sensibles (Art. 7.3)
 - [ ] Formularios solicitan solo los datos necesarios para la finalidad declarada
 
 **Privacidad desde el diseño (no en la ley, buena práctica):**
@@ -197,9 +212,10 @@ requieren consentimiento previo e informado del titular.
 - [ ] El checkbox vincula a la política de privacidad
 - [ ] Finalidad concreta declarada antes de enviar
 
-**Marketing directo (Art. 27 + Art. 34):**
+**Marketing directo (Art. 27):**
 - [ ] Si hay newsletter o comunicaciones comerciales: existe mecanismo de baja claro
-- [ ] La política menciona el derecho de oposición al tratamiento para fines comerciales
+- [ ] La política menciona el derecho del titular a pedir el retiro o bloqueo de sus datos
+      de los bancos usados para publicidad (Art. 27.3)
 - [ ] El opt-out es tan accesible como el opt-in
 - [ ] Si se usan datos de fuentes públicas para marketing directo: se informa al
       titular en el primer contacto (Art. 27.3)
@@ -211,27 +227,33 @@ Menores de 13 años: requieren representación de padres o tutores.
 Menores de 13-18 años: capacidad progresiva según el acto.
 - [ ] Si el sitio capta menores: ¿existe verificación de edad o consentimiento parental?
 
-### Bloque 6 — Derechos ARCO: canal habilitado (Art. 14–16 + Art. 34)
+### Bloque 6 — Derechos del titular: canal habilitado (Art. 14–16 + Art. 27)
 Peso: 15 pts
 
-La Ley 25.326 reconoce **4 derechos** del titular (derechos ARCO), plazo de
-respuesta de **30 días corridos** (Art. 14.3):
+La Ley 25.326 reconoce estos derechos, con plazos distintos para cada uno:
 
-1. **Acceso** (Art. 14): conocer los datos sobre sí mismo en cualquier banco de datos
-2. **Rectificación** (Art. 16.1): corrección de datos inexactos o incompletos
-3. **Cancelación / Supresión** (Art. 16.1): eliminación de datos cuyo tratamiento
-   no cumpla la ley (incluye el derecho al olvido en medios digitales — posición
-   de la AAIP y jurisprudencia argentina)
-4. **Oposición** (Art. 34): oponerse al tratamiento para fines de publicidad directa
+1. **Acceso** (Art. 14): conocer los datos sobre sí mismo en cualquier banco de datos.
+   Respuesta en **10 días corridos** desde la intimación (Art. 14.2). Es gratuito a
+   intervalos no inferiores a seis meses, salvo interés legítimo (Art. 14.3)
+2. **Rectificación y actualización** (Art. 16): corrección de datos inexactos o
+   incompletos, en **5 días hábiles** (Art. 16.2)
+3. **Supresión** (Art. 16): eliminación de datos cuyo tratamiento no cumpla la ley,
+   también en **5 días hábiles** (Art. 16.2)
+4. **Retiro o bloqueo para publicidad** (Art. 27.3): pedir que se retiren o bloqueen sus
+   datos de los bancos usados con fines publicitarios
+(El Art. 34 regula la legitimación para la acción judicial de habeas data, no un derecho
+de oposición.)
 
 Nota: la Ley 25.326 no reconoce explícitamente derechos de portabilidad, limitación
 ni de no ser objeto de decisiones automatizadas (a diferencia del RGPD). Si existe
 reforma legislativa en vigor, verificar si estos derechos fueron incorporados.
 
 Verificar:
-- [ ] Existe mecanismo explícito para ejercer derechos ARCO (email, formulario, dirección)
-- [ ] Se menciona el plazo de respuesta de **30 días** (Art. 14.3)
-- [ ] Se mencionan los cuatro derechos: acceso, rectificación, cancelación y oposición
+- [ ] Existe mecanismo explícito para ejercer derechos (email, formulario, dirección)
+- [ ] Se mencionan los plazos de respuesta (acceso 10 días corridos; rectificación y
+      supresión 5 días hábiles). Un plazo de "30 días" es un error frecuente: es issue medio
+- [ ] Se mencionan los derechos de acceso, rectificación, actualización, supresión y el
+      retiro o bloqueo para publicidad
 - [ ] Se indica qué información debe adjuntar el titular (identificación)
 - [ ] Se menciona el derecho de habeas data (Art. 43 CN) y la posibilidad de recurrir
       a la justicia o reclamar ante la AAIP si la solicitud no es atendida
@@ -261,8 +283,9 @@ salvo las excepciones del propio artículo.
 - [ ] Medidas de seguridad reforzadas mencionadas
 
 **Datos de salud (Art. 8):**
-- [ ] Solo pueden ser recabados por establecimientos sanitarios o profesionales
-      de la salud con obligación de secreto
+- [ ] Los establecimientos sanitarios y los profesionales de la salud pueden tratar los
+      datos de salud de sus pacientes, respetando el secreto profesional (el Art. 8
+      habilita a esos sujetos; no prohíbe a otros con base legal)
 - [ ] Si el sitio es de salud: ¿la política lo menciona?
 
 ### Bloque 8 — Transferencias internacionales (Art. 12)
@@ -272,13 +295,18 @@ La Ley 25.326 prohíbe la transferencia de datos personales a países u organism
 internacionales o supranacionales que no proporcionen niveles de protección adecuados
 (Art. 12.1). La AAIP mantiene el listado de países con nivel adecuado.
 
-**Excepciones a la prohibición (Art. 12.2):**
-- Colaboración judicial internacional
-- Intercambio de datos médicos por razones de salud o higiene pública
-- Transferencias bancarias o bursátiles según la legislación aplicable
-- Cuando la transferencia es necesaria para la prevención del delito
-- Consentimiento del titular para la transferencia
-- Cuando la transferencia se realice en el marco de tratados internacionales
+**Excepciones de la propia ley (Art. 12.2):** colaboración judicial internacional;
+intercambio de datos médicos por tratamiento del afectado o por investigación
+epidemiológica; transferencias bancarias o bursátiles; transferencias acordadas en
+tratados internacionales; y cooperación entre organismos de inteligencia contra el crimen
+organizado, el terrorismo y el narcotráfico.
+
+**Vías habituales para un sitio comercial** (fuera del Art. 12.2):
+- País con nivel adecuado según la lista de la autoridad (Disposición DNPDP 60-E/2016)
+- Consentimiento expreso del titular para la transferencia (Decreto 1558/2001, art. 12)
+- Cláusulas contractuales modelo: las de la Disposición 60-E/2016 y las de la Red
+  Iberoamericana de Protección de Datos, aprobadas por la Resolución AAIP 198/2023
+  (BO 18/10/2023); las dos siguen vigentes
 
 Verificar:
 - [ ] La política declara si se realizan transferencias internacionales
@@ -318,7 +346,8 @@ datos ante el Registro Nacional de Bases de Datos de la AAIP (Art. 21.1).
 Los responsables de bases de datos privadas con datos de personas físicas deben
 registrarse antes de iniciar el tratamiento.
 
-Esta obligación es única en la región — no existe en el RGPD ni en la LGPD.
+No existe en el RGPD ni en la LGPD; en la región, Uruguay también exige registro
+(Ley 18.331).
 No es auditable externamente, pero su cumplimiento es verificable consultando
 el registro público de la AAIP.
 
@@ -349,34 +378,37 @@ Score = suma de puntos obtenidos / 100
 
 ## Paso 5 — Clasificación de issues y sanciones (Art. 31 + Art. 32)
 
-La Ley 25.326 establece tres tipos de sanciones administrativas (Art. 31):
+La Ley 25.326 (Art. 31) prevé apercibimiento, suspensión, multa de ARS 1.000 a
+ARS 100.000, y clausura o cancelación del archivo o banco de datos. La graduación vigente
+es la de la **Resolución AAIP 126/2024** (BO 24/05/2024, vigente desde el 01/06/2024),
+que derogó la Disposición 7/2005 y las Resoluciones 240/2022 y 244/2022:
 
-| Sanción | Detalle |
-|---------|---------|
-| **Apercibimiento** | Con fijación de plazo para regularización |
-| **Suspensión** | Hasta 30 días del archivo o banco de datos |
-| **Multa** | De ARS 1.000 a ARS 100.000 (montos del texto legal — actualizados periódicamente por la AAIP; verificar valores vigentes en argentina.gob.ar/aaip) |
-| **Clausura** / **Cancelación** | Del registro o banco de datos |
+| Gravedad | Sanciones |
+|---|---|
+| **Leve** | Hasta 2 apercibimientos y/o multa de ARS 1.000 a ARS 80.000 |
+| **Grave** | Hasta 4 apercibimientos, suspensión de 1 a 30 días y/o multa de ARS 80.001 a ARS 90.000 |
+| **Muy grave** | Hasta 6 apercibimientos, suspensión de 31 a 365 días, clausura o cancelación y/o multa de ARS 90.001 a ARS 100.000 |
 
-Nota: los montos nominales en ARS están sujetos a actualización por inflación.
-La AAIP puede publicar tablas actualizadas. Citar el régimen sancionador sin
-especificar montos nominales si no se puede verificar el valor vigente.
+Si una misma conducta genera varias multas, el total tiene un tope de 500 veces el máximo
+de la escala. El pago voluntario dentro de 20 días hábiles reduce la multa al 50 %. Los
+montos no se indexan: el peso real de una sanción está en la suspensión, la clausura y el
+daño reputacional, no en la multa.
 
 **Adicionalmente:** El titular puede interponer acción de habeas data ante la
 Justicia Federal o Nacional (Art. 43 CN) de forma directa, independientemente
 de la vía administrativa ante la AAIP.
 
 **Críticos** (incumplimiento directo de la ley):
-- Sin información mínima al titular sobre el tratamiento → Art. 6.2
+- Sin información mínima al titular sobre el tratamiento → Art. 6
 - Datos sensibles tratados sin consentimiento expreso → Art. 7
-- Sin mecanismo de ejercicio de derechos ARCO → Art. 14-16
+- Sin mecanismo de ejercicio de derechos → Art. 14-16
 - Transferencia internacional a país sin nivel adecuado sin garantías → Art. 12
 - Sin HTTPS → Art. 9 (seguridad)
 
 **Medios** (gap relevante):
-- Política existe pero falta información mínima del Art. 6.2
+- Política existe pero falta información mínima del Art. 6
 - Base jurídica no declarada por finalidad
-- Derechos ARCO mencionados sin canal ni plazo (30 días)
+- Derechos mencionados sin canal ni plazo (acceso 10 días corridos; rectificación y supresión 5 días hábiles)
 - Transferencias internacionales no declaradas
 - Base de datos no registrada ante la AAIP → Art. 21
 
@@ -438,7 +470,12 @@ Mismas limitaciones que el skill `rgpd`. Adicional:
 
 - **Ley 25.326**: sancionada en 2000, Decreto reglamentario 1558/2001.
 - **AAIP**: autoridad de control desde 2017.
-- **Reforma legislativa**: verificar en argentina.gob.ar/aaip el estado de cualquier
-  proyecto de reforma o nueva ley en vigor a la fecha de uso.
+- **Reforma legislativa**: sin ley nueva al 20/11/2026; proyectos en Diputados sin avance
+  comprobado. Verificar en argentina.gob.ar/aaip y el Boletín Oficial antes de usar.
+- **Sanciones**: Resolución AAIP 126/2024, vigente desde el 01/06/2024.
+- **Transferencias**: Disposición 60-E/2016 y Resolución AAIP 198/2023 (cláusulas modelo).
+- **Convenio 108**: parte desde el 01/06/2019; Convenio 108+ aprobado por Ley 27.699 (2022).
 - **Habeas data**: Art. 43 CN — derecho constitucional independiente de la ley ordinaria.
-- **Versión de esta skill:** 1.0.0 (2026-07-08).
+- **Versión de esta skill:** 1.1.0 (2026-11-20). Plazos de los arts. 14 y 16, art. 6,
+  excepciones de los arts. 5.2, 7.2 y 12.2 y régimen sancionatorio corregidos contra
+  InfoLEG y la AAIP.

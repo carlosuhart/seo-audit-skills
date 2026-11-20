@@ -4,6 +4,8 @@ description: >
   XML sitemap audits: discovery, structure, URL quality, lastmod integrity, CMS patterns
   and sampling, including sitemap indexes and robots.txt conflicts. Use when evaluating
   or fixing a sitemap.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # XML Sitemap — Technical SEO Audit

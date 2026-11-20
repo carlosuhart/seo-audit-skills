@@ -10,7 +10,8 @@ argument-hint: "<url> [--ley <ley|lista|todas>] [--pais <código-ISO>] [--docx]"
 license: MIT
 metadata:
   author: Zythos Media
-  version: "1.0.0"
+  version: "1.1.0"
+  revisar: "2027-01-15"
   category: legal-compliance
 ---
 
@@ -82,7 +83,7 @@ No autodetectar. Si se especifica `--ley todas`, activar todas las disponibles.
 | TLD `.uk` / `.co.uk`, GBP, "ICO", "UK GDPR", "United Kingdom" en contenido | `uk-gdpr` |
 | TLD `.br`, BRL, CNPJ, "ANPD", "LGPD", "Brasil" en contenido | `lgpd` |
 | TLD `.ar`, ARS, CUIT/CUIL, "AAIP", AFIP, ANSES, "Argentina" en contenido | `ley-25326` |
-| TLD `.mx`, MXN, RFC, "INAI", "LFPDPPP", "México" en contenido | `lfpdppp` |
+| TLD `.mx`, MXN, RFC, "INAI" (avisos anteriores a 2025), "Secretaría Anticorrupción", "LFPDPPP", "México" en contenido | `lfpdppp` |
 | TLD `.ch`, CHF, MWST/TVA/IVA suizo, "FDPIC", "EDÖB", "nFADP", cantón suizo en contenido | `nfadp` |
 | "California", "CCPA", "CPRA", "Do Not Sell", "CPPA", USD + sede en EE.UU. | `ccpa` |
 | TLD genérico (`.com`, `.net`, `.org`) sin señales claras | Usar idioma + moneda + sede declarada |
@@ -125,14 +126,20 @@ Patrones de issues transversales frecuentes:
 
 | Issue | RGPD | Ley 21.719 | UK GDPR | LGPD | Ley 25.326 | LFPDPPP | nFADP | CCPA/CPRA |
 |-------|------|-----------|---------|------|-----------|---------|-------|----------|
-| Política / aviso inexistente | Art. 13/14 | Art. 14 | Art. 13/14 | Art. 9 | Art. 6.2 | Art. 15-16 | Art. 19 | § 1798.130 |
-| Sin base jurídica declarada | Art. 6 | Art. 12 | Art. 6 | Art. 7 | Art. 5-6 | Art. 8-10 | Art. 6 | § 1798.110 |
-| Cookies sin consentimiento previo | Art. 7 + ePrivacy | Art. 12 | PECR Reg. 6 | Art. 7.I | Art. 5.1 | Art. 8 | Art. 6 + DSG-Praxis | § 1798.120/121 (opt-out) |
-| Sin canal de ejercicio de derechos | Art. 12 | Art. [derechos] | Art. 12 | Art. 18 | Art. 14-16 | Art. 22-27 | Art. 25-32 | § 1798.130 |
-| Transferencias int. no declaradas | Art. 44 | Art. 26 | Art. 44 UK | Art. 33 | Art. 12 | Art. 36-37 | Art. 16-17 | § 1798.115 |
-| Datos sensibles sin consentimiento explícito | Art. 9 | Art. 16 | Art. 9 | Art. 11 | Art. 7 | Art. 9 | Art. 31 | § 1798.121 (SPI) |
-| Sin identificación del responsable | Art. 13.1(a) | Art. 5 | Art. 13.1(a) | Art. 9.I | Art. 6.2(a) | Art. 16.I | Art. 19.2(a) | § 1798.130 |
-| Sin HTTPS | Art. 32 | Art. 19 | Art. 32 | Art. 46 | Art. 9 | Art. 19 | Art. 8 | § 1798.150 (riesgo acción privada) |
+| Política / aviso inexistente | Art. 13/14 | Art. 14 ter | Art. 13/14 | Art. 9 | Art. 6 | Arts. 14-15 | Art. 19 | § 1798.130 |
+| Sin base jurídica declarada | Art. 6 | Arts. 12-13 | Art. 6 | Art. 7 | Art. 5 | Arts. 7-9 | Art. 6 | § 1798.110 |
+| Cookies y rastreo sin la medida que exige cada ley | Art. 5.3 ePrivacy + ley nacional (consentimiento previo) | Art. 12 (consentimiento) | PECR Reg. 6 + Anexo A1 (excepciones desde 05/02/2026) | Art. 7 + Guía de cookies ANPD | Art. 5.1 | Art. 7 (informar y permitir desactivar) | Art. 45c LTC (informar y permitir rechazar) | § 1798.120/121 + GPC (opt-out) |
+| Sin canal de ejercicio de derechos | Art. 12 | Art. 11 (plazos) | Art. 12 | Art. 18 | Arts. 14-16 | Arts. 22-26 | Art. 25 | § 1798.130 |
+| Transferencias int. no declaradas | Art. 44 | Arts. 27-29 | Art. 44 UK | Art. 33 | Art. 12 | Arts. 35-36 | Arts. 16-17 | § 1798.115 |
+| Datos sensibles sin consentimiento explícito | Art. 9 | Art. 16 | Art. 9 | Art. 11 | Art. 7 | Art. 8 | Art. 31 | § 1798.121 (SPI) |
+| Sin identificación del responsable | Art. 13.1(a) | Art. 14 ter | Art. 13.1(a) | Art. 9.I | Art. 6 b) | Art. 15.I | Art. 19.2(a) | § 1798.130 |
+| Sin HTTPS | Art. 32 | Art. 14 quinquies | Art. 32 | Art. 46 | Art. 9 | Art. 18 | Art. 8 | § 1798.150 (riesgo acción privada) |
+
+La fila de cookies no es un mismo issue en todas partes: en la UE, Chile y Brasil manda el
+consentimiento previo; en México y Suiza el mínimo legal es informar y permitir rechazar;
+en el Reino Unido hay excepciones para estadísticas propias; en California es opt-out con
+respeto obligatorio de GPC. Un banner "solo informativo" puede cumplir en un país y ser
+crítico en otro.
 
 Formato de issue transversal:
 ```

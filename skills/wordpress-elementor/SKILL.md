@@ -4,6 +4,8 @@ description: >
   WordPress + Elementor (free y Pro) en auditorías SEO: issues recurrentes, soluciones y
   checklist. Usar cuando el sitio corre Elementor o se menciona "Elementor" o "Hello
   Elementor".
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # WordPress + Elementor — Guía SEO Técnica
