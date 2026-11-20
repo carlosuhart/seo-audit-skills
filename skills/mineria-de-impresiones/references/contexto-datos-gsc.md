@@ -50,6 +50,16 @@ Referencia obligatoria antes de interpretar datos de Google Search Console. Los 
 - Las preguntas de seguimiento en AI Mode reinician la posición a 1
 - No hay forma nativa en GSC de separar datos de AI Mode del resto
 
+### Evento 4: Error en el informe de IA generativa (9 al 11 de noviembre de 2026)
+
+**Qué pasó:** "A logging error caused a decrease in impressions on the Generative AI performance report in Search for data from November 9 - November 11, 2026." Google aclara que solo afecta al registro de datos, no a cuánto apareció el sitio. Coincide con el inicio del core update de noviembre (10/11/2026), así que una caída de impresiones de IA esos días no se debe leer como efecto del update. Antes había pasado lo mismo del 13 al 17/08/2026, y esos datos se restauraron. Fuente: https://support.google.com/webmasters/answer/6211453 (consultada 20/11/2026). Revisar esa página ante cualquier quiebre raro en un período reciente.
+
+Search Console tiene además un informe de rendimiento de IA generativa propio, distinto del informe de rendimiento "Web" del Evento 3.
+
+## Filtros nuevos de la API (16/11/2026)
+
+La API Search Analytics ahora separa consultas de marca y sin marca (`brandedClassification`: `BRANDED` / `NON_BRANDED`, datos desde el 21/02/2026, solo propiedades de nivel superior con volumen suficiente y sin combinar con un filtro de `query`), reporta la búsqueda multimodal (`type: webMultimodal`: Lens, Rodea para buscar, subida de imágenes) y acepta varios países o dispositivos en una petición (`filterLists`). Para minería de impresiones conviene pedir o extraer los datos **sin marca**: las queries de marca tienen CTR alto por naturaleza y distorsionan la comparación con los referentes de CTR. Fuente: https://developers.google.com/search/blog/2026/11/search-analytics-api-update
+
 ## Guía práctica: Cómo interpretar según el período
 
 ### Datos anteriores a mayo 2025

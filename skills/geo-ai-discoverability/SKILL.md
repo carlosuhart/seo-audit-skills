@@ -5,6 +5,8 @@ description: >
   sitio: Wikidata, NewsMediaOrganization, Wikipedia, llms.txt, RSL 1.0, E-E-A-T, pasajes
   citables, Knowledge Panel, Preferred Sources e IndexNow. Para auditar un dominio
   completo usar seo-geo; para un post, blog-geo.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # GEO/AEO — Generative & Answer Engine Optimization
@@ -92,74 +94,95 @@ Solo el **11% de los dominios** son citados por ChatGPT y Google AI Overviews pa
 
 | Crawler | Plataforma | User-Agent | Obedece robots.txt |
 |---|---|---|---|
-| GPTBot | OpenAI / ChatGPT Search | `GPTBot` | Sí |
-| OAI-SearchBot | OpenAI search features | `OAI-SearchBot` | Sí |
-| ChatGPT-User | ChatGPT browsing (user-triggered) | `ChatGPT-User` | No (user-triggered) |
-| PerplexityBot | Perplexity | `PerplexityBot` | Sí |
-| Google-Extended | Google AI training y grounding opt-out | `Google-Extended` | Sí |
-| Google-CloudVertexBot | Vertex AI Agent (site owner requested) | `Google-CloudVertexBot` | Sí |
-| Google-Agent | Project Mariner, agentic browsing | `Google-Agent` | No (user-triggered) |
-| Google-NotebookLM | Fetch de URLs añadidas por el usuario | `Google-NotebookLM` | No (user-triggered) |
-| anthropic-ai | Claude (training) | `anthropic-ai` | Sí |
-| ClaudeBot | Claude (web features) | `ClaudeBot` | Sí |
-| GrokBot | xAI / Grok DeepSearch | `Grokbot` | Sí |
-| DuckAssistBot | DuckDuckGo AI Chat | `DuckAssistBot` | Sí |
-| Meta-ExternalAgent | Meta AI (FB, IG, WA, Messenger) | `meta-externalagent` | Sí |
-| Applebot-Extended | Apple Intelligence / Siri | `Applebot-Extended` | Sí |
-| cohere-ai | Cohere | `cohere-ai` | Sí |
-| Bytespider | ByteDance / TikTok AI | `Bytespider` | Sí |
+Separar siempre tres funciones: **entrenamiento** (bloquearlo no quita visibilidad en
+búsqueda), **búsqueda/citación** (bloquearlo sí la quita) y **fetch pedido por un usuario**
+(suele ignorar robots.txt).
 
-**Nota crítica:** Los fetchers user-triggered (Google-Agent, Google-NotebookLM, ChatGPT-User) ignoran robots.txt por diseño — no se pueden bloquear con robots.txt, solo con controles server-side.
+| Crawler | Empresa | Función | Obedece robots.txt |
+|---|---|---|---|
+| `GPTBot` | OpenAI | Entrenamiento. Bloquearlo no afecta a ChatGPT Search | Sí |
+| `OAI-SearchBot` | OpenAI | Búsqueda de ChatGPT. Bloquearlo saca al sitio de las respuestas de búsqueda | Sí |
+| `ChatGPT-User` | OpenAI | Acciones pedidas por un usuario. "robots.txt rules may not apply" | No necesariamente |
+| `OAI-AdsBot` | OpenAI | Solo visita páginas enviadas como anuncios; no entrena | No documentado |
+| `ClaudeBot` | Anthropic | Entrenamiento (bot vigente; `anthropic-ai` y `Claude-Web` son tokens antiguos) | Sí |
+| `Claude-SearchBot` | Anthropic | Búsqueda de Claude. Bloquearlo puede reducir la visibilidad en sus respuestas | Sí |
+| `Claude-User` | Anthropic | Fetch pedido por un usuario de Claude | Sí (Anthropic declara respetar robots.txt en sus bots) |
+| `PerplexityBot` | Perplexity | Búsqueda de Perplexity; no entrena modelos | Perplexity recomienda permitirlo en robots.txt |
+| `Perplexity-User` | Perplexity | Fetch pedido por un usuario. "generally ignores robots.txt rules" | No |
+| `meta-externalagent` | Meta | Entrenamiento de modelos y mejora de productos | Sí |
+| `meta-webindexer` | Meta | Búsqueda de Meta AI; permitirlo ayuda a que Meta AI cite y enlace | Sí |
+| `meta-externalfetcher` | Meta | Fetch pedido por un usuario. "may bypass robots.txt rules" | No necesariamente |
+| `Google-Extended` | Google | Token, no rastreador: entrenamiento de Gemini y grounding en Gemini Apps/Vertex AI | Sí (token de robots.txt) |
+| `Google-CloudVertexBot` | Google | Rastreo pedido por el dueño del sitio para Vertex AI | Sí |
+| `Google-Agent` | Google | Navegador que actúa por encargo de un usuario | No (user-triggered) |
+| `Google-GeminiNotebook` | Google | URLs que el usuario añade a NotebookLM (antes `Google-NotebookLM`, renombrado 16/07/2026) | No (user-triggered) |
+| `Applebot-Extended` | Apple | Token, no rastreador: decide si lo rastreado por Applebot entrena los modelos de Apple. Bloquearlo no afecta a Siri ni Spotlight | Sí (token de robots.txt) |
+| `DuckAssistBot` | DuckDuckGo | Respuestas de DuckAssist | Sí |
+| `Bytespider` | ByteDance | Entrenamiento (sin documentación oficial) | No verificable |
+| `cohere-ai` | Cohere | Entrenamiento (Cohere no publica documentación oficial de sus bots) | No verificable |
 
-**Web Bot Auth (RFC 9421):** Los agentes agentic de Google (Google-Agent) pueden autenticarse via header `Signature-Agent` + key directory. Reverse-DNS sigue siendo el fallback para verificación de identidad del bot.
+`Grokbot` (xAI) no tiene documentación oficial verificada: no prometer que xAI lo use ni
+que lo respete. Fuentes: https://developers.openai.com/api/docs/bots,
+https://support.claude.com/en/articles/8896518, https://docs.perplexity.ai/guides/bots,
+https://developers.facebook.com/docs/sharing/webmasters/web-crawlers,
+https://developers.google.com/crawling/docs/changelog (consultadas 20/11/2026). La lista
+con métodos de verificación por IP vive en la skill `seo-logs` (`references/bots.json`).
+
+**Fetchers pedidos por un usuario** (ChatGPT-User, Perplexity-User, meta-externalfetcher,
+Google-Agent, Google-GeminiNotebook): sus dueños dicen que pueden ignorar robots.txt. Si
+hay que bloquearlos, se hace en el servidor, CDN o firewall usando sus listas de IP.
+
+**Google-Agent: cómo verificarlo** (guía de Google, 17/11/2026,
+https://developers.google.com/crawling/docs/crawlers-fetchers/allow-google-agent): el
+User-Agent contiene `Google-Agent` y la IP está en
+`https://developers.google.com/static/crawling/ipranges/user-triggered-agents.json`. Google
+además experimenta con Web Bot Auth (RFC 9421): cabecera `Signature-Agent` con
+`https://agent.bot.goog` y claves públicas en
+`https://agent.bot.goog/.well-known/http-message-signatures-directory`. Para peticiones
+verificadas, Google pide saltar los desafíos anti-bot.
+
+**AIPREF:** Anthropic reconoce desde el 30/10/2026 la señal común de preferencia de
+entrenamiento, pero si robots.txt nombra a `ClaudeBot`, manda esa regla. Google anunció
+soporte para inicios de 2027. Detalle en la skill `robots-txt`.
 
 ### Postura recomendada en robots.txt
 
+Para ser citado, **no hace falta declarar los bots de búsqueda**: sin grupo propio caen en
+`User-agent: *` y respetan sus restricciones. Declararlos con `Disallow:` vacío es un
+error: un bot con grupo propio ignora por completo el grupo `*`, así que pasaría a tener
+acceso a `/wp-admin/`, carrito y demás rutas bloqueadas para todos.
+
+Solo se escriben grupos para lo que se quiere **negar**. Ejemplo para un sitio que quiere
+visibilidad en IA pero no entrenar modelos:
+
 ```
-# AI search — permitir todos los crawlers de indexación/citación
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+
+# Entrenamiento: bloquear solo si el cliente lo decide
 User-agent: GPTBot
-Disallow:
-
-User-agent: OAI-SearchBot
-Disallow:
-
-User-agent: PerplexityBot
-Disallow:
-
-User-agent: anthropic-ai
-Disallow:
-
 User-agent: ClaudeBot
-Disallow:
-
-User-agent: Grokbot
-Disallow:
-
-User-agent: DuckAssistBot
-Disallow:
-
+User-agent: CCBot
 User-agent: meta-externalagent
-Disallow:
-
+User-agent: Google-Extended
 User-agent: Applebot-Extended
-Disallow:
+Disallow: /
 
-# Google-Extended: bloquear SOLO si se quiere opt-out de training de Google AI.
-# Bloquearlo NO impide aparecer en AI Overviews ni AI Mode — son controles separados.
-# User-agent: Google-Extended
-# Disallow: /
+Sitemap: https://dominio.com/sitemap.xml
 ```
 
 **Reglas de decisión:**
-- `Google-Extended` controla training de Gemini/Vertex, NO aparición en AI Overviews/AI Mode.
-- Bloquear `GPTBot` u `OAI-SearchBot` significa que ChatGPT Search no citará la página.
-- No bloquear `Googlebot` nunca — afecta búsqueda orgánica y AI Overviews simultáneamente.
+- `Google-Extended` controla entrenamiento de Gemini y grounding en Gemini Apps/Vertex AI, NO la aparición en AI Overviews ni AI Mode (eso es el control de IA generativa de Search Console).
+- Bloquear `OAI-SearchBot` saca al sitio de ChatGPT Search. Bloquear `GPTBot` solo evita el entrenamiento.
+- Bloquear `Claude-SearchBot` o `meta-webindexer` reduce la visibilidad en Claude y Meta AI; bloquear `ClaudeBot` o `meta-externalagent` solo evita el entrenamiento.
+- No bloquear `Googlebot` nunca: afecta a la búsqueda orgánica y a AI Overviews a la vez.
 
 ---
 
 ## llms.txt — resumen de contexto para AI tools
 
-llms.txt es un archivo de texto plano en `/llms.txt`. **Google lo ignora explícitamente** (confirmado en guía AI optimization 2026-06-29, y por Gary Illyes y John Mueller). **Bing Copilot/Microsoft Copilot, Perplexity, ChatGPT/OpenAI y otros LLMs sí pueden leerlo.**
+llms.txt es un archivo de texto plano en `/llms.txt`. **Google lo ignora explícitamente** (confirmado en guía AI optimization 2026-06-29, y por Gary Illyes y John Mueller). Google lo confirmó en su documentación el 15/06/2026: llms.txt "aren't needed for Google Search" y no afecta ni positiva ni negativamente a la visibilidad. Para otros agentes que consultan este formato sirve como fuente estructurada adicional, sin garantía de qué plataformas lo leen ni cuándo: no nombrar plataformas concretas como lectores confirmados.
 
 **Cuándo implementarlo:** siempre — el coste es mínimo y aporta contexto a plataformas no-Google.
 **Cuándo NO prometerlo:** como lever de ranking en Google Search, AI Overviews o AI Mode.
@@ -305,7 +328,7 @@ Grok 4 usa DeepSearch para rastreo web en tiempo real. Las señales específicas
 **Implicación práctica:**
 - Presencia activa en X con posts que enlacen al sitio es el lever más directo para Grok
 - Una comunidad en X alrededor del nicho (respuestas, retweets, menciones) amplifica el efecto
-- GrokBot respeta robots.txt: añadir `User-agent: Grokbot / Disallow:` activa crawling
+- xAI no publica documentación oficial de un rastreador `Grokbot` (verificado 20/11/2026): no declararlo en robots.txt ni prometer que activar una regla cambie algo. Basta con que `User-agent: *` no bloquee el contenido público
 
 ---
 
@@ -573,14 +596,10 @@ Usar para establecer baseline cuantitativo y medir variación mensual.
 
 ```
 CRAWLABILIDAD
-[ ] GPTBot + OAI-SearchBot permitidos (ChatGPT Search)
-[ ] PerplexityBot permitido
-[ ] anthropic-ai + ClaudeBot permitidos
-[ ] Grokbot permitido (Grok / xAI)
-[ ] DuckAssistBot permitido
-[ ] meta-externalagent permitido (Meta AI)
-[ ] Applebot-Extended permitido (Apple Intelligence)
+[ ] Bots de búsqueda sin bloquear y SIN grupo propio con Disallow vacío: OAI-SearchBot, Claude-SearchBot, PerplexityBot, meta-webindexer, DuckAssistBot
 [ ] Bingbot no bloqueado (Microsoft Copilot)
+[ ] Entrenamiento (GPTBot, ClaudeBot, meta-externalagent, Google-Extended, Applebot-Extended, CCBot): decisión del cliente documentada; bloquearlos no quita visibilidad en búsqueda
+[ ] Fetchers de usuario (ChatGPT-User, Perplexity-User, meta-externalfetcher, Google-Agent) no frenados por desafíos anti-bot del CDN si el cliente quiere ser usado por agentes
 [ ] Google-Extended: decisión documentada (training vs AI Overviews son controles separados)
 
 LLMS.TXT + RSL 1.0
@@ -590,7 +609,7 @@ LLMS.TXT + RSL 1.0
 [ ] H1 único al inicio + blockquote de resumen inmediatamente después (única sección obligatoria + resumen, ver reglas estrictas arriba)
 [ ] Enlaces en las listas de archivos usan sintaxis markdown [texto](url), NUNCA "Etiqueta: url" en texto plano — verificar línea por línea, es el fallo más común (ver nota Lighthouse "Agentic Browsing")
 [ ] RSL 1.0 declarado (en llms.txt o /rsl.txt)
-[ ] Alcance comunicado: Google lo ignora; puede ayudar en Bing/Perplexity/ChatGPT/Grok
+[ ] Alcance comunicado: Google lo ignora; fuente estructurada adicional para otros agentes, sin plataformas confirmadas
 
 ENTIDAD (WIKIDATA + KNOWLEDGE PANEL)
 [ ] Entidad Wikidata existe con URL oficial exacta (P856)
@@ -609,7 +628,6 @@ MICROSOFT COPILOT
 
 GROK / XAI
 [ ] Cuenta verificada en X activa con posts que enlazan al sitio
-[ ] Grokbot permitido en robots.txt
 [ ] Posts de X cubren los temas clave del nicho
 
 META AI

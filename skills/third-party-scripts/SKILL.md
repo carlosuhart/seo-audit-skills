@@ -5,6 +5,8 @@ description: >
   impact by vendor, GTM deferral, footprint audits, removing unused scripts and spotting
   scripts injected into post content. Use for INP, TBT or LCP caused by third-party
   JavaScript.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Third-Party Scripts — Performance & SEO
@@ -284,6 +286,30 @@ Fix: remove the whole `<script>` block, treat it as a security finding (how did 
 in: compromised account, plugin, copied content?) and search options and widgets for the
 same pattern. See `wordpress-hidden-errors` (pattern C7).
 
+## Back button hijacking — a spam policy since April 2026
+
+Google added "back button hijacking" to its spam policies on 13/04/2026: "when a site
+interferes with user browser navigation", "preventing them from using their back button to
+immediately get back to the page they came from"
+(https://developers.google.com/search/docs/essentials/spam-policies, read 20/11/2026). It
+is no longer only a UX complaint: it can lead to a manual action, and since April 2026
+Google's changelog says spam reports may be used for manual actions (see `seo-negativo`).
+
+The site owner often did not write it. It usually comes from a third-party script: ad
+networks with "back button" or "exit" formats, interstitial and recommendation widgets
+that insert a page of their own in the history, or popunder scripts.
+
+**Detection:**
+- Load the page from a Google results page, click nothing, press Back once. If the user
+  does not return to Google (lands on an ad page, a "you may also like" page or the same
+  URL again), the site fails.
+- Search the loaded JS (DevTools > Sources, or the HAR) for `history.pushState` /
+  `history.replaceState` called on load without a user navigation, and for `popstate`
+  listeners that redirect or open a new page. SPA routers use `pushState` legitimately,
+  so judge by behaviour, not by the presence of the call.
+- Block third-party domains one at a time in DevTools (Network > Block request domain) to
+  find which script does it.
+
 ## Removing unused scripts
 
 1. Identify unused scripts via Coverage tab or GTM audit
@@ -298,7 +324,8 @@ same pattern. See `wordpress-hidden-errors` (pattern C7).
 ## Audit checklist
 
 ```
-CRITICAL (direct CWV impact)
+CRITICAL (direct CWV impact or spam policy)
+[ ] Back button returns to the referring page (no back button hijacking by an ad or widget script)
 [ ] No render-blocking scripts in <head> without async or defer
 [ ] LCP element not delayed by third-party script execution
 [ ] No duplicate analytics tags (GTM + inline gtag.js simultaneously)

@@ -6,6 +6,7 @@ description: >
   de disavow.txt. Usar con "SEO negativo", "ataque de backlinks" o "disavow".
 metadata:
   type: skill
+  revisar: "2027-05-20"
 ---
 
 # seo-negativo
@@ -48,6 +49,28 @@ Monitoreo continuo de SEO negativo y protocolo de respuesta ante ataques. Cubre 
 - Comprobar GSC > Acciones manuales > Cualquier acción activa
 - Tipos: "Patrón de links artificiales", "Contenido generado automáticamente", "Encubrimiento"
 - Impacto: puede ser parcial (algunas páginas) o de sitio completo
+
+**Informes de spam como vía de ataque (desde abril de 2026):** el registro de cambios de
+la documentación de Google dice que "Google may now use spam report submissions to take
+manual action" (14/04/2026, aclarado el 23/04/2026,
+https://developers.google.com/search/updates). La página de políticas de spam sigue
+hablando de los informes solo como mejora de sus sistemas automáticos, así que citar el
+registro de cambios como fuente. Consecuencia práctica: un competidor puede denunciar
+infracciones reales del sitio (cloaking heredado, páginas de terceros alojadas, spam de
+usuarios sin moderar, back button hijacking de un script de anuncios) y acelerar una
+acción manual. Un informe falso no crea una infracción, pero una infracción olvidada sí
+se vuelve más fácil de encontrar. Defensa: el barrido de políticas de spam entra en el
+diagnóstico inicial, no solo cuando ya hay una acción manual.
+
+**Spam de usuarios (UGC):** foros, comentarios y perfiles abiertos son la puerta más
+usada para meter spam en un dominio ajeno. Google recomienda verificar el sitio o
+subdominio en Search Console para recibir el aviso de acción manual, revisar
+"regularmente" los informes de indexación y de rendimiento buscando "unexpected spikes in
+indexed pages, impressions, or queries that don't match your platform's purpose", marcar
+los enlaces no confiables con `nofollow` o `ugc` y aplicar `noindex` a las publicaciones de
+usuarios nuevos sin reputación. Fuente:
+https://developers.google.com/search/docs/monitor-debug/prevent-abuse (guía actualizada
+26/10/2026, consultada 20/11/2026).
 
 **Ataques de reputación:**
 - Reseñas falsas masivas en GBP (spike en 1-2 semanas)

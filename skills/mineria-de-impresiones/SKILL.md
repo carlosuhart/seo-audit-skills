@@ -5,6 +5,8 @@ description: >
   decide qué mejorar, qué crear y cómo optimizar títulos y metas. Usar con "minería de
   impresiones", "mejorar CTR", "brecha de contenido con GSC" o "queries con impresiones
   sin clics". Siempre pide datos reales de GSC antes de analizar.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Minería de impresiones

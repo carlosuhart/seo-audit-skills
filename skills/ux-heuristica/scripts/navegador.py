@@ -256,3 +256,15 @@ window.__a11y = window.__a11y || (() => {
 })();
 """
 
+
+def abrir_chromium(p, **kw):
+    """Abre el Chrome del sistema con el sandbox encendido (se actualiza solo con los parches de
+    seguridad). Si no está instalado, usa el Chromium de Playwright, también con sandbox, y avisa.
+    El Chromium de Playwright queda atrasado frente a los parches de Chrome y Playwright lo lanza
+    sin sandbox por defecto, por eso no se usa p.chromium.launch() directo."""
+    try:
+        return p.chromium.launch(channel="chrome", chromium_sandbox=True, **kw)
+    except Exception as e:  # Chrome no instalado o canal no disponible
+        print(f"Aviso: Chrome del sistema no disponible ({type(e).__name__}); "
+              "uso el Chromium de Playwright con sandbox", file=sys.stderr)
+        return p.chromium.launch(chromium_sandbox=True, **kw)

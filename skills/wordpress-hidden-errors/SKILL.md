@@ -142,6 +142,7 @@ python scripts/strip_shortcode.py plan audit/strip --tag amazon
 | P5 | robots.txt físico con bloques contradictorios añadidos por plugins | Media | Content-Signal opuestos |
 | P6 | Regla WAF genérica que bloquea `/feed/` | Media | RSS 403 a lectores |
 | P7 | Cabecera `Link: describedby` a `llms.txt` por idioma inexistente | Baja | 404 anunciado en cabecera |
+| P9 | CSP Report-Only en modo aprendizaje que supera el límite de cabeceras | Crítica | 500 en todo el dominio, sin `error_log` |
 
 Detección y corrección de cada uno en `references/patterns.md`. Tablas, claves de
 opciones y consultas SQL de WPML y Rank Math en `references/wpml-rankmath-internals.md`.

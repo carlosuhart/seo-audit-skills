@@ -4,6 +4,8 @@ description: >
   robots.txt e indexabilidad: especificación de Google, plantillas por tipo de sitio,
   Merchant Center, bots de IA, meta robots, X-Robots-Tag, conflicto entre Disallow y
   noindex e informe de cobertura de GSC.
+metadata:
+  revisar: "2027-05-04"
 ---
 
 # robots.txt — Guía Técnica SEO
@@ -29,9 +31,10 @@ description: >
 
 ### Precedencia de reglas (crítico)
 
-- Cuando hay conflicto entre `Allow` y `Disallow`, **gana la regla más larga** (más específica).
-- Empate en longitud → gana `Allow`.
-- Ejemplo: `Disallow: /page` (6 chars) vs `Allow: /page/featured` (21 chars) → `Allow` gana para `/page/featured`.
+- Cuando hay conflicto entre `Allow` y `Disallow`, **gana la regla más larga** (más específica, se cuentan los caracteres de la ruta de la regla).
+- Empate en longitud, también con comodines → Google usa la **menos restrictiva** (`Allow`).
+- Ejemplo: `Disallow: /page` (5 caracteres) vs `Allow: /page/featured` (14 caracteres) → `Allow` gana para `/page/featured`.
+- Ejemplos oficiales: `/page.htm` con `allow: /page` y `disallow: /*.htm` → gana `disallow` (6 contra 5). `/page.php5` con `allow: /page` y `disallow: /*.ph` → gana `allow` (empate a 5, menos restrictiva). `allow: /$` + `disallow: /` → solo la raíz queda permitida.
 
 ### Matching de User-agent
 
@@ -47,6 +50,63 @@ description: >
 - `$` — fin de URL. `/*.php$` coincide con `/file.php` pero NO con `/file.php?param`.
 - Son soportados por Google en ambas directivas `Allow` y `Disallow`.
 
+### Caracteres no ASCII en rutas (tildes, eñes, ç) — verificado 04/11/2026
+
+**Qué dice Google (spec oficial):** las rutas pueden escribirse en UTF-8 directo o con
+percent-encoding UTF-8. Los rastreadores de Google comparan reglas y URLs en su forma
+codificada, así que para Googlebot `Disallow: /niños/` y `Disallow: /ni%C3%B1os/` son
+idénticas (ejemplo oficial: `/foo/bar/ツ` ≡ `/foo/bar/%E3%83%84`). Google añade que la
+forma codificada "puede facilitar el procesamiento con herramientas de terceros".
+
+**Qué dice el estándar (RFC 9309 §2.2.2):** los octetos fuera de ASCII en la URI y en
+las rutas del robots.txt DEBEN codificarse con percent-encoding antes de comparar. Un
+parser conforme hace la conversión solo; uno no conforme o antiguo puede no hacerla.
+
+**Recomendación:** en robots.txt escribir siempre la forma codificada (compatibilidad
+con todos los rastreadores, Bing, Yandex, bots de IA, herramientas de auditoría). Las
+URLs públicas pueden mantener sus caracteres. Un robots.txt existente con rutas sin
+codificar NO es un error para Google: reportarlo como mejora de compatibilidad, prioridad
+baja, nunca como issue de indexación.
+
+| Carácter | Codificado | Carácter | Codificado |
+|----------|-----------|----------|-----------|
+| á | `%C3%A1` | ñ | `%C3%B1` |
+| é | `%C3%A9` | Ñ | `%C3%91` |
+| í | `%C3%AD` | ü | `%C3%BC` |
+| ó | `%C3%B3` | ç | `%C3%A7` |
+| ú | `%C3%BA` | espacio | `%20` |
+
+**Trampas (derivadas de la spec y de UTF-8, no declaradas por Google como casos):**
+- Las rutas distinguen mayúsculas: `/Niños/` (`%C3%91`) no coincide con `/niños/` (`%C3%B1`).
+- Normalización Unicode: una ñ descompuesta (NFD, n + tilde combinante) se codifica
+  `n%CC%83` y NO coincide con `%C3%B1` (NFC). Copiar la ruta desde la URL real que sirve
+  el sitio (crawl, logs, barra de direcciones), no teclearla.
+- Codificación Latin-1 (`%F1` para ñ) es incorrecta: Google exige UTF-8.
+- Hex en mayúsculas (`%C3%B1`) por convención RFC 3986; Google no documenta el caso de
+  minúsculas, no depender de él.
+- El archivo debe guardarse en UTF-8: si no, Google puede ignorar los caracteres fuera
+  de rango y dejar reglas inválidas. El BOM inicial se ignora.
+- Dominios IDN: el robots.txt de un dominio con tilde/eñe aplica también a su versión
+  punycode (`exämple.com` ≡ `xn--exmple-cua.com`), no al dominio sin tilde.
+
+**Origen de la aclaración:** vídeo "What can you actually put in a robots.txt?" del canal
+Google Search Central (título y canal verificados). Participantes (Gary Illyes y Cherry
+Prommawin), serie *The Non-Canonical Cabinet* y fecha 21/10/2026 según SEOmanal
+(28/10/2026); el contenido del vídeo no se pudo verificar directamente.
+
+**Qué cambió en la spec (verificado con diff del HTML, 04/11/2026):** la equivalencia
+UTF-8 / percent-encoding y el ejemplo `ツ` ya estaban en la versión del 31/08/2026
+(copia de Wayback Machine del 15/10/2026). La edición del 23/10/2026 añadió UNA sola
+frase, literal: "While Google's systems parse raw UTF-8 characters properly, using
+percent-encoding for rule paths can make it easier to process these files with
+third-party tools and services." Es el único cambio de texto visible. Está registrado en
+el changelog de la documentación de rastreo (https://developers.google.com/crawling/docs/changelog,
+entrada 23/10/2026 "Updated guidance on robots.txt specifications"), no en el de Search
+Central. No es una obligación nueva para Googlebot.
+
+> Los cambios de robots.txt, crawlers, user agents e IP ranges se publican en el changelog
+> de crawling, separado del de Search Central. Revisar los dos.
+
 ### Casos edge importantes
 
 - `Disallow:` (vacío) = permite todo. Equivale a no tener robots.txt.
@@ -54,6 +114,42 @@ description: >
 - El archivo robots.txt es público — nunca usarlo para ocultar información sensible.
 - AdsBot (`AdsBot-Google`, `AdsBot-Google-Mobile`) **no** está cubierto por `User-agent: *`. Debe nombrarse explícitamente si se quiere bloquear.
 - Una directiva `Sitemap:` no interrumpe un grupo de user-agent — parsers la ignoran al construir grupos.
+- `Sitemap:` puede apuntar a otro host, no necesita estar codificada y no tiene límite de líneas.
+- Reglas `Allow`/`Disallow` antes de la primera línea `User-agent` se ignoran.
+- Campos no listados (`crawl-delay`, `noindex`, `host`, `clean-param`) no tienen efecto en Google; Google lo aclaró en su changelog del 07/10/2024.
+- El REP no aplica a los fetchers de Google que activa un usuario (suscripciones a feeds, Google-Agent) ni a los de seguridad (análisis de malware).
+
+### Alcance, códigos HTTP, caché y tamaño (spec de Google, actualizada 23/10/2026)
+
+**Alcance:** un robots.txt vale solo para su host, protocolo y puerto exactos.
+- `https://example.com/robots.txt` no aplica a `http://example.com/`, a `https://www.example.com/` ni a ningún subdominio (`blog.`, `shop.`, `marketing.`). Cada subdominio necesita el suyo.
+- Un robots.txt en un subdirectorio (`/carpeta/robots.txt`) no es válido.
+- Los puertos estándar (443, 80) equivalen al host sin puerto; un puerto no estándar (`:8181`) necesita su propio archivo.
+- Un robots.txt servido en la IP solo vale para la IP como host, no para los dominios alojados en ella.
+- La URL del archivo distingue mayúsculas: tiene que ser `/robots.txt` en minúsculas.
+
+**Qué hace Google según el código HTTP del propio robots.txt:**
+
+| Respuesta | Comportamiento de Google |
+|---|---|
+| 2xx | Procesa el archivo |
+| 3xx | Sigue al menos 5 saltos; si no llega, lo trata como 404. No sigue redirecciones por JS, meta refresh ni frames |
+| 4xx (salvo 429) | Como si no existiera: **rastrea todo sin restricciones** |
+| 429, 5xx, DNS, timeout, conexión cortada | Error de servidor: 12 h sin rastrear el sitio; luego usa la última versión buena hasta 30 días; sin copia previa, asume que no hay restricciones |
+| Errores más de 30 días | Si el sitio está disponible, actúa como si no hubiera robots.txt; si no, deja de rastrear |
+
+Consecuencias de auditoría:
+- **Un WAF o CDN que responde 403 al robots.txt para Googlebot hace que Google rastree todo**, incluido lo que el archivo bloquea. Probar el robots.txt con user agent de Googlebot, no solo en el navegador.
+- Un 5xx o 429 sostenido en el robots.txt congela el rastreo del sitio entero. Es la primera hipótesis ante una caída brusca de "Solicitudes de rastreo" en GSC.
+- No usar 401/403 en el sitio para frenar el rastreo: no reducen la frecuencia.
+
+**Frenar el rastreo de urgencia:** devolver 503 o 429 (con `Retry-After: <segundos>` o una fecha UTC) en las URLs afectadas, nunca más de 1-2 días: si Googlebot ve esos códigos varios días en la misma URL, puede eliminarla del índice. Changelog de crawling 06/10/2026, guía "Reduce the Google crawl rate".
+
+**Caché:** Google guarda el robots.txt hasta 24 h, más si no puede refrescarlo (timeouts, 5xx). Respeta `Cache-Control: max-age` para alargar o acortar ese plazo. Un cambio en el robots.txt puede tardar un día en aplicarse; en GSC (Configuración > robots.txt) se puede pedir que lo vuelva a leer.
+
+**Tamaño:** límite de 500 KiB. Lo que pase de ahí se ignora. Si el archivo crece por reglas por URL, consolidar por directorio.
+
+**Formato:** si lo que se sirve es HTML en vez de reglas, Google intenta extraer reglas válidas e ignora el resto. Es un caso típico de CMS que responde la home o una página 404 con código 200 en `/robots.txt`.
 
 ---
 
@@ -302,7 +398,10 @@ Disallow: /
 User-agent: cohere-ai
 Disallow: /
 
-User-agent: MetaAI
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: Applebot-Extended
 Disallow: /
 
 Sitemap: https://dominio.com/sitemap_index.xml
@@ -325,42 +424,95 @@ Sitemap: https://dominio.com/sitemap_index.xml
 | `GPTBot` | OpenAI | Entrenamiento de modelos |
 | `Google-Extended` | Google | Entrenamiento de Gemini exclusivamente. Bloquearlo NO afecta ranking ni inclusión en Google Search (documentación oficial Google). |
 | `CCBot` | Common Crawl | Dataset público de entrenamiento |
-| `anthropic-ai` | Anthropic | Entrenamiento (crawler masivo) |
-| `ClaudeBot` | Anthropic | Entrenamiento (alias anterior) |
-| `Bytespider` | ByteDance / TikTok | Entrenamiento |
-| `cohere-ai` | Cohere | Entrenamiento |
-| `MetaAI` | Meta | Entrenamiento |
+| `ClaudeBot` | Anthropic | Entrenamiento (bot vigente) |
+| `anthropic-ai` | Anthropic | Token antiguo; mantenerlo no hace daño, pero el que cuenta es `ClaudeBot` |
+| `Bytespider` | ByteDance / TikTok | Entrenamiento (sin documentación oficial) |
+| `cohere-ai` | Cohere | Entrenamiento según directorios de terceros. Cohere no publica documentación oficial de sus bots ni de si respetan robots.txt (verificado 20/11/2026): bloquearlo no hace daño, pero no prometer efecto |
+| `meta-externalagent` | Meta | Entrenamiento de modelos de IA. `MetaAI` no es un user-agent real |
+| `Applebot-Extended` | Apple | No rastrea: es un token que controla si lo ya rastreado por Applebot entrena los modelos de Apple. Bloquearlo no afecta a Siri ni Spotlight |
+
+Fuentes y verificación de cada bot: `seo-logs/references/bots.json` (consultado 31/10/2026). Ante discrepancia, manda ese archivo.
+
+### Google: tres controles distintos para IA (no confundirlos)
+
+| Qué se quiere | Mecanismo | Qué NO hace |
+|---|---|---|
+| Que el contenido no entrene Gemini ni sirva de grounding en Gemini Apps y Vertex AI | `User-agent: Google-Extended` / `Disallow: /` en robots.txt | No saca el sitio de Google Search, AI Overviews ni AI Mode. No es señal de ranking |
+| Salir de AI Overviews, AI Mode y la IA de Discover | **Control de IA generativa de Search** en Search Console (Configuración > Search generative AI > Excluir). Disponible para todos los sitios desde el 31/08/2026. Por propiedad, con herencia de la propiedad padre; tarda 1-2 días | No afecta al entrenamiento (para eso, Google-Extended). No es señal de ranking ni de inclusión en el resto de Search. Se pierden el tráfico y las impresiones de esas funciones. No anula decisiones de Merchant Center ni Google Ads |
+| Limitar fragmentos o salir de Search | `nosnippet`, `max-snippet`, `data-nosnippet`, `noindex` | `noindex` saca la página de todo Search, no solo de la IA |
+
+Antes de recomendar la exclusión, medir con el informe de rendimiento de IA generativa de
+GSC lo que se perdería. Para un cliente que quiere visibilidad en IA, lo normal es
+**incluir** (es el valor por defecto) y, si acaso, bloquear solo Google-Extended.
+
+**Próximo (anunciado, aún no activo):** señal común de preferencia de entrenamiento AIPREF,
+del grupo de trabajo AIPREF del IETF. Google la soportará "in early 2027" con la línea
+`user-agent: __usage_ai-training`. Google-Extended y los controles de cada empresa
+seguirán funcionando. Si un sitio rechaza el entrenamiento con la señal común y no
+menciona Google-Extended, Google lo tratará como un bloqueo de Google-Extended. No
+implementarla en clientes hasta que Google confirme el soporte activo; revisar a inicios
+de 2027. Fuentes: blog de Search Central, 30/10/2026
+(https://developers.google.com/search/blog/2026/10/ai-training-control) y página de
+rastreadores comunes de Google (actualizada 30/10/2026).
+
+**Anthropic ya la reconoce:** desde el 30/10/2026 Anthropic reconoce la señal común de "no
+AI training", con una precedencia explícita: si robots.txt nombra a `ClaudeBot`, manda esa
+regla aunque la señal general diga otra cosa. Fuente:
+https://support.claude.com/en/articles/8896518 (consultada 20/11/2026). La recomendación de
+no implementarla en clientes se mantiene hasta que Google la active, porque un bloqueo por
+grupo de cada bot sigue siendo lo que todos entienden.
 
 ### Bots de búsqueda IA — NO declarar bloque explícito
 
 | User-agent | Empresa | Uso |
 |------------|---------|-----|
-| `PerplexityBot` | Perplexity | Indexación para respuestas de búsqueda |
-| `ChatGPT-User` | OpenAI | Petición directa de usuario en ChatGPT |
-| `OAI-SearchBot` | OpenAI | SearchGPT / ChatGPT Search |
-| `Claude-User` | Anthropic | Petición directa de usuario en Claude |
+| `PerplexityBot` | Perplexity | Indexación para respuestas de búsqueda; no entrena modelos |
+| `OAI-SearchBot` | OpenAI | ChatGPT Search. Bloquearlo saca al sitio de esas respuestas |
+| `Claude-SearchBot` | Anthropic | Indexación para la búsqueda de Claude. Bloquear `ClaudeBot` no lo bloquea |
+| `Claude-User` | Anthropic | Petición directa de usuario en Claude (Anthropic declara que sus bots respetan robots.txt) |
+| `meta-webindexer` | Meta | Búsqueda de Meta AI; permitirlo ayuda a que Meta AI cite y enlace el sitio |
 
 **Regla crítica:** NO declarar estos bots con `Allow: /` en bloque propio. Un bot con bloque
 explícito solo lee ese bloque e ignora completamente `User-agent: *`. Declarar `Allow: /`
 les daría acceso total a `/wp-admin/`, `/carrito/`, archivos sensibles, etc.
 La forma correcta es no declararlos — caen en `User-agent: *` y respetan todas las restricciones.
 
-**Nota:** `GPTBot` (entrenamiento) y `ChatGPT-User` (búsqueda) son bots distintos.
-Bloquear `GPTBot` no afecta a las respuestas de ChatGPT a usuarios.
+**Nota:** `GPTBot` (entrenamiento) y `OAI-SearchBot` (búsqueda) son bots distintos.
+Bloquear `GPTBot` no afecta a ChatGPT Search.
 
-### Bots user-triggered — fuera del alcance de robots.txt
+### Bots user-triggered — robots.txt no los frena
 
-| User-agent | Empresa | Uso |
-|------------|---------|-----|
-| `Google-Agent` | Google | Navegación web en nombre de un usuario humano (Project Mariner y agentes similares) |
+Sus propios dueños documentan que pueden ignorar robots.txt porque la petición la hace un
+usuario. Si un cliente necesita bloquearlos, el control está en el servidor, CDN o firewall,
+con las listas de IP que publica cada empresa.
 
-**Google-Agent ignora robots.txt por diseño.** Al ser user-triggered (el humano solicita explícitamente la acción), Google lo excluye del protocolo robots.txt. No existe mecanismo para bloquearlo selectivamente.
+| User-agent | Empresa | Qué dice la documentación | Lista de IP |
+|------------|---------|---------------------------|-------------|
+| `Google-Agent` | Google | Navegador que actúa por encargo de un usuario; los fetchers user-triggered "generally ignore robots.txt rules" | `user-triggered-agents.json` |
+| `Google-GeminiNotebook` | Google | URLs que el usuario añade a NotebookLM (antes `Google-NotebookLM`, renombrado 16/07/2026) | Ver la página de fetchers user-triggered |
+| `ChatGPT-User` | OpenAI | "robots.txt rules may not apply" | `openai.com/chatgpt-user.json` |
+| `Perplexity-User` | Perplexity | "generally ignores robots.txt rules" | `perplexity.ai/perplexity-user.json` |
+| `meta-externalfetcher` | Meta | "may bypass robots.txt rules" | No publica |
 
-- Anunciado: 20 de marzo de 2026
-- IP ranges en `user-triggered-agents.json` (archivo separado, no en el estándar de fetchers)
-- Identificable en logs de servidor por el user-agent documentado
-- Experimenta con `web-bot-auth` (`https://agent.bot.goog`) para autenticación criptográfica
-- Las vistas generadas no cuentan como sesiones humanas en Analytics
+Fuentes (consultadas 20/11/2026): https://developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers,
+https://developers.openai.com/api/docs/bots, https://docs.perplexity.ai/guides/bots,
+https://developers.facebook.com/docs/sharing/webmasters/web-crawlers.
+
+**Google-Agent: cómo permitirlo o verificarlo** (guía publicada el 17/11/2026,
+https://developers.google.com/crawling/docs/crawlers-fetchers/allow-google-agent). Es el
+caso inverso al habitual: el riesgo no es que entre, sino que el CDN lo bloquee y un
+cliente que quiere ser usado por agentes quede fuera.
+- Verificación: el User-Agent contiene `Google-Agent` y la IP está en
+  `https://developers.google.com/static/crawling/ipranges/user-triggered-agents.json`.
+- Web Bot Auth (experimental, RFC 9421): cabecera `Signature-Agent` con
+  `g="https://agent.bot.goog"`, más `Signature` y `Signature-Input`; claves públicas en
+  `https://agent.bot.goog/.well-known/http-message-signatures-directory`.
+- Para peticiones verificadas, saltar CAPTCHA y desafíos JS. La regla de permiso debe
+  evaluarse antes que los bloqueos amplios por ASN de nube o centro de datos, cubrir
+  también las acciones del recorrido (búsqueda interna, carrito, XHR/GraphQL), excluir
+  esas IP de los límites por IP y conservar las cabeceras User-Agent y Signature a través
+  de proxies.
+- Las vistas que genera no cuentan como sesiones humanas en Analytics.
 
 ---
 
@@ -415,10 +567,13 @@ antes de esa directiva (la regla más larga gana).
 **Fix:** Si Googlebot tiene su propio bloque con `Disallow:` vacío, no aplica.
 Si no, evaluar si la paginación tiene valor de indexación para el sitio.
 
-### Error 5: Wildcard `$` en Allow para JS/CSS
-**Síntoma:** `Allow: /*.js$` no funciona como se espera en parsers no-Google.
-**Nota:** Google sí soporta `$` como fin de URL. Pero en un bloque donde
-Googlebot tiene acceso total de todas formas, estas reglas son redundantes.
+### Error 5: Reglas `$` para JS/CSS redundantes
+**Síntoma:** `Allow: /*.js$` en un grupo donde el bot ya tiene acceso total.
+**Nota:** `*` y `$` son obligatorios en RFC 9309 (§2.2.3), así que cualquier parser
+conforme los soporta. Lo que falla en la práctica es otra cosa: `/*.js$` NO coincide
+con `/app.js?ver=6.4` (WordPress añade `?ver=`), así que la regla no desbloquea esos
+recursos. Usar `Allow: /*.js` sin `$`. Y en un bloque donde Googlebot ya tiene acceso
+total, estas reglas sobran.
 
 ### Error 6: AdsBot no bloqueado explícitamente
 **Síntoma:** AdsBot sigue rastreando aunque `User-agent: *` tenga restricciones.
@@ -470,6 +625,10 @@ o feed que se quiera bloquear en todos los idiomas).
 `uri.path contains "/feed/"`: lectores RSS y agregadores no verificados reciben 403.
 Al auditar robots.txt, revisar también las reglas WAF/CDN que afectan a las mismas
 rutas; el robots.txt solo declara intención.
+
+Caso extremo: si el WAF bloquea el propio `/robots.txt`, un 403 hace que Google rastree
+todo sin restricciones y un 5xx o 429 congela el rastreo del sitio (ver "Alcance,
+códigos HTTP, caché y tamaño").
 
 Ver `wordpress-hidden-errors` (patrones P5 y P6) para el procedimiento completo.
 
@@ -542,6 +701,8 @@ curl -I https://example.com/documento.pdf | grep -i "x-robots-tag"
 ```
 CRÍTICO (impacto directo en indexación o Merchant Center)
 [ ] ¿El dominio en Sitemap: coincide con el sitio actual?
+[ ] ¿/robots.txt responde 200 a Googlebot (probar con su user agent: un 403 del WAF = sin restricciones, un 5xx/429 = rastreo congelado)?
+[ ] ¿Cada subdominio y protocolo relevante tiene su propio robots.txt?
 [ ] Si tiene Merchant Center: ¿Googlebot tiene bloque explícito con Disallow: vacío?
 [ ] Si tiene Merchant Center: ¿Googlebot-image tiene bloque explícito con Disallow: vacío?
 [ ] ¿Hay Disallow: /*? sin bloque explícito de Googlebot? (bloquea parámetros)
@@ -561,6 +722,7 @@ MEDIO (buenas prácticas y governance)
 [ ] ¿Se diferencian bots de entrenamiento vs bots de búsqueda IA?
 [ ] ¿AdsBot está gestionado explícitamente si hay campañas de Google Ads?
 [ ] ¿La sintaxis es estándar? (paths empiezan por /, no hay wildcards al inicio)
+[ ] ¿Rutas con tildes/eñes en percent-encoding UTF-8, con mayúsculas y forma NFC iguales a la URL real?
 [ ] ¿Hay directivas Crawl-delay para bots agresivos (msnbot, Slurp)?
 
 BAJO (limpieza y mantenimiento)
@@ -683,6 +845,13 @@ Validar con Search Console > Configuración > robots.txt.
 | `none` | Equivale a `noindex, nofollow` |
 | `all` | Equivale a `index, follow` (default — no hace falta declararlo) |
 
+**Meta robots fuera del `<head>`:** Google "doesn't enforce placement of meta robots in the
+HTML head" y "will respect robots meta tags in the body section" (nota documentada el
+24/03/2026; el comportamiento no cambió, solo no estaba escrito). Consecuencia de
+auditoría: un `noindex` que un plugin, constructor o bloque de contenido imprime dentro del
+`<body>` también desindexa. Al buscar noindex inesperados, revisar el documento completo,
+no solo el `<head>`. Fuente: https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
+
 **Nota:** Google acepta `<meta name="googlebot" content="...">` para reglas
 específicas a Googlebot. Si un sitio tiene audiencia en Rusia o China, considerar
 `<meta name="robots">` (para todos) vs bot-específico.
@@ -772,3 +941,10 @@ Screaming Frog > Sitemaps > URLs in Sitemap Non-Indexable — lista todos estos 
 - MC — Página desktop no rastreable: https://support.google.com/merchants/answer/6098185
 - MC — Página mobile no rastreable: https://support.google.com/merchants/answer/15488560
 - RFC 9309 (estándar oficial): https://www.rfc-editor.org/rfc/rfc9309
+- Changelog de crawling (robots.txt, user agents, IP ranges): https://developers.google.com/crawling/docs/changelog
+- Reducir la frecuencia de rastreo (503/429, Retry-After): https://developers.google.com/crawling/docs/crawlers-fetchers/reduce-crawl-rate
+- Rastreadores comunes de Google (Google-Extended, AIPREF): https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers
+- Control de IA generativa de Search: https://support.google.com/webmasters/answer/16908024
+- Anuncio del control común de entrenamiento IA (30/10/2026): https://developers.google.com/search/blog/2026/10/ai-training-control
+- Caracteres no ASCII, aclaración en vídeo (21/10/2026): https://www.youtube.com/watch?v=-jHONLQgE-s
+- Resumen secundario (SEOmanal, 28/10/2026): https://seomanal.es/tecnico/rastreo/google-aclara-como-usar-tildes-y-enes-en-las-rutas-de-robots-txt/

@@ -5,6 +5,8 @@ description: >
   WordPress (plugins, .htaccess, Nginx), PrestaShop, Rank Math y Cloudflare, con
   detección en Screaming Frog.
 user-invokable: false
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Redirects — Guía Técnica SEO
@@ -222,6 +224,15 @@ permanente debe ser 301 explícito.
 
 8. **GSC: change of address** (si es migración de dominio):
    GSC > Configuración > Cambio de dirección — notifica a Google formalmente.
+   - Solo hace falta al pasar de un dominio o subdominio a otro. **No** se usa para
+     HTTP → HTTPS ni para cambiar entre www y sin www dentro del mismo dominio.
+   - En un cambio de dominio, enviarlo para **todas las variantes verificadas** del
+     dominio antiguo, incluidos subdominios y versiones www/sin www, y verificar antes
+     todas las variantes del sitio antiguo y del nuevo. Error frecuente en auditoría:
+     el cambio se envió solo desde la propiedad `www` y los subdominios quedaron sin
+     notificar.
+   - Fuente: https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes
+     (variantes de dominio añadidas el 17/06/2026, consultada 20/11/2026).
 
 9. **Monitorizar GSC durante 3-4 semanas**: Coverage report — las URLs antiguas
    deben pasar de "Indexed" a "Redirect" progresivamente.

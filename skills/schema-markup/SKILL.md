@@ -4,6 +4,8 @@ description: >
   Schema.org JSON-LD for SEO: type selection, CMS implementation (Yoast, Rank Math,
   WooCommerce, PrestaShop), documented bugs, validation and rich result eligibility. Use
   when auditing or implementing structured data or diagnosing rich results in GSC.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Schema Markup (JSON-LD) — Technical SEO
@@ -267,8 +269,25 @@ Fix: disable breadcrumb schema in one plugin. Yoast handles it well by default.
 
 **`price` format:** String, not number. `"29.99"` not `29.99`.
 
-**`priceValidUntil`:** Required for rich result eligibility when `price` is present.
-Without it, Google may not show the price in the rich result.
+**`priceValidUntil`:** Recommended, not required (Google lists it under Recommended
+properties of `Offer` in both the product snippet and merchant listing docs). Do not
+report its absence as an error. Use it when the price really expires.
+
+**Sale price with dates (merchant listing, clarified 07/07/2026):** to mark when a sale
+price is active, use `validFrom` for the start and either `validThrough` or
+`priceValidUntil` for the end, in ISO 8601. The start must be earlier than or equal to the
+end. `priceValidUntil` does not apply to the `PriceSpecification` type. A common audit
+finding: a sale price with no end date that stays in the markup after the sale ended.
+
+**Merchant listing properties added in 2026:**
+- `category` (07/07/2026): accepts plain text, `CategoryCode` objects, or an array mixing both.
+- `hasAdultConsideration` (20/05/2026): marks a product as adult-oriented. Brings parity
+  with the Merchant Center feed, so mismatches between feed and markup are worth checking
+  on stores that sell such products.
+
+Source: https://developers.google.com/search/docs/appearance/structured-data/merchant-listing
+and https://developers.google.com/search/docs/appearance/structured-data/product-snippet
+(read 20/11/2026).
 
 ### AggregateRating
 
@@ -744,7 +763,8 @@ add_filter('wpseo_schema_website', function($data) {
 **MedicalWebPage and MedicalCondition do not generate an enhancement report in GSC.**
 
 Google Search Console only shows enhancement reports for schema types that
-generate rich results (Product, FAQ, HowTo, Review, etc.). Medical schema
+generate rich results (Product, Review snippet, Video, Breadcrumb, etc.; FAQ and
+HowTo no longer generate rich results in Google). Medical schema
 types are not in this list.
 
 **The value of medical schema is:**
@@ -1068,8 +1088,10 @@ These require custom Smarty template implementation.
    → Confirms Google can render a rich result from this specific page
    → "Eligible" does not guarantee Google will show it — Google decides
 4. Monitor GSC > Enhancements
-   → Available for: Product, FAQ (health/gov), Article, Sitelinks Searchbox,
-     Video, Review snippet, Breadcrumb
+   → Available for: Product (product snippets and merchant listings), Video,
+     Review snippet, Breadcrumb, and the other types in Google's Search Gallery
+   → Retired, no report and no rich result: FAQ (removed from Search 07/05/2026,
+     docs removed 15/06/2026) and Sitelinks search box (feature no longer exists)
    → NOT available for: MedicalWebPage, MedicalCondition, Service, LocalBusiness
 5. After GSC shows the enhancement, check for errors/warnings in the report
 ```
@@ -1110,7 +1132,7 @@ MEDIUM
 [ ] Author schema with jobTitle and description for E-E-A-T
 [ ] Consistent @id for author across Article and Person pages
 [ ] FAQPage maintained on relevant pages (semantic value even without rich result)
-[ ] priceValidUntil present on Product Offer schema
+[ ] Sale prices carry validFrom + validThrough/priceValidUntil, and no expired sale price remains in the markup
 [ ] AggregateRating has reviewCount, ratingValue, bestRating, worstRating
 [ ] MedicalWebPage specialty uses schema.org enum URL
 

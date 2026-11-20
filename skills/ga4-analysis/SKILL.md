@@ -5,6 +5,8 @@ description: >
   adquisición, engagement y comparación de períodos, con cruce con GSC y Google Ads.
   Usar al interpretar tráfico, caídas o fuentes de adquisición.
 user-invokable: false
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # GA4 Analysis — Knowledge Base
@@ -80,6 +82,31 @@ O con dimensión secundaria "Session source/medium":
 - `google / cpc` = Google Ads
 - `(direct) / (none)` = Direct (incluye dark social y tráfico no atribuido)
 
+### Qué Referer envía Google Search (documentado 12/11/2026)
+
+Google Search usa la política `origin`: la cabecera `Referer` lleva solo el esquema y el
+host, sin ruta, sin parámetros y **sin la consulta**. Valores documentados:
+
+| Superficie | Referer |
+|---|---|
+| Google Search en la web | `https://www.google.com/` o un dominio local (`https://www.google.cl/`, `https://www.google.co.uk/`) |
+| App de Google en Android | `android-app://com.google.android.googlequicksearchbox/https/www.google.com` (si la app abre el enlace en una pestaña del navegador) o `https://www.google.com/` |
+| App de Google en iOS | `https://www.google.com/` o un dominio local |
+| Discover | El mismo que la superficie donde se vio Discover (app de Google o web) |
+| Google Imágenes y otros servicios en los mismos orígenes | Los mismos valores |
+
+Consecuencias de auditoría:
+- El referrer `android-app://com.google.android.googlequicksearchbox/...` es tráfico de
+  Google Search. Si aparece como referral o en `(direct)`, el canal orgánico está
+  subcontado: revisar la configuración de fuentes y la lista de exclusión de referencias.
+- Discover, Imágenes, AI Overviews y AI Mode no se distinguen de la búsqueda web por el
+  Referer: GA4 los suma en `google / organic`. Para separarlos hay que ir a Search Console
+  (tipo de búsqueda, Discover, informe de IA generativa), no a GA4.
+- La consulta nunca viene en el Referer: no buscar keywords en GA4.
+
+Fuente: https://developers.google.com/search/docs/monitor-debug/identify-google-search-traffic
+(consultada 20/11/2026).
+
 ---
 
 ## Atribución en GA4
@@ -109,6 +136,52 @@ O con dimensión secundaria "Session source/medium":
 2. **Cross-device:** GA4 puede atribuir a orgánico si el mismo usuario buscó en móvil sin clic en ad.
 3. **Import delay:** Las conversiones importadas de GA4 a Ads tienen lag de 24-48h.
 4. **Conversiones importadas vs Conversiones de Ads:** Ads puede contar smart bidding conversions adicionales.
+5. **Clics pagados que nunca llegan como sesión:** parte de la brecha no es de atribución sino de llegada o de medición. Ver la sección siguiente antes de discutir modelos.
+
+### Clics pagados frente a sesiones: dónde se pierde la diferencia
+
+Usar cuando la plataforma de anuncios reporta bastantes más clics que las sesiones que GA4 registra para esa misma fuente, o cuando el coste por clic se ve bien y no llega nada al sitio. Antes de culpar al anuncio o al modelo de atribución, separar dos problemas: gente que se va antes de que cargue la página (llegada) y gente que llega pero no se registra o se registra en otra fuente (medición).
+
+**Escalera de números** (mismo rango cerrado, misma campaña, misma URL de destino):
+
+| Paso | Google Ads | Meta Ads |
+|---|---|---|
+| 1. Clics pagados | Clics de la campaña en Google Ads (o la métrica "Google Ads clicks" en GA4 con las cuentas vinculadas) | Clics en el enlace |
+| 2. Llegadas | No existe métrica equivalente; se omite este paso | Visitas a la página de destino |
+| 3. Sesiones atribuidas | Sesiones `google / cpc` en GA4 para esa campaña | Sesiones con la fuente y el medio de los UTM de Meta |
+| 4. Sesiones totales de la URL de destino | Sesiones de esa landing page en todas las fuentes | Igual |
+
+Calcular cada paso como porcentaje del anterior. Con Meta, la caída del paso 1 al 2 es de llegada y la del 2 al 3 es de medición. Con Google Ads, sin el paso 2, separar las dos causas con evidencia directa (abrir la URL, medir la carga en móvil, revisar el consentimiento).
+
+Nunca comparar clics del paso 1 con sesiones del paso 3 y llamar "pérdida" a toda la diferencia: mezcla abandono, medición y reglas de conteo distintas.
+
+**Causas por tipo:**
+
+| Tipo | Causa | Señal |
+|---|---|---|
+| Llegada | Carga lenta en móvil, página pesada, navegador integrado de la app (Instagram, Facebook) | Caída grande ya en el paso 2 (Meta) o carga en móvil lenta; uniforme entre campañas que comparten destino |
+| Medición | Redirección que borra `gclid`, `fbclid` o los UTM | El paso 4 crece en `(direct) / (none)` u `Organic Search` cuando sube la inversión |
+| Medición | Banner de consentimiento: con Consent Mode básico no se envía nada si se rechaza; con el avanzado llegan pings sin cookies y GA4 modela | Brecha mayor en mercados o dispositivos con más rechazo |
+| Medición | Cambio de dominio sin medición entre dominios configurada, bloqueadores de anuncios | Sesiones que aparecen como referral del propio dominio o no aparecen |
+| Medición | Etiqueta de GA4 que dispara tarde o no dispara en la landing (SPA, GTM condicionado) | Ver `google-tag-manager` |
+
+**Regla de redirección (va primero):** abrir la URL de destino del anuncio tal como está en la plataforma, con los parámetros, y confirmar que `gclid`/`fbclid` y los UTM sobreviven hasta la URL final. Si se pierden, detenerse y reportarlo como primer arreglo: hasta corregirlo, ningún ratio posterior es legible y el tráfico pagado se estará sumando a Direct u Orgánico, inflando el canal SEO.
+
+**Concentración:** si la brecha se concentra en una URL de destino y no en todas, el problema es la página o su redirección, no la plataforma.
+
+**Veredicto** (los umbrales son heurísticas de partida, no reglas de Google ni de Meta; recalibrar por cuenta y no citarlos como cifra en informes de cliente):
+
+| Veredicto | Criterio orientativo |
+|---|---|
+| Diferencia normal | Meta: llegadas en el 80% o más de los clics, y sesiones en el 70% o más de las llegadas. Google Ads: sesiones `google / cpc` en el 70% o más de los clics, sin pérdida de parámetros |
+| Primero, problema de llegada | Meta: llegadas por debajo del 70% de los clics. Google Ads: carga lenta en móvil verificada y sin fallos de medición |
+| Primero, problema de medición | Parámetros que se pierden en la redirección, o sesiones por debajo del 50% de las llegadas (Meta) o de los clics (Google Ads) con carga correcta |
+
+**Alcance:** este análisis termina cuando el visitante llega. Si clics y sesiones cuadran pero no hay conversiones, el problema es de landing u oferta (ver `seo-conversion` o `page-cro`).
+
+**Salida:** escalera de números con porcentajes, chequeo de cada URL de destino (redirecciones, parámetros que sobreviven, carga en móvil), orden de arreglos y una sección de datos faltantes que diga qué ratio quedó sin poder leerse.
+
+*Origen del método: set de skills de atribución de Elykia (skill 2, "Detector de Clics Perdidos"), adaptado a Google Ads y a GA4. Revisado 31/10/2026.*
 
 ---
 

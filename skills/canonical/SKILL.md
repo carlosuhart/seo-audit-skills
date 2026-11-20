@@ -6,6 +6,9 @@ description: >
   Math, WooCommerce, PrestaShop), incluido el canonical como causa de problemas de
   indexación o canibalización.
 user-invokable: false
+metadata:
+  fuentes: "2026-11-04"
+  revisar: "2027-05-04"
 ---
 
 # Canonical Tags — Guía Técnica SEO
@@ -28,10 +31,17 @@ con otros señales (hreflang, sitemap, internal links).
 - Versiones con y sin trailing slash (`/servicio` vs `/servicio/`)
 - Versiones HTTP/HTTPS o www/non-www duplicadas
 - Productos en múltiples categorías (`/cat-a/producto/` y `/cat-b/producto/`)
-- Contenido sindicado publicado en otro sitio (el original apunta a sí mismo)
+- En el sitio original, self-referencing siempre (también si el contenido se sindica)
 
 ### Cuándo el canonical NO es la solución
 
+- **Contenido sindicado en sitios de socios.** Google: "The canonical link element is
+  not recommended for those who want to avoid duplication by syndication partners,
+  because the pages are often very different. The most effective solution is for
+  partners to block indexing of your content." (guía de canonicalización, actualizada
+  21/08/2026). Pedir al socio `noindex` en su copia; ver también la guía de Google News
+  sobre duplicación de artículos. Si el socio solo acepta canonical cruzado, es mejor
+  que nada, pero no garantiza que Google elija el original.
 - Contenido sustancialmente diferente entre las URLs — usar canonical diferente es
   señal de manipulación y Google puede ignorarlo
 - Páginas que deben indexarse de forma independiente — usar canonical a otra URL las
@@ -230,7 +240,7 @@ Reports > Canonicals > Canonical Chains — lista todas las cadenas detectadas.
 | Producto en dos categorías con la misma URL de producto | Canonical (primary category) |
 | Página de paginación | Self-referencing canonical |
 | Parámetro de UTM o tracking | Canonical a URL limpia |
-| Contenido sindicado en otro sitio | Canonical al original (desde el sindicado) |
+| Contenido sindicado en otro sitio | `noindex` en la copia del socio (Google no recomienda canonical cruzado para sindicación) |
 
 Un 301 transmite PageRank. Un canonical también consolida señales pero de forma
 más lenta y menos garantizada. Para URLs que deben eliminarse permanentemente,
@@ -359,6 +369,26 @@ Columnas clave en la pestaña Internal:
 - **"Excluded by 'noindex' tag"**: URL excluida — verificar que no había un canonical
   apuntando desde otra URL a esta.
 
+### Después de corregir: plazos y expectativas
+
+- **Reevaluación:** "Even after fixing content issues, Google might hold pages in a
+  duplicate cluster for up to two weeks." Hasta dos semanas en el clúster de
+  duplicados aunque el arreglo esté bien. No reportar el Fix como fallido antes de ese
+  plazo; fijar la reverificación a 14 días o más.
+- **Lo que acelera la separación:** que la diferencia de contenido entre las páginas
+  agrupadas sea clara y significativa. Un canonical correcto sobre páginas casi
+  idénticas no las separa: hay que diferenciar el contenido.
+- **Request Indexing** en la inspección de URL pide la reevaluación, pero tiene cuota:
+  reservarlo para las URLs más importantes.
+- **Canonical o 301 inyectados por un hackeo** que apuntan a un dominio de spam hacen
+  que Google elija la URL maliciosa. Si GSC muestra como canonical elegida una URL de
+  otro dominio sin relación, revisar `<head>` y cabeceras HTTP en busca de código
+  inyectado antes de tocar nada más.
+- **Sitio copiado:** en casos raros Google elige como canonical la URL de un sitio que
+  copió el contenido. Vía legal: pedir la retirada al hosting o una solicitud DMCA.
+
+Fuente: https://developers.google.com/search/docs/crawling-indexing/canonicalization-troubleshooting
+
 ---
 
 ## Checklist de auditoría canonical
@@ -387,7 +417,7 @@ MEDIO
 BAJO
 [ ] ¿PrestaShop LayerNavigation con canonical en URLs de facetas?
 [ ] ¿Comentarios paginados con canonical incorrecto?
-[ ] ¿Contenido sindicado sin canonical al original?
+[ ] ¿Contenido sindicado indexable en sitios de socios? → pedir noindex en la copia del socio
 ```
 
 ---
@@ -397,3 +427,4 @@ BAJO
 - Consolidar URLs duplicadas: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
 - Canonical y paginación: https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading
 - Informe de cobertura GSC: https://support.google.com/webmasters/answer/7440203
+- Solución de problemas de canonicalización (sindicación, reevaluación, hackeo): https://developers.google.com/search/docs/crawling-indexing/canonicalization-troubleshooting

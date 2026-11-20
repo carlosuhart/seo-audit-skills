@@ -280,7 +280,7 @@ def main() -> None:
     dir_cap = None if a.sin_capturas else nav.carpeta_salida(os.path.join(out_dir, "capturas"))
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = nav.abrir_chromium(p)
         for url in nav.leer_urls(a.urls, a.urls_archivo):
             ctx = nav.nuevo_contexto(browser, a.vista, reduced_motion="reduce")
             page = ctx.new_page()

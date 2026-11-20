@@ -6,6 +6,8 @@ description: >
   soft-404 por rutas catch-all y canonical, hreflang y cabeceras configurados en el
   framework.
 user-invokable: false
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # JavaScript SEO — Guía Técnica (frameworks React/Vue, sin CMS)
@@ -110,6 +112,30 @@ de estas dos, y hay que distinguirlas en el hallazgo:
 El método de verificación en 3 pasos de arriba (curl crudo → crawler con JS → dato
 real de Google) sigue aplicando igual; solo cambia a qué causa apunta el hallazgo en
 el informe.
+
+---
+
+## Límite de 2 MB de Googlebot — el HTML que pasa del corte no existe para Google
+
+Googlebot lee solo los primeros **2 MB de cada archivo**, medidos **sin comprimir**, y
+64 MB en PDF. Cada recurso que pide para renderizar (CSS, JS) tiene su propio límite de
+2 MB. Al llegar al corte, detiene la descarga y manda a indexar solo lo descargado. El
+resto de los rastreadores y fetchers de Google usa 15 MB por defecto, así que una
+herramienta que "ve todo" no prueba que Googlebot también lo vea.
+
+Por qué importa en frameworks JS: el payload de hidratación incrustado en el HTML
+(`__NEXT_DATA__`, los `self.__next_f.push(...)` del App Router, el estado serializado de
+Nuxt) puede inflar el documento por encima de 2 MB sin que se note en el navegador, que
+sí lo descarga entero. Si el contenido, los enlaces o el JSON-LD quedan después del corte,
+Google no los procesa.
+
+**Cómo medirlo:** `curl -s --compressed URL | wc -c` da el tamaño sin comprimir (la
+cabecera `Content-Length` suele ser el tamaño comprimido y engaña). Si pasa de 2.097.152
+bytes, buscar qué hay después de ese punto: `curl -s --compressed URL | tail -c +2097153`.
+
+Fuente: https://developers.google.com/search/docs/crawling-indexing/googlebot y
+https://developers.google.com/crawling/docs/crawlers-fetchers/overview-google-crawlers
+(límites aclarados el 03/02/2026, consultado 20/11/2026).
 
 ---
 
@@ -353,6 +379,8 @@ CRÍTICO
 [ ] (Vue/Nuxt) ¿El HTML crudo trae el shell vacío para todo el sitio (`ssr: false`,
     modo SPA) o solo faltan nav/headings puntuales por `<ClientOnly>`/guards
     `process.client`? — son hallazgos de alcance distinto, no reportarlos igual.
+[ ] ¿El HTML sin comprimir supera 2 MB? Si es así, ¿qué contenido, enlaces o
+    JSON-LD quedan después del corte de Googlebot?
 
 ALTO
 [ ] ¿Cada ruta declara su propio canonical self-referencing vía metadata del

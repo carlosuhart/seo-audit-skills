@@ -4,6 +4,8 @@ description: >
   Cache architecture for SEO: Cache-Control, CDN vs browser cache, ETag and
   Last-Modified, and CMS setups (WP Rocket, LiteSpeed, PrestaShop, Nginx/Apache). Use
   for TTFB issues, caching layers or cache header audits.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Cache Headers & Caching Strategy — Technical SEO
@@ -333,6 +335,34 @@ Options:
    the CDN cache for specific URLs when content is updated.
 3. **Cache-Control: stale-while-revalidate**: serve stale while fetching fresh
    in background — best user experience.
+
+### Moving a site to a CDN — the crawl spike and the bot wall
+
+Google published guidance on this on 11/11/2026
+(https://developers.google.com/search/blog/2026/11/crawling-cdn, read 20/11/2026). Two
+failures show up in audits after a CDN migration:
+
+**1. Origin overloaded right after the switch.** "Caches only shield you on the second
+visit": with cold caches, every Googlebot request is a miss that reaches the origin, and
+crawling often rises after an infrastructure change. Google's recommendations:
+- **Pre-warm the cache** before cutting over: request the high-traffic URLs, the ones
+  expected to peak, and the most crawled ones through the CDN "at a controlled pace".
+  The most crawled URLs come from the server logs (see the `seo-logs` skill).
+- **Temporary brake:** answer `429` or `503` for "a few hours, or 1-2 days at most". Longer
+  is outside what Google recommends for this brake. Never `403`.
+
+**2. Googlebot blocked by the CDN's bot protection.** Bot fight modes, challenge pages and
+"block all automated clients" rules stop verified crawlers too. Google's rule: "If you
+need to block bots, allow verified bots in your CDN and firewall settings" and "exempt
+verified crawlers from bot challenges". Target specific unwanted bots in robots.txt or
+with rules, instead of blocking all automation. Verify Google's IPs with
+https://developers.google.com/crawling/docs/crawlers-fetchers/verify-google-requests.
+
+Audit check after any CDN change: run the URL Inspection live test in GSC on key URLs and
+confirm a `200` with the real HTML, not a challenge page. A curl with a Googlebot user
+agent does not prove anything here: a well-configured verified-bot rule should block it,
+because it comes from a non-Google IP. Then watch GSC > Settings > Crawl stats for a rise
+in 4xx/5xx or "host had problems" over the following two weeks.
 
 ---
 

@@ -11,6 +11,8 @@ allowed-tools:
   - Write
   - Glob
   - WebSearch
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # GSC Diagnostics — Quick wins, canibalización y anomalías
@@ -72,6 +74,7 @@ Para cada caso de severidad alta o media, indicar cuál de las dos páginas tien
 Serie diaria de clics e impresiones del período. Calcular media y desviación estándar; marcar como anómalo cualquier día con `|z-score| > 2`.
 
 Para cada día anómalo detectado:
+0. Revisar primero la página de anomalías de datos de Search Console (https://support.google.com/webmasters/answer/6211453). Un error de registro de Google produce exactamente el mismo dibujo que una caída real. Ejemplo: del 9 al 11/11/2026 un error bajó las impresiones del informe de IA generativa, en los mismos días en que arrancaba el core update de noviembre (10/11/2026). Si la fecha coincide con un error de registro, reportarlo así y no como caída.
 1. Cruzar la fecha con el calendario de Google Algorithm Updates (`feedback_google_updates.md` — usar WebSearch si el rango es reciente y no hay calendario cargado en memoria)
 2. Reportar el cruce como **hipótesis a validar**, nunca como causa confirmada, salvo coincidencia exacta de fecha con un update documentado
 3. Si no hay update que coincida, buscar causas propias primero: cambio de contenido, migración, incidente técnico (revisar `project_*` de ese cliente en memoria antes de concluir "causa desconocida")
@@ -104,6 +107,18 @@ Guardar el JSON crudo en el directorio de auditorias del proyecto.
 - El z-score de anomalías es sensible a series cortas o con mucho ruido natural (sitios de bajo volumen): con <30 días de datos, no reportar anomalías, decirlo explícitamente en vez de forzar un cálculo poco confiable.
 - Esto es diagnóstico, no prescripción de contenido. Para el plan de qué escribir/reescribir en una página con quick wins, encadenar con `mineria-de-impresiones`.
 - Un dato de URL Inspection de ayer puede haber cambiado hoy (Google rastreó entremedio). Antes de entregar un documento que cite el estado de indexación de una URL, reinspeccionarla el mismo día.
+
+## Filtros nuevos de la API Search Analytics (16/11/2026)
+
+Google amplió `searchanalytics.query` (https://developers.google.com/search/blog/2026/11/search-analytics-api-update, consultado 20/11/2026):
+
+- **Marca / sin marca:** dimensión o filtro `brandedClassification` con valores `BRANDED` y `NON_BRANDED` (solo operador `equals`). Datos desde el 21/02/2026, solo en propiedades de nivel superior con volumen suficiente; si la propiedad no califica, no devuelve filas. No se puede combinar con un filtro de `query` en la misma petición.
+- **Búsqueda multimodal:** `type: webMultimodal` (Google Lens, Rodea para buscar y subida de imágenes en Search).
+- **Varios países o dispositivos a la vez:** `dimensionFilterGroups[].filterLists[]` con `dimension` (`country` o `device`) y `expressions[]`. Países en ISO 3166-1 alfa-3; dispositivos `DESKTOP`, `MOBILE`, `TABLET`. No filtrar la misma dimensión en `filters` y en `filterLists` a la vez.
+
+Uso en este diagnóstico:
+- **Quick wins y canibalización sin marca:** correrlos con `brandedClassification = NON_BRANDED` cuando la propiedad califica. Las queries de marca casi siempre tienen CTR alto y una sola página relevante, así que meten ruido en ambos cálculos. Es la clasificación de Google, no una lista de términos propia: declarar cuál se usó.
+- **Si la propiedad no califica** (sin filas), volver a separar con una lista de términos de marca confirmada por el usuario, como antes.
 
 ## Solicitudes manuales de indexación — el cupo no es público
 

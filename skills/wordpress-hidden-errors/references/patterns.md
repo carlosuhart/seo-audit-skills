@@ -326,3 +326,23 @@ que no son de OpenAI, por ejemplo) suele estar bien.
 Plugins de visibilidad IA añaden `Link: <home_url>/llms.txt; rel="describedby"`; en las
 traducciones apunta a `/en/llms.txt`, que no existe. Redirección en el edge
 `/(en|pt-br|fr)/llms.txt` → `/llms.txt`.
+
+### P9. 500 en todo el sitio por una CSP en modo aprendizaje que infla las cabeceras
+
+Plugins de seguridad con una CSP en modo aprendizaje (Really Simple Security, entre otros)
+generan `Content-Security-Policy-Report-Only` sumando cada dominio que carga la página. Con
+redes de anuncios llega a cientos de dominios: en un caso de octubre de 2026, 388 dominios y
+11.850 caracteres, que superaron el límite de tamaño de cabeceras de LiteSpeed y dejaron
+todo el dominio en 500 durante tres días. No queda nada en `error_log` ni en las métricas del
+hosting, y restaurar un backup no lo arregla si el archivo ya estaba inflado en esa fecha.
+
+Detección: ante un 500 sin registros, mirar el tamaño de `wp-content/advanced-headers.php`
+(se carga con `auto_prepend_file` desde `.htaccess` o `.user.ini`) y medir las cabeceras de
+una respuesta sana (`curl -sI` y sumar su longitud). Es un riesgo en cualquier sitio con
+anuncios y CSP en modo aprendizaje, aunque hoy responda 200.
+
+Corrección: respaldar y quitar solo la línea `Report-Only` del archivo. Después, desactivar el
+modo aprendizaje en el plugin, o lo vuelve a generar. Algunas versiones regeneran solo
+`advanced-headers-test.php` y no el definitivo: comprobar que el archivo que se carga quedó
+sin la línea y que el sitio responde 200 sin `Report-Only`. Una CSP con anuncios conviene
+escribirla a mano con comodines por red, no aprendida dominio por dominio.

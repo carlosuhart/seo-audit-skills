@@ -147,7 +147,7 @@ def main() -> None:
     resumen = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = nav.abrir_chromium(p)
         for url in urls:
             for vista in vistas:
                 ctx = nav.nuevo_contexto(browser, vista)

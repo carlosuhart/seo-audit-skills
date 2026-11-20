@@ -4,6 +4,8 @@ description: >
   Image SEO and Core Web Vitals: WebP and AVIF, srcset and sizes, lazy loading, the LCP
   image (fetchpriority, preload), compression and WordPress or PrestaShop
   implementation. Use when auditing images for LCP, CLS, weight or accessibility.
+metadata:
+  revisar: "2027-05-20"
 ---
 
 # Image Optimization — SEO & Core Web Vitals
@@ -186,6 +188,27 @@ in WP Rocket > Media > LazyLoad > Excluded images.
 
 **SEO impact:** Alt text is used by Google to understand image content and as a
 ranking signal for image search. It is also a mandatory WCAG accessibility requirement.
+
+---
+
+## Preferred image — which image Google shows for the page
+
+Google documents how to tell it which image represents the page (section "Specify a
+preferred image with metadata", added 02/03/2026,
+https://developers.google.com/search/docs/appearance/google-images, read 20/11/2026):
+
+- schema.org `primaryImageOfPage` with a `URL` or `ImageObject`, or the `image` of the
+  page's main entity (via `mainEntity` / `mainEntityOfPage`).
+- The `og:image` meta tag.
+- Pick an image "relevant and representative of the page". Avoid "a generic image (for
+  example, your site logo)" and avoid "an image with text" in these fields.
+
+Audit findings that come from this:
+- **The same `og:image` on every page** (usually the logo or a sitewide banner, set as
+  the SEO plugin's default). It tells Google the preferred image of every URL is the logo.
+- **`og:image` and schema pointing to different images** on the same page: pick one.
+- **Product or recipe pages whose `og:image` is a promo banner with text** instead of the
+  product or dish photo.
 
 ---
 

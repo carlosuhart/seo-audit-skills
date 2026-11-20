@@ -142,7 +142,7 @@ def main() -> None:
     dir_cap = nav.carpeta_salida(os.path.join(out_dir, "capturas"))
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = nav.abrir_chromium(p)
         for url in nav.leer_urls(a.urls, a.urls_archivo):
             s = nav.slug(url, 50)
             res = {"url": url, "fecha": nav.ahora()}

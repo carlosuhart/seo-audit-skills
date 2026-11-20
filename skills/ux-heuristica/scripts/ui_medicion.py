@@ -405,7 +405,7 @@ def main() -> None:
     dir_cap = None if a.sin_capturas else nav.carpeta_salida(os.path.join(out, "capturas"))
     anchos = tuple(int(x) for x in a.anchos.split(","))
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = nav.abrir_chromium(p)
         for url in nav.leer_urls(a.urls, a.urls_archivo):
             res = medir(browser, url, anchos, a.alto, a.bloquear_host, dir_cap)
             res["significado"] = SIGNIFICADO

@@ -81,7 +81,7 @@ def modo_url(spec: dict, hosts, tmp_png: str) -> tuple[Image.Image, list[str]]:
     from playwright.sync_api import sync_playwright
     no_encontrados = []
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = nav.abrir_chromium(p)
         ctx = nav.nuevo_contexto(b, spec.get("vista", "escritorio"), reduced_motion="reduce")
         page = ctx.new_page()
         nav.instalar_bloqueos(page, hosts, True)

@@ -359,7 +359,7 @@ def main() -> None:
     out = nav.carpeta_salida(a.out)
     dir_cap = nav.carpeta_salida(os.path.join(out, "capturas"))
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = nav.abrir_chromium(p)
         for url in nav.leer_urls(a.urls, a.urls_archivo):
             for vista in [v.strip() for v in a.vistas.split(",") if v.strip()]:
                 prefijo = f"form_{nav.slug(url, 40)}_{vista}"
